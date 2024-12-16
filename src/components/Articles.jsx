@@ -7,8 +7,8 @@ function Articles() {
 
   useEffect(() => {
     getArticles()
-      .then((data) => {
-        setArticles(data.articles);
+      .then((articles) => {
+        setArticles(articles);
       })
       .catch((error) => {
         console.log(error);
