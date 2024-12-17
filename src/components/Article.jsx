@@ -1,22 +1,47 @@
 import { useEffect, useState } from "react";
 import { getArticle } from "../../api";
 import { useParams } from "react-router-dom";
+import { Skeleton } from "@mui/joy";
 
 function Article() {
   const [article, setArticle] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  let { article_id } = useParams();
+  const { article_id } = useParams();
 
   useEffect(() => {
+    setIsLoading(true);
+
     getArticle(article_id)
-      .then((data) => {
-        console.log(data);
-        setArticle(data.article);
+      .then((article) => {
+        setArticle(article);
+        setIsLoading(false);
       })
       .catch((error) => {
         console.log(error);
       });
   }, [article_id]);
+
+  if (isLoading) {
+    return (
+      <section>
+        <Skeleton
+          variant="rectangle"
+          animation="wave"
+          width="80%"
+          height={280}
+          style={{ margin: "auto" }}
+        />
+        <br />
+        <Skeleton
+          animation="wave"
+          width="60%"
+          height={300}
+          style={{ marginLeft: "10%", padding: 0 }}
+        />
+      </section>
+    );
+  }
 
   return (
     <>

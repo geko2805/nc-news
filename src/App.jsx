@@ -3,15 +3,18 @@ import "./App.css";
 import Articles from "./components/Articles";
 import { CssBaseline, CssVarsProvider } from "@mui/joy";
 import Article from "./components/Article";
+import Header from "./components/Header";
+import Home from "./components/Home";
 
 function App() {
   return (
     <>
       <CssVarsProvider>
-        {/* must be used under CssVarsProvider */}
         <CssBaseline />
-        {/* The rest of your application */}
+        <Header />
         <Routes>
+          <Route path="/" element={<Home />} />
+
           <Route path="/articles" element={<Articles />} />
           <Route path="/articles/:article_id" element={<Article />} />
         </Routes>
