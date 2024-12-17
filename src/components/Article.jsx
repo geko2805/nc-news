@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
-import { getArticle } from "../../api";
+import { getArticle, getComments } from "../../api";
 import { useParams } from "react-router-dom";
 import { Skeleton } from "@mui/joy";
+import CommentList from "./CommentList";
 
 function Article() {
   const [article, setArticle] = useState([]);
+  const [comments, setComments] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { article_id } = useParams();
@@ -15,6 +18,18 @@ function Article() {
     getArticle(article_id)
       .then((article) => {
         setArticle(article);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [article_id]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    getComments(article_id)
+      .then((comments) => {
+        setComments(comments);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -55,6 +70,10 @@ function Article() {
         <img src={article.article_img_url} alt={article.title} />
 
         <p>{article.body}</p>
+      </section>
+
+      <section>
+        <CommentList comments={comments} />
       </section>
     </>
   );
