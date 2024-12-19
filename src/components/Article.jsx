@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getArticle, getComments } from "../../api";
+import { getArticle, getComments, incVotes } from "../../api";
 import { useParams } from "react-router-dom";
 import { Skeleton } from "@mui/joy";
 import CommentList from "./CommentList";
@@ -9,7 +9,7 @@ function Article() {
   const [comments, setComments] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
-
+  const [error, setError] = useState(null);
   const { article_id } = useParams();
 
   useEffect(() => {
@@ -22,6 +22,7 @@ function Article() {
       })
       .catch((error) => {
         console.log(error);
+        setError("Failed to load article.");
       });
   }, [article_id]);
 
@@ -34,8 +35,33 @@ function Article() {
       })
       .catch((error) => {
         console.log(error);
+        setError("Failed to load comments.");
       });
   }, [article_id]);
+
+  function handleVoteClick(vote) {
+    setArticle((currArticle) => ({
+      ...currArticle,
+      votes: currArticle.votes + vote,
+    }));
+
+    incVotes(article_id, vote)
+      .then(() => {
+        console.log("Vote successfully updated on server.");
+      })
+      .catch((error) => {
+        console.log("Failed to update votes: ", error);
+        setArticle((currArticle) => ({
+          ...currArticle,
+          votes: prevArticle.votes - vote, // Revert optimistic update
+        }));
+        setError("Failed to update votes. Please try again.");
+      });
+  }
+
+  function clearError() {
+    setError(null); // Clear the error state
+  }
 
   if (isLoading) {
     return (
@@ -58,6 +84,14 @@ function Article() {
     );
   }
 
+  if (error && !article) {
+    return <p style={{ color: "red" }}>{error}</p>;
+  }
+
+  if (!article) {
+    return <p>Article not found.</p>;
+  }
+
   return (
     <>
       <section>
@@ -67,6 +101,16 @@ function Article() {
         <p>
           Comments: {article.comment_count} Votes: {article.votes}
         </p>
+        <p>
+          Vote: <button onClick={() => handleVoteClick(1)}>+</button>
+          <button onClick={() => handleVoteClick(-1)}>-</button>{" "}
+        </p>
+        {error && (
+          <p style={{ color: "red" }} onClick={clearError}>
+            {error} (click to dismiss)
+          </p>
+        )}
+
         <img src={article.article_img_url} alt={article.title} />
 
         <p>{article.body}</p>
