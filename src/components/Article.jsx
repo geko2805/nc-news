@@ -9,7 +9,10 @@ function Article() {
   const [comments, setComments] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); // Error for article
+  const [commentsError, setCommentsError] = useState(null); // Error for comments
+  const [voteError, setVoteError] = useState(null); // Error for voting
+
   const { article_id } = useParams();
 
   useEffect(() => {
@@ -23,10 +26,12 @@ function Article() {
       .catch((error) => {
         console.log(error);
         setError("Failed to load article.");
+        setIsLoading(false);
       });
   }, [article_id]);
 
   useEffect(() => {
+    setCommentsError(null);
     setIsLoading(true);
     getComments(article_id)
       .then((comments) => {
@@ -35,7 +40,7 @@ function Article() {
       })
       .catch((error) => {
         console.log(error);
-        setError("Failed to load comments.");
+        setCommentsError("Failed to load comments.");
       });
   }, [article_id]);
 
@@ -55,12 +60,19 @@ function Article() {
           ...currArticle,
           votes: prevArticle.votes - vote, // Revert optimistic update
         }));
-        setError("Failed to update votes. Please try again.");
+        setVoteError("Failed to update votes. Please try again.");
       });
   }
 
   function clearError() {
     setError(null); // Clear the error state
+  }
+  function clearCommentsError() {
+    setCommentsError(null);
+  }
+
+  function clearVoteError() {
+    setVoteError(null);
   }
 
   if (isLoading) {
@@ -105,9 +117,9 @@ function Article() {
           Vote: <button onClick={() => handleVoteClick(1)}>+</button>
           <button onClick={() => handleVoteClick(-1)}>-</button>{" "}
         </p>
-        {error && (
-          <p style={{ color: "red" }} onClick={clearError}>
-            {error} (click to dismiss)
+        {voteError && (
+          <p style={{ color: "red" }} onClick={clearVoteError}>
+            {voteError} (click to dismiss)
           </p>
         )}
 
@@ -117,7 +129,16 @@ function Article() {
       </section>
 
       <section>
-        <CommentList comments={comments} />
+        {commentsError && (
+          <p style={{ color: "red" }} onClick={clearCommentsError}>
+            {commentsError} (click to dismiss)
+          </p>
+        )}
+        {!commentsError && comments ? (
+          <CommentList comments={comments} />
+        ) : (
+          <p>No comments available.</p>
+        )}
       </section>
     </>
   );
