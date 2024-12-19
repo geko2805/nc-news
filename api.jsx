@@ -18,7 +18,14 @@ export function getArticle(article_id) {
 
 export function getComments(article_id) {
   return api.get(`/articles/${article_id}/comments`).then(({ data }) => {
-    console.log(data.comments);
     return data.comments;
   });
+}
+
+export function incVotes(article_id, inc_votes) {
+  return api
+    .patch(`/articles/${article_id}`, { inc_votes })
+    .then(({ data }) => {
+      return data.article;
+    });
 }
