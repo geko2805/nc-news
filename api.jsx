@@ -29,3 +29,11 @@ export function incVotes(article_id, inc_votes) {
       return data.article;
     });
 }
+
+export function addComment(article_id, username, body) {
+  return api
+    .post(`/articles/${article_id}/comments`, { username, body })
+    .then(({ data }) => {
+      return data.comment;
+    });
+}

@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
-import { getArticle, getComments, incVotes } from "../../api";
+import { addComment, getArticle, getComments, incVotes } from "../../api";
 import { useParams } from "react-router-dom";
-import { Button, Skeleton } from "@mui/joy";
+import { Button, FormControl, Skeleton, Textarea } from "@mui/joy";
 import CommentList from "./CommentList";
 
 function Article() {
   const [article, setArticle] = useState([]);
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null); // Error for article
   const [voteError, setVoteError] = useState(null); // Error for voting
-
   const { article_id } = useParams();
 
   useEffect(() => {
@@ -114,6 +112,7 @@ function Article() {
 
       <section>
         <h1>Comments</h1>
+
         <CommentList article_id={article_id} />
       </section>
     </>
