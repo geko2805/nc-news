@@ -1,7 +1,9 @@
 import CommentCard from "./CommentCard";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { addComment, getComments } from "../../api";
 import { Button, FormControl, Skeleton, Textarea } from "@mui/joy";
+import { UserContext } from "./UserContext";
+import SignInModal from "./SignInModal";
 
 function CommentList({ article_id }) {
   const [comments, setComments] = useState([]);
@@ -9,6 +11,8 @@ function CommentList({ article_id }) {
   const [isLoading, setIsLoading] = useState(false);
   const [commentInput, setCommentInput] = useState("");
   const [commentSubmitted, setCommentSubmitted] = useState(0); // Trigger for re-fetch
+
+  const { user, setModalOpen } = useContext(UserContext);
 
   useEffect(() => {
     setCommentsError(null);
@@ -29,7 +33,7 @@ function CommentList({ article_id }) {
     try {
       setIsLoading(true);
 
-      await addComment(article_id, "grumpy19", commentInput);
+      await addComment(article_id, user.username, commentInput);
       setCommentInput("");
       setCommentSubmitted((prev) => prev + 1); // trigger useEffect
     } catch (error) {
@@ -38,24 +42,6 @@ function CommentList({ article_id }) {
       setIsLoading(false);
     }
   };
-
-  // if (isLoading) {
-  //   return (
-  //     <div>
-  //       {/* Render skeleton placeholders - move to commentcard? and send state on props? */}
-  //       {[1, 2, 3].map((_, index) => (
-  //         <Skeleton
-  //           key={index}
-  //           variant="text"
-  //           animation="wave"
-  //           width="80%"
-  //           height={30}
-  //           style={{ marginBottom: "10px" }}
-  //         />
-  //       ))}
-  //     </div>
-  //   );
-  // }
 
   if (commentsError) {
     return (
@@ -68,22 +54,35 @@ function CommentList({ article_id }) {
   return (
     <>
       <section style={{ flex: 1 }}>
-        <FormControl style={{ paddingTop: 20 }}>
-          <Textarea
-            minRows={2}
-            placeholder="Enter your comment..."
-            value={commentInput}
-            onChange={(event) => setCommentInput(event.target.value)}
-          />
+        {user.username ? (
+          <FormControl style={{ paddingTop: 20 }}>
+            <Textarea
+              minRows={2}
+              placeholder="Enter your comment..."
+              value={commentInput}
+              onChange={(event) => setCommentInput(event.target.value)}
+            />
 
-          <Button
-            onClick={handleCommentSubmit}
-            disabled={!commentInput || isLoading} // stop user sending empty inputs or sending multiple requests
-          >
-            Submit
-          </Button>
-        </FormControl>
-
+            <Button
+              onClick={handleCommentSubmit}
+              disabled={!commentInput || isLoading} // stop user sending empty inputs or sending multiple requests
+            >
+              Submit
+            </Button>
+          </FormControl>
+        ) : (
+          <p>
+            Please{" "}
+            <Button
+              variant="outlined"
+              color="neutral"
+              onClick={() => setModalOpen(true)}
+            >
+              Log in
+            </Button>{" "}
+            to post comments
+          </p>
+        )}
         {commentSubmitted > 0 ? (
           <p
             style={{ color: "green", padding: 10, cursor: "pointer" }}
