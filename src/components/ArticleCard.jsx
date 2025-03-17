@@ -5,7 +5,7 @@ function ArticleCard({ article, isLoading }) {
   return (
     <>
       <Link to={isLoading ? "#" : `/articles/${article.article_id}`}>
-        <Card sx={{ minHeight: "280px", width: 320 }}>
+        <Card sx={{ minHeight: "280px", width: 320, margin: 1 }}>
           {isLoading ? (
             <>
               <CardCover>
