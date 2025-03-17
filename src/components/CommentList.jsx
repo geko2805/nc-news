@@ -68,7 +68,7 @@ function CommentList({ article_id }) {
   return (
     <>
       <section style={{ flex: 1 }}>
-        <FormControl style={{ padding: 20 }}>
+        <FormControl style={{ paddingTop: 20 }}>
           <Textarea
             minRows={2}
             placeholder="Enter your comment..."
@@ -83,6 +83,17 @@ function CommentList({ article_id }) {
             Submit
           </Button>
         </FormControl>
+
+        {commentSubmitted > 0 ? (
+          <p
+            style={{ color: "green", padding: 10, cursor: "pointer" }}
+            onClick={() => setCommentSubmitted(0)}
+          >
+            Comment posted (click to dismiss)
+          </p>
+        ) : (
+          ""
+        )}
       </section>
 
       {comments.length === 0 ? (
