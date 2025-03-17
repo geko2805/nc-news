@@ -39,23 +39,23 @@ function CommentList({ article_id }) {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div>
-        {/* Render skeleton placeholders - move to commentcard? and send state on props? */}
-        {[1, 2, 3].map((_, index) => (
-          <Skeleton
-            key={index}
-            variant="text"
-            animation="wave"
-            width="80%"
-            height={30}
-            style={{ marginBottom: "10px" }}
-          />
-        ))}
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div>
+  //       {/* Render skeleton placeholders - move to commentcard? and send state on props? */}
+  //       {[1, 2, 3].map((_, index) => (
+  //         <Skeleton
+  //           key={index}
+  //           variant="text"
+  //           animation="wave"
+  //           width="80%"
+  //           height={30}
+  //           style={{ marginBottom: "10px" }}
+  //         />
+  //       ))}
+  //     </div>
+  //   );
+  // }
 
   if (commentsError) {
     return (
@@ -67,15 +67,23 @@ function CommentList({ article_id }) {
 
   return (
     <>
-      <FormControl>
-        <Textarea
-          minRows={2}
-          placeholder="Enter your comment..."
-          value={commentInput}
-          onChange={(event) => setCommentInput(event.target.value)}
-        />
-        <Button onClick={handleCommentSubmit}>Submit</Button>
-      </FormControl>
+      <section style={{ flex: 1 }}>
+        <FormControl style={{ padding: 20 }}>
+          <Textarea
+            minRows={2}
+            placeholder="Enter your comment..."
+            value={commentInput}
+            onChange={(event) => setCommentInput(event.target.value)}
+          />
+
+          <Button
+            onClick={handleCommentSubmit}
+            disabled={!commentInput || isLoading} // stop user sending empty inputs or sending multiple requests
+          >
+            Submit
+          </Button>
+        </FormControl>
+      </section>
 
       {comments.length === 0 ? (
         <p>No comments available, be the first...</p>
@@ -88,13 +96,18 @@ function CommentList({ article_id }) {
             flexWrap: "wrap",
           }}
         >
-          {comments.map((comment) => (
-            <CommentCard
-              key={comment.comment_id}
-              comment={comment}
-              isLoading={false}
-            />
-          ))}
+          {isLoading
+            ? [...Array(12)].map((_, index) => (
+                <CommentCard key={index} comment={{}} isLoading={true} />
+              ))
+            : // Render actual comments when loading is false
+              comments.map((comment) => (
+                <CommentCard
+                  key={comment.comment_id}
+                  comment={comment}
+                  isLoading={false}
+                />
+              ))}
         </ul>
       )}
     </>

@@ -6,7 +6,7 @@ import CommentList from "./CommentList";
 
 function Article() {
   const [article, setArticle] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null); // Error for article
   const [voteError, setVoteError] = useState(null); // Error for voting
   const { article_id } = useParams();
@@ -50,26 +50,26 @@ function Article() {
     setVoteError(null);
   }
 
-  if (isLoading) {
-    return (
-      <section>
-        <Skeleton
-          variant="rectangle"
-          animation="wave"
-          width="80%"
-          height={280}
-          style={{ margin: "auto" }}
-        />
-        <br />
-        <Skeleton
-          animation="wave"
-          width="60%"
-          height={300}
-          style={{ marginLeft: "10%", padding: 0 }}
-        />
-      </section>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <section>
+  //       <Skeleton
+  //         variant="rectangle"
+  //         animation="wave"
+  //         width="80%"
+  //         height={280}
+  //         style={{ margin: "auto" }}
+  //       />
+  //       <br />
+  //       <Skeleton
+  //         animation="wave"
+  //         width="60%"
+  //         height={300}
+  //         style={{ marginLeft: "10%", padding: 0 }}
+  //       />
+  //     </section>
+  //   );
+  // }
 
   //   if (error && !article) {
   //     return <p style={{ color: "red" }}>{error}</p>;
@@ -89,25 +89,118 @@ function Article() {
   return (
     <>
       <section>
-        <h1>{article.title}</h1>
-        <p>By {article.author}</p>
-        <p>Topic: {article.topic}</p>
-        <p>
-          Comments: {article.comment_count} Votes: {article.votes}
-        </p>
-        <p>
-          Vote: <Button onClick={() => handleVoteClick(1)}>+</Button>
-          <Button onClick={() => handleVoteClick(-1)}>-</Button>{" "}
-        </p>
-        {voteError && (
-          <p style={{ color: "red" }} onClick={clearVoteError}>
-            {voteError} (click to dismiss)
-          </p>
+        {isLoading ? (
+          <>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Skeleton
+                variant="text"
+                animation="wave"
+                width={280}
+                height={40}
+                style={{ margin: "10px auto" }}
+              />
+              <Skeleton
+                variant="text"
+                animation="wave"
+                width={100}
+                height={20}
+                style={{ margin: "auto" }}
+              />
+              <Skeleton
+                variant="text"
+                animation="wave"
+                width={100}
+                height={20}
+                style={{ margin: "auto" }}
+              />
+              <Skeleton
+                variant="text"
+                animation="wave"
+                width={100}
+                height={20}
+                style={{ margin: "auto" }}
+              />
+              <p>
+                Vote:{" "}
+                <Button disabled={isLoading} onClick={() => handleVoteClick(1)}>
+                  +
+                </Button>
+                <Button
+                  disabled={isLoading}
+                  onClick={() => handleVoteClick(-1)}
+                >
+                  -
+                </Button>{" "}
+              </p>
+              <Skeleton
+                variant="rectangle"
+                animation="wave"
+                width={700}
+                height={400}
+                style={{ maxWidth: "100%", margin: "auto" }}
+              />
+              <Skeleton
+                variant="text"
+                animation="wave"
+                width={"80%"}
+                height={20}
+                style={{ margin: "auto" }}
+              />
+              <Skeleton
+                variant="text"
+                animation="wave"
+                width={"80%"}
+                height={20}
+                style={{ margin: "auto" }}
+              />
+              <Skeleton
+                variant="text"
+                animation="wave"
+                width={"80%"}
+                height={20}
+                style={{ margin: "auto" }}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <h1>{article.title}</h1>
+              <p>By {article.author}</p>
+              <p>Topic: {article.topic}</p>
+              <p>
+                Comments: {article.comment_count} Votes: {article.votes}
+              </p>
+              <p>
+                Vote: <Button onClick={() => handleVoteClick(1)}>+</Button>
+                <Button onClick={() => handleVoteClick(-1)}>-</Button>{" "}
+              </p>
+              {voteError && (
+                <p style={{ color: "red" }} onClick={clearVoteError}>
+                  {voteError} (click to dismiss)
+                </p>
+              )}
+              <img
+                style={{ maxWidth: "100%", height: "auto" }}
+                src={article.article_img_url}
+                alt={article.title}
+              />
+              <p style={{ width: "95%" }}>{article.body}</p>
+            </div>
+          </>
         )}
-
-        <img src={article.article_img_url} alt={article.title} />
-
-        <p>{article.body}</p>
       </section>
 
       <section>
