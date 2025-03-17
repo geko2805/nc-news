@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getArticle, getComments, incVotes } from "../../api";
 import { useParams } from "react-router-dom";
-import { Skeleton } from "@mui/joy";
+import { Button, Skeleton } from "@mui/joy";
 import CommentList from "./CommentList";
 
 function Article() {
@@ -48,13 +48,6 @@ function Article() {
       });
   }
 
-  function clearError() {
-    setError(null); // Clear the error state
-  }
-  function clearCommentsError() {
-    setCommentsError(null);
-  }
-
   function clearVoteError() {
     setVoteError(null);
   }
@@ -80,12 +73,19 @@ function Article() {
     );
   }
 
-  if (error && !article) {
-    return <p style={{ color: "red" }}>{error}</p>;
-  }
+  //   if (error && !article) {
+  //     return <p style={{ color: "red" }}>{error}</p>;
+  //   }
 
-  if (!article) {
-    return <p>Article not found.</p>;
+  //   if (!article) {
+  //     return <p>Article not found.</p>;
+  //   }
+
+  if (error || !article) {
+    if (!article) {
+      return <p style={{ color: "red" }}>Article not found.</p>;
+    }
+    return <p style={{ color: "red" }}>{error}</p>;
   }
 
   return (
@@ -98,8 +98,8 @@ function Article() {
           Comments: {article.comment_count} Votes: {article.votes}
         </p>
         <p>
-          Vote: <button onClick={() => handleVoteClick(1)}>+</button>
-          <button onClick={() => handleVoteClick(-1)}>-</button>{" "}
+          Vote: <Button onClick={() => handleVoteClick(1)}>+</Button>
+          <Button onClick={() => handleVoteClick(-1)}>-</Button>{" "}
         </p>
         {voteError && (
           <p style={{ color: "red" }} onClick={clearVoteError}>

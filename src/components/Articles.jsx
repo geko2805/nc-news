@@ -29,7 +29,6 @@ function Articles() {
 
   return (
     <>
-      <h1>Articles</h1>
       <section>
         <ArticleList articles={articles} isLoading={isLoading} />
       </section>
