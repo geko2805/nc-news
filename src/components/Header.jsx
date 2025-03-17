@@ -5,8 +5,13 @@ function Header() {
     <>
       <header>
         <Link to="/">
-          <h1>LOGO</h1>
+          <img style={{ width: 100 }} src="../../src/assets/logo.jpeg" />
         </Link>
+        <div>
+          <h1>NC News</h1>
+          <p>Home to your latest news</p>
+        </div>
+
         <nav>
           <Link to="/">Home</Link>
 
