@@ -37,3 +37,11 @@ export function addComment(article_id, username, body) {
       return data.comment;
     });
 }
+
+export function deleteComment(comment_id) {
+  return api
+    .delete(`/comments/${comment_id}`, { comment_id })
+    .then(({ data }) => {
+      return data.msg;
+    });
+}

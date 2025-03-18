@@ -1,7 +1,7 @@
 import CommentCard from "./CommentCard";
 import { useContext, useEffect, useState } from "react";
-import { addComment, getComments } from "../../api";
-import { Button, FormControl, Skeleton, Textarea } from "@mui/joy";
+import { addComment, deleteComment, getComments } from "../../api";
+import { Alert, Button, FormControl, Skeleton, Textarea } from "@mui/joy";
 import { UserContext } from "./UserContext";
 import SignInModal from "./SignInModal";
 
@@ -10,7 +10,8 @@ function CommentList({ article_id }) {
   const [commentsError, setCommentsError] = useState(null); // Error for comments
   const [isLoading, setIsLoading] = useState(false);
   const [commentInput, setCommentInput] = useState("");
-  const [commentSubmitted, setCommentSubmitted] = useState(0); // Trigger for re-fetch
+  const [commentSubmitted, setCommentSubmitted] = useState(0); // Trigger for re-fetch - change this to add the returned comment from api to comments
+  //const [commentDeleted, setCommentDeleted] = useState(0); // Trigger for re-fetch
 
   const { user, setModalOpen } = useContext(UserContext);
 
@@ -38,6 +39,23 @@ function CommentList({ article_id }) {
       setCommentSubmitted((prev) => prev + 1); // trigger useEffect
     } catch (error) {
       console.error("Error posting comment:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      setIsLoading(true);
+      await deleteComment(commentId);
+      // trigger rerendder by changing comments state + filter out deleted comment
+      setComments((prevComments) =>
+        prevComments.filter((comment) => comment.comment_id !== commentId)
+      );
+      // setCommentDeleted(1);
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      // set an error state here
     } finally {
       setIsLoading(false);
     }
@@ -84,12 +102,15 @@ function CommentList({ article_id }) {
           </p>
         )}
         {commentSubmitted > 0 ? (
-          <p
-            style={{ color: "green", padding: 10, cursor: "pointer" }}
+          <Alert
+            variant="solid"
+            color="success"
+            style={{ padding: 10, cursor: "pointer" }}
             onClick={() => setCommentSubmitted(0)}
           >
+            {" "}
             Comment posted (click to dismiss)
-          </p>
+          </Alert>
         ) : (
           ""
         )}
@@ -116,6 +137,7 @@ function CommentList({ article_id }) {
                   key={comment.comment_id}
                   comment={comment}
                   isLoading={false}
+                  handleDeleteComment={handleDeleteComment}
                 />
               ))}
         </ul>

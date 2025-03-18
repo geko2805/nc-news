@@ -9,7 +9,10 @@ import {
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 
-function CommentCard({ comment, isLoading }) {
+function CommentCard({ comment, isLoading, handleDeleteComment }) {
+  const handleDelete = () => {
+    handleDeleteComment(comment.comment_id); // Call CommentList's delete handler
+  };
   const { user } = useContext(UserContext);
 
   return (
@@ -50,7 +53,7 @@ function CommentCard({ comment, isLoading }) {
             <Typography>Votes: {comment.votes}</Typography>
 
             {user.username && comment.author === user.username && (
-              <Button>Delete</Button>
+              <Button onClick={handleDelete}>Delete</Button>
             )}
           </CardContent>
         )}

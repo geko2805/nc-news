@@ -58,7 +58,7 @@ export default function SignInModal() {
             }}
           >
             <Stack spacing={1}>
-              <Input placeholder="Username" required />
+              <Input placeholder="jessjelly" disabled />
               <Input placeholder="*******" disabled />
               <Button type="submit">Submit</Button>
             </Stack>
