@@ -6,6 +6,7 @@ import Article from "./components/Article";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import { UserProvider } from "./components/UserContext";
+import Topics from "./components/Topics";
 
 function App() {
   return (
@@ -18,6 +19,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/articles" element={<Articles />} />
             <Route path="/articles/:article_id" element={<Article />} />
+            <Route path="/topics" element={<Topics />} />
+            <Route path="/topics/:topic" element={<Articles />} />
           </Routes>
         </UserProvider>
       </CssVarsProvider>

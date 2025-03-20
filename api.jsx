@@ -4,8 +4,20 @@ const api = axios.create({
   baseURL: "https://my-nc-news-s3ph.onrender.com/api",
 });
 
-export function getArticles() {
-  return api.get(`/articles`).then(({ data }) => {
+// export function getArticles() {
+//   return api.get(`/articles`).then(({ data }) => {
+//     return data.articles;
+//   });
+// }
+
+export function getArticles(topic, author) {
+  console.log(topic, author);
+
+  const query =
+    `${topic ? `?topic=${topic}` : ""}` +
+    `${author ? (topic ? "&" : "?") + `author=${author}` : ""}`;
+
+  return api.get(`/articles${query}`).then(({ data }) => {
     return data.articles;
   });
 }
@@ -44,4 +56,10 @@ export function deleteComment(comment_id) {
     .then(({ data }) => {
       return data.msg;
     });
+}
+
+export function getTopics() {
+  return api.get(`/topics`).then(({ data }) => {
+    return data.topics;
+  });
 }
