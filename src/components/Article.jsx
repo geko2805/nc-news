@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { addComment, getArticle, getComments, incVotes } from "../../api";
 import { useParams } from "react-router-dom";
 import { Button, FormControl, Skeleton, Textarea } from "@mui/joy";
 import CommentList from "./CommentList";
+import { UserContext } from "./UserContext";
 
 function Article() {
   const [article, setArticle] = useState([]);
@@ -10,6 +11,7 @@ function Article() {
   const [error, setError] = useState(null); // Error for article
   const [voteError, setVoteError] = useState(null); // Error for voting
   const { article_id } = useParams();
+  const { user, setModalOpen } = useContext(UserContext);
 
   useEffect(() => {
     setIsLoading(true);
@@ -49,35 +51,6 @@ function Article() {
   function clearVoteError() {
     setVoteError(null);
   }
-
-  // if (isLoading) {
-  //   return (
-  //     <section>
-  //       <Skeleton
-  //         variant="rectangle"
-  //         animation="wave"
-  //         width="80%"
-  //         height={280}
-  //         style={{ margin: "auto" }}
-  //       />
-  //       <br />
-  //       <Skeleton
-  //         animation="wave"
-  //         width="60%"
-  //         height={300}
-  //         style={{ marginLeft: "10%", padding: 0 }}
-  //       />
-  //     </section>
-  //   );
-  // }
-
-  //   if (error && !article) {
-  //     return <p style={{ color: "red" }}>{error}</p>;
-  //   }
-
-  //   if (!article) {
-  //     return <p>Article not found.</p>;
-  //   }
 
   if (error || !article) {
     if (!article) {
@@ -183,10 +156,52 @@ function Article() {
               <p>
                 Comments: {article.comment_count} Votes: {article.votes}
               </p>
-              <p>
-                Vote: <Button onClick={() => handleVoteClick(1)}>+</Button>
-                <Button onClick={() => handleVoteClick(-1)}>-</Button>{" "}
+
+              <p style={{ padding: 5 }}>
+                Vote:
+                <Button
+                  onClick={
+                    user.username
+                      ? () => handleVoteClick(+1)
+                      : () => setModalOpen(true)
+                  }
+                  disabled={user.username === article.author ? "disabled" : ""}
+                  style={{ marginLeft: 5 }}
+                >
+                  +
+                </Button>
+                <Button
+                  // onClick={() => handleVoteClick(-1)}
+                  onClick={
+                    user.username
+                      ? () => handleVoteClick(-1)
+                      : () => setModalOpen(true)
+                  }
+                  disabled={user.username === article.author ? "disabled" : ""}
+                  style={{ marginLeft: 5 }}
+                >
+                  -
+                </Button>
               </p>
+              {user.username === article.author && (
+                <span style={{ fontSize: 12 }}>
+                  You cant vote on your own article
+                </span>
+              )}
+
+              {/* {!user.username && (
+                <span style={{ fontSize: 12, marginLeft: 5 }}>
+                  Please
+                  <span
+                    onClick={() => setModalOpen(true)}
+                    style={{ color: "green", cursor: "pointer" }}
+                  >
+                    {" "}
+                    Log in
+                  </span>{" "}
+                  to vote
+                </span>
+              )} */}
               {voteError && (
                 <p style={{ color: "red" }} onClick={clearVoteError}>
                   {voteError} (click to dismiss)
