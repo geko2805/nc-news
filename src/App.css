@@ -63,7 +63,8 @@ button:focus-visible {
   margin: 2em;
 }
 
-.articleList {
+.articleList,
+.topicsList {
   display: flex;
   width: 100%;
   justify-content: center;

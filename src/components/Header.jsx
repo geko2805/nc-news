@@ -32,6 +32,9 @@ function Header() {
             <Link style={{ marginLeft: 20 }} to="/articles">
               Articles
             </Link>
+            <Link style={{ marginLeft: 20 }} to="/topics">
+              Topics
+            </Link>
           </nav>
         </div>
 

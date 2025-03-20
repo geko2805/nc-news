@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import { getArticles } from "../../api";
 import ArticleList from "./ArticleList";
 import { AspectRatio, Card, Skeleton, Typography } from "@mui/joy";
+import { useParams } from "react-router-dom";
 
 function Articles() {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  let { topic } = useParams();
 
   useEffect(() => {
     setIsLoading(true);
-    getArticles()
+    getArticles(topic)
       .then((articles) => {
         setArticles(articles);
         setIsLoading(false);
@@ -17,15 +19,7 @@ function Articles() {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
-
-  //   if (isLoading) {
-  //     return (
-  //       <>
-  //         <p>Articles loading...</p>
-  //       </>
-  //     );
-  //   }
+  }, [topic]);
 
   return (
     <>
