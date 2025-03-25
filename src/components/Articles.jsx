@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/joy";
 import { useParams, useSearchParams } from "react-router-dom";
+import ErrorFallback from "./ErrorFallback";
 
 function Articles() {
   const [articles, setArticles] = useState([]);
@@ -22,6 +23,7 @@ function Articles() {
     searchParams.get("sort_by") || "created_at"
   );
   const [order, setOrder] = useState(searchParams.get("order") || "DESC");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setIsLoading(true);
@@ -32,6 +34,7 @@ function Articles() {
       })
       .catch((error) => {
         console.log(error);
+        setError(error.response.data.msg);
         setIsLoading(false);
       });
   }, [topic, sortBy, order]);
@@ -65,6 +68,10 @@ function Articles() {
     setOrder(newValue);
     setSearchParams({ ...Object.fromEntries(searchParams), order: newValue });
   };
+
+  if (error) {
+    return <ErrorFallback error={error} />;
+  }
 
   return (
     <>

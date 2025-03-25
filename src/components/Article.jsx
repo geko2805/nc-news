@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { Button, FormControl, Skeleton, Textarea } from "@mui/joy";
 import CommentList from "./CommentList";
 import { UserContext } from "./UserContext";
+import ErrorFallback from "./ErrorFallback";
 
 function Article() {
   const [article, setArticle] = useState([]);
@@ -22,8 +23,8 @@ function Article() {
         setIsLoading(false);
       })
       .catch((error) => {
-        console.log(error);
-        setError("Failed to load article.");
+        console.log(error.response.data.msg);
+        setError(error.response.data.msg);
         setIsLoading(false);
       });
   }, [article_id]);
@@ -53,8 +54,10 @@ function Article() {
   }
 
   if (error || !article) {
-    if (!article) {
-      return <p style={{ color: "red" }}>Article not found.</p>;
+    if (article.length === 0) {
+      //return <p style={{ color: "red" }}>Article not found.</p>;
+      console.log(error, "error in error");
+      return <ErrorFallback error={error} />;
     }
     return <p style={{ color: "red" }}>{error}</p>;
   }
@@ -165,7 +168,7 @@ function Article() {
                       ? () => handleVoteClick(+1)
                       : () => setModalOpen(true)
                   }
-                  disabled={user.username === article.author ? "disabled" : ""}
+                  disabled={user.username === article.author ? true : false}
                   style={{ marginLeft: 5 }}
                 >
                   +
@@ -177,7 +180,7 @@ function Article() {
                       ? () => handleVoteClick(-1)
                       : () => setModalOpen(true)
                   }
-                  disabled={user.username === article.author ? "disabled" : ""}
+                  disabled={user.username === article.author ? true : false}
                   style={{ marginLeft: 5 }}
                 >
                   -
