@@ -10,7 +10,18 @@ function TopicCard({ topic, isLoading }) {
       style={{ width: "50%", padding: 5, maxWidth: 450 }}
       to={`/topics/${topic.slug}`}
     >
-      <Card sx={{ minHeight: "280px", width: "100%" }}>
+      <Card
+        variant="outlined"
+        sx={{
+          minHeight: "200px",
+          width: "100%",
+          transition: "all 0.2s ease",
+          "&:hover": {
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+            transform: "translateY(-2px)",
+          },
+        }}
+      >
         {isLoading ? (
           <>
             <CardCover>
@@ -40,11 +51,11 @@ function TopicCard({ topic, isLoading }) {
             />
 
             <CardContent sx={{ justifyContent: "center", display: "flex" }}>
-              <Typography level="title-lg" textColor="#fff">
+              <Typography level="h3" textColor="text.secondary">
                 {topic.slug[0].toUpperCase() + topic.slug.slice(1)}
               </Typography>
               <Typography textColor="#fff">{topic.description}</Typography>
-              <Button style={{ width: "50px" }}>GO</Button>
+              {/* <Button style={{ width: "50px" }}>GO</Button> */}
             </CardContent>
           </>
         )}

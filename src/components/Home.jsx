@@ -6,7 +6,6 @@ import { Button } from "@mui/joy";
 function Home() {
   return (
     <>
-      <h1>NC NEWS</h1>
       <Link to="/articles" className="all-items">
         <Button
           variant="solid"
