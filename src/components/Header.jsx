@@ -24,6 +24,7 @@ function Header() {
         <Link to="/">
           <img style={{ width: 100 }} src="../../src/assets/logo.jpeg" />
         </Link>
+
         <div>
           <h1>NC News</h1>
           <p style={{ fontStyle: "italic" }}>Home to your latest news</p>
