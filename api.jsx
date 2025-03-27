@@ -64,3 +64,9 @@ export function getTopics() {
     return data.topics;
   });
 }
+
+export function getUserByUsername(username) {
+  return api.get(`/users/${username}`).then(({ data }) => {
+    return data.user;
+  });
+}

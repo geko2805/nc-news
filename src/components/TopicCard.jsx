@@ -39,12 +39,16 @@ function TopicCard({ topic, isLoading }) {
               }}
             />
 
-            <CardContent sx={{ justifyContent: "center", display: "flex" }}>
+            <CardContent sx={{ justifyContent: "center" }}>
               <Typography level="title-lg" textColor="#fff">
                 {topic.slug[0].toUpperCase() + topic.slug.slice(1)}
               </Typography>
               <Typography textColor="#fff">{topic.description}</Typography>
-              <Button style={{ width: "50px" }}>GO</Button>
+              <Button
+                style={{ width: "auto", margin: "0 auto", display: "block" }}
+              >
+                View articles
+              </Button>
             </CardContent>
           </>
         )}
