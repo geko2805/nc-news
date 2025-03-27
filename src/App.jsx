@@ -16,8 +16,10 @@ function App() {
         <UserProvider>
           <CssBaseline />
           <Header />
+
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/articles" element={<Articles />} />
             <Route path="/articles/:article_id" element={<Article />} />
             <Route path="/topics" element={<Topics />} />
