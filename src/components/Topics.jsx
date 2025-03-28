@@ -20,7 +20,7 @@ function Topics() {
   }, []);
   return (
     <>
-      {topics && <h2>All Topics</h2>}
+      {/* {topics && <h2>Topics</h2>} */}
       {/* <p>{JSON.stringify(topics)}</p> */}
       <TopicsList topics={topics} isLoading={isLoading} />
     </>
