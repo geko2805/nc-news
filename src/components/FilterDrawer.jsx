@@ -29,10 +29,20 @@ import HotelRoundedIcon from "@mui/icons-material/HotelRounded";
 import Done from "@mui/icons-material/Done";
 import { getTopics } from "../../api";
 import { useTopics } from "./TopicsContext";
+import { UserContext } from "./UserContext";
 
-export default function FilterDrawer() {
+export default function FilterDrawer({
+  articles,
+  filteredArticles,
+  setFilteredArticles,
+}) {
   const [open, setOpen] = React.useState(false);
   const [type, setType] = React.useState("All time"); //change to be date published !!!!!!!!!!!!
+  const [hideNegative, setHideNegative] = React.useState(false);
+  const [showAuthoredByUser, setShowAuthoredByUser] = React.useState(false);
+  const { user, setModalOpen } = React.useContext(UserContext);
+
+  console.log(hideNegative);
   const { topics, isLoading } = useTopics();
 
   const topicSlugs = topics.map((topic) => {
@@ -47,6 +57,27 @@ export default function FilterDrawer() {
       setSelectedTopics(topics.map((topic) => topic.slug));
     }
   }, [topics]);
+
+  React.useEffect(() => {
+    let filtered = [...articles]; // start with all articles
+
+    // filter by selected topics
+    filtered = filtered.filter((article) =>
+      selectedTopics.includes(article.topic)
+    );
+
+    // filter to hide negative vote counts if hideNegative is true
+    if (hideNegative) {
+      filtered = filtered.filter((article) => article.votes >= 0);
+    }
+
+    // filter only user authored articles when showAuthoredByUser is true
+    if (showAuthoredByUser && user?.username) {
+      filtered = filtered.filter((article) => article.author === user.username);
+    }
+
+    setFilteredArticles(filtered);
+  }, [articles, selectedTopics, hideNegative, showAuthoredByUser, user]);
 
   const handleCheckboxChange = (topicSlug) => (event) => {
     setSelectedTopics((prev) => {
@@ -224,16 +255,20 @@ export default function FilterDrawer() {
             </div>
 
             <Typography level="title-md" sx={{ fontWeight: "bold", mt: 2 }}>
-              Booking options
+              More options
             </Typography>
             <FormControl orientation="horizontal">
               <Box sx={{ flex: 1, pr: 1 }}>
                 <FormLabel sx={{ typography: "title-sm" }}>Votes</FormLabel>
                 <FormHelperText sx={{ typography: "body-sm" }}>
-                  Hide articles with negative vote counts{" "}
+                  Hide articles with negative vote counts
                 </FormHelperText>
               </Box>
-              <Switch />
+              <Switch
+                checked={hideNegative}
+                onChange={(event) => setHideNegative(event.target.checked)}
+                inputProps={{ "aria-label": "controlled" }}
+              />
             </FormControl>
 
             <FormControl orientation="horizontal">
@@ -242,10 +277,31 @@ export default function FilterDrawer() {
                   My Articles
                 </FormLabel>
                 <FormHelperText sx={{ typography: "body-sm" }}>
-                  Only show articles which I published
+                  {user.name ? (
+                    "Only show articles which I published"
+                  ) : (
+                    <p>
+                      Please{" "}
+                      <Button
+                        variant="outlined"
+                        color="neutral"
+                        onClick={() => setModalOpen(true)}
+                      >
+                        Log in
+                      </Button>{" "}
+                      to view your articles
+                    </p>
+                  )}
                 </FormHelperText>
               </Box>
-              <Switch />
+              <Switch
+                checked={showAuthoredByUser}
+                onChange={(event) =>
+                  setShowAuthoredByUser(event.target.checked)
+                }
+                inputProps={{ "aria-label": "controlled" }}
+                disabled={!user.name}
+              />
             </FormControl>
           </DialogContent>
 
@@ -260,13 +316,18 @@ export default function FilterDrawer() {
               variant="outlined"
               color="neutral"
               onClick={() => {
-                setType("");
+                setType("All time");
                 setSelectedTopics(topicSlugs);
+                setFilteredArticles(articles);
+                setShowAuthoredByUser(false);
+                setHideNegative(false);
               }}
             >
               Reset
             </Button>
-            <Button onClick={() => setOpen(false)}>Show 165 properties</Button>
+            <Button onClick={() => setOpen(false)}>
+              Show {filteredArticles.length} articles
+            </Button>
           </Stack>
         </Sheet>
       </Drawer>
