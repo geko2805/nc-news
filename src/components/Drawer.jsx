@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import SignInModal from "./SignInModal";
 
-export default function DrawerBasic() {
+export default function DrawerBasic({ searchQuery, onSearchChange }) {
   const [open, setOpen] = React.useState(false);
   const { user, setUser, modalOpen, setModalOpen } =
     React.useContext(UserContext);
@@ -80,40 +80,43 @@ export default function DrawerBasic() {
           <ModalClose id="close-icon" sx={{ position: "initial" }} />
         </Box>
 
-        <Input
-          size="sm"
-          placeholder="Search"
-          variant="plain"
-          endDecorator={<Search />}
-          slotProps={{
-            input: {
-              "aria-label": "Search anything",
-            },
-          }}
-          sx={{
-            m: 3,
-            borderRadius: 0,
-            borderBottom: "2px solid",
-            borderColor: "neutral.outlinedBorder",
-            "&:hover": {
-              borderColor: "neutral.outlinedHoverBorder",
-            },
-            "&::before": {
-              border: "1px solid var(--Input-focusedHighlight)",
-              transform: "scaleX(0)",
-              left: 0,
-              right: 0,
-              bottom: "-2px",
-              top: "unset",
-              transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+        <Link to="/articles">
+          <Input
+            onClick={toggleDrawer(false)}
+            onKeyDown={toggleDrawer(false)}
+            size="sm"
+            placeholder="Search"
+            variant="plain"
+            endDecorator={<Search />}
+            slotProps={{
+              input: {
+                "aria-label": "Search anything",
+              },
+            }}
+            sx={{
+              m: 3,
               borderRadius: 0,
-            },
-            "&:focus-within::before": {
-              transform: "scaleX(1)",
-            },
-          }}
-        />
-
+              borderBottom: "2px solid",
+              borderColor: "neutral.outlinedBorder",
+              "&:hover": {
+                borderColor: "neutral.outlinedHoverBorder",
+              },
+              "&::before": {
+                border: "1px solid var(--Input-focusedHighlight)",
+                transform: "scaleX(0)",
+                left: 0,
+                right: 0,
+                bottom: "-2px",
+                top: "unset",
+                transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+                borderRadius: 0,
+              },
+              "&:focus-within::before": {
+                transform: "scaleX(1)",
+              },
+            }}
+          />
+        </Link>
         <Box
           sx={{
             display: "flex",

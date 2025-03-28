@@ -17,7 +17,18 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Search } from "@mui/icons-material";
 
 function Header() {
-  const { user, setUser, modalOpen, setModalOpen } = useContext(UserContext);
+  const {
+    user,
+    setUser,
+    modalOpen,
+    setModalOpen,
+    searchQuery,
+    setSearchQuery,
+  } = useContext(UserContext);
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
 
   return (
     <Box
@@ -77,7 +88,10 @@ function Header() {
           zIndex: 1000,
         }}
       >
-        <DrawerBasic />
+        <DrawerBasic
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
+        />
       </Box>
 
       {/* Dropdown (Large screens and up) */}
@@ -160,32 +174,36 @@ function Header() {
           gridRow: "1",
         }}
       >
-        <Input
-          size="sm"
-          placeholder="Search"
-          variant="plain"
-          endDecorator={<Search />}
-          slotProps={{ input: { "aria-label": "Search anything" } }}
-          sx={{
-            height: 30,
-            width: { md: 150, xl: 200 },
-            borderRadius: 0,
-            borderBottom: "2px solid",
-            borderColor: "neutral.outlinedBorder",
-            "&:hover": { borderColor: "neutral.outlinedHoverBorder" },
-            "&::before": {
-              border: "1px solid var(--Input-focusedHighlight)",
-              transform: "scaleX(0)",
-              left: 0,
-              right: 0,
-              bottom: "-2px",
-              top: "unset",
-              transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+        <Link to="/articles">
+          <Input
+            value={searchQuery}
+            onChange={handleSearchChange}
+            size="sm"
+            placeholder="Search"
+            variant="plain"
+            endDecorator={<Search />}
+            slotProps={{ input: { "aria-label": "Search anything" } }}
+            sx={{
+              height: 30,
+              width: { md: 150, xl: 200 },
               borderRadius: 0,
-            },
-            "&:focus-within::before": { transform: "scaleX(1)" },
-          }}
-        />
+              borderBottom: "2px solid",
+              borderColor: "neutral.outlinedBorder",
+              "&:hover": { borderColor: "neutral.outlinedHoverBorder" },
+              "&::before": {
+                border: "1px solid var(--Input-focusedHighlight)",
+                transform: "scaleX(0)",
+                left: 0,
+                right: 0,
+                bottom: "-2px",
+                top: "unset",
+                transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+                borderRadius: 0,
+              },
+              "&:focus-within::before": { transform: "scaleX(1)" },
+            }}
+          />
+        </Link>
       </Box>
 
       {/* Sign in/Register Text (Largest screens only) */}
