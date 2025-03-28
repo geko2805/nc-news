@@ -4,6 +4,7 @@ import ArticleList from "./ArticleList";
 import {
   AspectRatio,
   Box,
+  Button,
   Card,
   FormLabel,
   Input,
@@ -12,7 +13,7 @@ import {
   Skeleton,
   Typography,
 } from "@mui/joy";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import ErrorFallback from "./ErrorFallback";
 import { UserContext } from "./UserContext";
 import { Search } from "@mui/icons-material";
@@ -28,12 +29,16 @@ function Articles() {
 
   let { topic } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+
   // get sort_by and order from URL, otherwise use defaults
   const [sortBy, setSortBy] = useState(
     searchParams.get("sort_by") || "created_at"
   );
   const [order, setOrder] = useState(searchParams.get("order") || "DESC");
   const [error, setError] = useState(null);
+
+  //history to enable going back a page
+  const navigate = useNavigate();
 
   //api call to get articles
   useEffect(() => {
@@ -95,6 +100,10 @@ function Articles() {
   const handleOrderChange = (newValue) => {
     setOrder(newValue);
     setSearchParams({ ...Object.fromEntries(searchParams), order: newValue });
+  };
+
+  const handleClearSelections = () => {
+    setSearchQuery("");
   };
 
   if (error) {
@@ -170,6 +179,8 @@ function Articles() {
             filteredArticles={filteredArticles}
             setFilteredArticles={setFilteredArticles}
             articles={articles}
+            sortBy={sortBy}
+            order={order}
             sx={{ position: "absolute", right: 0 }}
           />
         </Box>
@@ -226,8 +237,19 @@ function Articles() {
         <ArticleList articles={filteredArticles} isLoading={isLoading} />
 
         {!isLoading && articles.length > 0 && filteredArticles.length === 0 && (
+          <>
+            {" "}
+            <p style={{ padding: "20px" }}>
+              No articles found for your selections
+            </p>
+            <Button onClick={handleClearSelections}>Clear selections</Button>
+          </>
+        )}
+
+        {!isLoading && articles.length === 0 && (
           <p style={{ padding: "20px" }}>
-            No articles found for your selections
+            No articles found{" "}
+            <Button onClick={() => navigate(-1)}>Go back</Button>
           </p>
         )}
       </section>
