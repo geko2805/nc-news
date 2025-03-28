@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Articles from "./Articles";
 import Topics from "./Topics";
-import { Button } from "@mui/joy";
+import { Box, Button } from "@mui/joy";
 
 function Home() {
   return (
@@ -11,16 +11,33 @@ function Home() {
           variant="solid"
           sx={{
             "--Input-radius": "20px",
+            p: 4,
+            m: 3,
+            display: {
+              sm: "none", // Hidden on medium+
+            },
           }}
         >
-          All articles
+          View all articles
         </Button>
       </Link>
-      <Topics />{" "}
-      <Link to="/topics" style={{ display: "inline-block" }}>
+      <h2>Featured Topics</h2>
+
+      <Topics />
+      <Link to="/topics" style={{ display: "block" }}>
         <Button variant="solid">More this way</Button>
       </Link>
-      <Articles />
+
+      <Box
+        sx={{
+          display: {
+            xs: "none", // Hidden on medium+
+            sm: "block",
+          },
+        }}
+      >
+        <Articles />
+      </Box>
     </>
   );
 }
