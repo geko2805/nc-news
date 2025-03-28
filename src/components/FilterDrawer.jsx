@@ -117,7 +117,7 @@ export default function FilterDrawer({
       <Drawer
         sx={(theme) => ({
           [theme.breakpoints.down("sm")]: {
-            width: "100%",
+            //width: "100%",
           },
           maxWidth: "100vw",
         })}
@@ -132,7 +132,6 @@ export default function FilterDrawer({
               bgcolor: "transparent",
               p: { md: 3, sm: 0 },
               boxShadow: "none",
-              width: "100%",
               maxWidth: "100vw",
               [theme.breakpoints.down("md")]: {
                 minWidth: "auto",
