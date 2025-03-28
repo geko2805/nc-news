@@ -20,7 +20,7 @@ import FilterDrawer from "./FilterDrawer";
 
 function Articles() {
   const [articles, setArticles] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { searchQuery, setSearchQuery } = useContext(UserContext);
   const [filteredArticles, setFilteredArticles] = useState([]);
@@ -35,11 +35,13 @@ function Articles() {
   const [order, setOrder] = useState(searchParams.get("order") || "DESC");
   const [error, setError] = useState(null);
 
+  //api call to get articles
   useEffect(() => {
     setIsLoading(true);
     getArticles(topic, sortBy, order)
       .then((articles) => {
         setArticles(articles);
+        setFilteredArticles(articles);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -49,6 +51,7 @@ function Articles() {
       });
   }, [topic, sortBy, order]);
 
+  //useEffect for search
   useEffect(() => {
     if (searchQuery.trim() === "") {
       setFilteredArticles(articles);
@@ -221,6 +224,12 @@ function Articles() {
           />
         </Box>
         <ArticleList articles={filteredArticles} isLoading={isLoading} />
+
+        {!isLoading && articles.length > 0 && filteredArticles.length === 0 && (
+          <p style={{ padding: "20px" }}>
+            No articles found for your selections
+          </p>
+        )}
       </section>
     </>
   );

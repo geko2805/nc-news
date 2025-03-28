@@ -63,6 +63,7 @@ function Header() {
           gridColumn: "1",
           gridRow: "1",
           width: "100%",
+          zIndex: 1000,
         }}
       >
         <Link to="/">

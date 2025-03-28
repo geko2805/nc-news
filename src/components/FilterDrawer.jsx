@@ -42,16 +42,29 @@ export default function FilterDrawer({
   const [showAuthoredByUser, setShowAuthoredByUser] = React.useState(false);
   const { user, setModalOpen } = React.useContext(UserContext);
 
-  console.log(hideNegative);
-  const { topics, isLoading } = useTopics();
+  // detect screen size
+  const [isLargeScreen, setIsLargeScreen] = React.useState(
+    window.innerWidth >= 900
+  );
+  const anchor = isLargeScreen ? "right" : "bottom"; // Set anchor dynamically
+  // Update screen size on resize
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth >= 900); // 900px breakpoint (md)
+    };
+    window.addEventListener("resize", handleResize);
+    // Cleanup listener on unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
+  const { topics, isLoading } = useTopics();
   const topicSlugs = topics.map((topic) => {
     return topic.slug;
   }); // move this inside useeffect?
 
   const [selectedTopics, setSelectedTopics] = React.useState(topicSlugs);
-  console.log(selectedTopics);
 
+  //for  checkboxes
   React.useEffect(() => {
     if (topics.length > 0 && selectedTopics.length === 0) {
       setSelectedTopics(topics.map((topic) => topic.slug));
@@ -105,7 +118,7 @@ export default function FilterDrawer({
         size="md"
         variant="plain"
         open={open}
-        anchor="bottom"
+        anchor={anchor}
         onClose={() => setOpen(false)}
         slotProps={{
           content: {
@@ -113,6 +126,7 @@ export default function FilterDrawer({
               bgcolor: "transparent",
               p: { md: 3, sm: 0 },
               boxShadow: "none",
+              minWidth: 400,
             },
           },
         }}
@@ -215,7 +229,15 @@ export default function FilterDrawer({
               <List
                 orientation="horizontal"
                 size="sm"
-                sx={{ "--List-gap": "12px", "--ListItem-radius": "20px" }}
+                sx={(theme) => ({
+                  //[theme.breakpoints.up("md")]: {
+                  display: "flex",
+                  justifyContent: "start",
+                  flexWrap: "wrap",
+                  //  },
+                  gap: "12px",
+                  "--ListItem-radius": "20px",
+                })}
               >
                 {topics.map((topic, index) => {
                   const selected = selectedTopics.includes(topic.slug);
