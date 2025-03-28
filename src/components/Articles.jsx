@@ -129,7 +129,13 @@ function Articles() {
                 value={sortBy}
                 onChange={(e, newValue) => handleSortByChange(newValue)}
                 placeholder="Date"
-                style={{ marginLeft: 5 }}
+                sx={{
+                  m: 1,
+                  bgcolor: "background.level1",
+                  "&:hover": {
+                    bgcolor: "background.level2",
+                  },
+                }}
               >
                 <Option value="created_at">Date</Option>
                 <Option value="title">Title</Option>
@@ -146,7 +152,13 @@ function Articles() {
                 value={order}
                 onChange={(e, newValue) => handleOrderChange(newValue)}
                 placeholder="Newest first"
-                style={{ marginLeft: 5 }}
+                sx={{
+                  m: 1,
+                  bgcolor: "background.level1",
+                  "&:hover": {
+                    bgcolor: "background.level2",
+                  },
+                }}
               >
                 {sortBy === "created_at" ? (
                   <>

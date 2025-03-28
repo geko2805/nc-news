@@ -13,6 +13,7 @@ import {
   Avatar,
   IconButton,
   Input,
+  ListDivider,
   ModalClose,
   Typography,
 } from "@mui/joy";
@@ -21,6 +22,7 @@ import { Menu } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import SignInModal from "./SignInModal";
+import ModeSwitcher from "./ModeSwitcher";
 
 export default function DrawerBasic({ searchQuery, onSearchChange }) {
   const [open, setOpen] = React.useState(false);
@@ -57,6 +59,8 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
             display: "flex",
             flexDirection: "column",
             boxSizing: "border-box", // Include padding in height calculation
+            bgcolor: "background.body",
+            color: "text.primary",
           },
         }}
       >
@@ -79,7 +83,11 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
           </Typography>
           <ModalClose id="close-icon" sx={{ position: "initial" }} />
         </Box>
-
+        <ListItem>
+          {/* Dark mode switcher */}
+          <ModeSwitcher />
+        </ListItem>
+        <Divider />
         <Link to="/articles">
           <Input
             onClick={toggleDrawer(false)}
@@ -98,6 +106,8 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
               borderRadius: 0,
               borderBottom: "2px solid",
               borderColor: "neutral.outlinedBorder",
+              bgcolor: "neutral.200",
+              color: "text",
               "&:hover": {
                 borderColor: "neutral.outlinedHoverBorder",
               },
@@ -151,7 +161,7 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
             )}
           </List>
         )}
-        <Divider />
+        <ListDivider />
 
         <List
           size="lg"
@@ -160,11 +170,13 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
             fontSize: "lg",
             "& > div": { justifyContent: "center" },
           }}
-          onClick={toggleDrawer(false)}
-          onKeyDown={toggleDrawer(false)}
         >
           {["Home", "Topics", "Articles"].map((text) => (
-            <ListItem key={text}>
+            <ListItem
+              onClick={toggleDrawer(false)}
+              onKeyDown={toggleDrawer(false)}
+              key={text}
+            >
               <Link to={"/" + text}>
                 <ListItemButton>{text}</ListItemButton>
               </Link>
