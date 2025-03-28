@@ -7,9 +7,19 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <UserContext.Provider value={{ user, setUser, modalOpen, setModalOpen }}>
+    <UserContext.Provider
+      value={{
+        user,
+        setUser,
+        modalOpen,
+        setModalOpen,
+        searchQuery,
+        setSearchQuery,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

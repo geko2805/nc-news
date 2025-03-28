@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { getArticles } from "../../api";
 import ArticleList from "./ArticleList";
 import {
   AspectRatio,
+  Box,
   Card,
   FormLabel,
+  Input,
   Option,
   Select,
   Skeleton,
@@ -12,10 +14,18 @@ import {
 } from "@mui/joy";
 import { useParams, useSearchParams } from "react-router-dom";
 import ErrorFallback from "./ErrorFallback";
+import { UserContext } from "./UserContext";
+import { Search } from "@mui/icons-material";
+import FilterDrawer from "./FilterDrawer";
 
 function Articles() {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const { searchQuery, setSearchQuery } = useContext(UserContext);
+  const [filteredArticles, setFilteredArticles] = useState([]);
+  const searchInputRef = useRef(null);
+
   let { topic } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   // get sort_by and order from URL, otherwise use defaults
@@ -38,6 +48,21 @@ function Articles() {
         setIsLoading(false);
       });
   }, [topic, sortBy, order]);
+
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setFilteredArticles(articles);
+    } else {
+      const query = searchQuery.toLowerCase();
+      const filtered = articles.filter(
+        (article) =>
+          article.title.toLowerCase().includes(query) ||
+          article.topic.toLowerCase().includes(query) ||
+          article.author.toLowerCase().includes(query)
+      );
+      setFilteredArticles(filtered);
+    }
+  }, [articles, searchQuery]);
 
   const handleSortByChange = (newValue) => {
     setSortBy(newValue);
@@ -76,60 +101,121 @@ function Articles() {
   return (
     <>
       <section>
-        <div style={{ marginBottom: "20px", display: "flex", gap: "20px" }}>
-          <FormLabel>
-            Sort by
-            <Select
-              value={sortBy}
-              onChange={(e, newValue) => handleSortByChange(newValue)}
-              placeholder="Date"
-              style={{ marginLeft: 5 }}
-            >
-              <Option value="created_at">Date</Option>
-              <Option value="title">Title</Option>
-              <Option value="topic">Topic</Option>
-              <Option value="author">Author</Option>
-              <Option value="votes">Votes</Option>
-              <Option value="comment_count">Comments</Option>
-            </Select>
-          </FormLabel>
+        <Box
+          sx={{
+            marginBottom: "20px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%", // Ensure the container spans the full width
+          }}
+        >
+          <Box sx={{ display: "flex", gap: "20px" }}>
+            <FormLabel>
+              Sort by
+              <Select
+                value={sortBy}
+                onChange={(e, newValue) => handleSortByChange(newValue)}
+                placeholder="Date"
+                style={{ marginLeft: 5 }}
+              >
+                <Option value="created_at">Date</Option>
+                <Option value="title">Title</Option>
+                <Option value="topic">Topic</Option>
+                <Option value="author">Author</Option>
+                <Option value="votes">Votes</Option>
+                <Option value="comment_count">Comments</Option>
+              </Select>
+            </FormLabel>
 
-          <FormLabel>
-            Order
-            <Select
-              value={order}
-              onChange={(e, newValue) => handleOrderChange(newValue)}
-              placeholder="Newest first"
-              style={{ marginLeft: 5 }}
-            >
-              {sortBy === "created_at" ? (
-                <>
-                  <Option value="DESC">Newest first</Option>
-                  <Option value="ASC">Oldest first</Option>
-                </>
-              ) : sortBy === "title" ||
-                sortBy === "topic" ||
-                sortBy === "author" ? (
-                <>
-                  <Option value="ASC">A-Z</Option>
-                  <Option value="DESC">Z-A</Option>
-                </>
-              ) : sortBy === "votes" || sortBy === "comment_count" ? (
-                <>
-                  <Option value="DESC">Highest first</Option>
-                  <Option value="ASC">Lowest first</Option>
-                </>
-              ) : (
-                <>
-                  <Option value="DESC">Newest first</Option>
-                  <Option value="ASC">Oldest first</Option>
-                </>
-              )}
-            </Select>
-          </FormLabel>
-        </div>
+            <FormLabel>
+              Order
+              <Select
+                value={order}
+                onChange={(e, newValue) => handleOrderChange(newValue)}
+                placeholder="Newest first"
+                style={{ marginLeft: 5 }}
+              >
+                {sortBy === "created_at" ? (
+                  <>
+                    <Option value="DESC">Newest first</Option>
+                    <Option value="ASC">Oldest first</Option>
+                  </>
+                ) : sortBy === "title" ||
+                  sortBy === "topic" ||
+                  sortBy === "author" ? (
+                  <>
+                    <Option value="ASC">A-Z</Option>
+                    <Option value="DESC">Z-A</Option>
+                  </>
+                ) : sortBy === "votes" || sortBy === "comment_count" ? (
+                  <>
+                    <Option value="DESC">Highest first</Option>
+                    <Option value="ASC">Lowest first</Option>
+                  </>
+                ) : (
+                  <>
+                    <Option value="DESC">Newest first</Option>
+                    <Option value="ASC">Oldest first</Option>
+                  </>
+                )}
+              </Select>
+            </FormLabel>
+          </Box>
 
-        <ArticleList articles={articles} isLoading={isLoading} />
+          <FilterDrawer sx={{ position: "absolute", right: 0 }} />
+        </Box>
+
+        <Box sx={{ display: "flex" }}>
+          <Input
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            autoFocus
+            size="md"
+            placeholder="Search"
+            variant="plain"
+            endDecorator={<Search />}
+            slotProps={{
+              input: {
+                "aria-label": "Search anything",
+              },
+            }}
+            sx={{
+              display: {
+                xs: "block", // Visible on mobile
+                sm: "block", // Visible on medium
+                md: "none", // Hidden on large+
+              },
+              fontSize: "16px",
+              margin: "0 auto",
+              borderRadius: 0,
+              borderBottom: "2px solid",
+              borderColor: "neutral.outlinedBorder",
+              "&:hover": {
+                borderColor: "neutral.outlinedHoverBorder",
+              },
+              "&::before": {
+                border: "1px solid var(--Input-focusedHighlight)",
+                transform: "scaleX(0)",
+                left: 0,
+                right: 0,
+                bottom: "-2px",
+                top: "unset",
+                transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+                borderRadius: 0,
+              },
+              "&:focus-within::before": {
+                transform: "scaleX(1)",
+              },
+              // textAlign: "center",
+              // "&::placeholder": {
+              //   textAlign: "center",
+              //   fontSize: "20px",
+              // },
+            }}
+          />
+        </Box>
+        <ArticleList articles={filteredArticles} isLoading={isLoading} />
       </section>
     </>
   );
