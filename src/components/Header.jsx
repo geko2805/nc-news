@@ -2,8 +2,10 @@ import {
   Avatar,
   Box,
   Button,
+  Divider,
   Dropdown,
   Input,
+  ListDivider,
   Menu,
   MenuButton,
   MenuItem,
@@ -17,6 +19,8 @@ import DrawerBasic from "./Drawer";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Search } from "@mui/icons-material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ModeSwitcher from "./ModeSwitcher";
+import { DividerRoot } from "@mui/joy/Divider/Divider";
 
 function Header() {
   const {
@@ -135,8 +139,31 @@ function Header() {
               {user.name && (
                 <MenuItem onClick={() => setUser({})}>Logout</MenuItem>
               )}
+              <Box
+                sx={{
+                  display: {
+                    md: "block", // Hidden on mobile
+                    lg: "none", // Visible on medium+
+                  },
+                  zIndex: 1000,
+                }}
+              >
+                <ListDivider />
+                <ModeSwitcher />
+              </Box>
             </Menu>
           </Dropdown>
+          <Box
+            sx={{
+              display: {
+                xs: "none", // Hidden on mobile
+                lg: "block", // Visible on medium+
+              },
+              zIndex: 1000,
+            }}
+          >
+            <ModeSwitcher />
+          </Box>
         </Box>
 
         {/* Title and Subheader */}
