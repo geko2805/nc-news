@@ -116,9 +116,8 @@ export default function FilterDrawer({
       </Button>
       <Drawer
         sx={(theme) => ({
-          [theme.breakpoints.down("xs")]: {
+          [theme.breakpoints.down("sm")]: {
             maxWidth: "100vw",
-            minWidth: "100vw",
           },
         })}
         size="md"
