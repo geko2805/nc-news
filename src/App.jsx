@@ -6,11 +6,10 @@ import Article from "./components/Article";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import { UserProvider } from "./components/UserContext";
-import { TopicsProvider } from "./components/TopicsContext";
-
 import Topics from "./components/Topics";
 import ErrorFallback from "./components/ErrorFallback";
 import { useRef } from "react";
+import { TopicsProvider } from "./components/TopicsContext";
 
 function App() {
   const searchInputRef = useRef(null);
@@ -22,7 +21,6 @@ function App() {
           <TopicsProvider>
             <CssBaseline />
             <Header searchInputRef={searchInputRef} />
-
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />

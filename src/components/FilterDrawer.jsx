@@ -40,7 +40,15 @@ export default function FilterDrawer({
   const [type, setType] = React.useState("All time"); //change to be date published !!!!!!!!!!!!
   const [hideNegative, setHideNegative] = React.useState(false);
   const [showAuthoredByUser, setShowAuthoredByUser] = React.useState(false);
+
+  //from context
+  const { topics, isLoading } = useTopics();
   const { user, setModalOpen } = React.useContext(UserContext);
+
+  //state for all the topic titles populated from topic context -----MOVE THESE UP TO ARTICLES SO THE STATE CAN BE RESET EASILY IS NO ARTICLES AVAILABLE
+  const [topicSlugs, setTopicSlugs] = React.useState([]);
+  // state for topics selected by checkbox filters
+  const [selectedTopics, setSelectedTopics] = React.useState(topicSlugs);
 
   // detect screen size
   const [isLargeScreen, setIsLargeScreen] = React.useState(
@@ -61,17 +69,15 @@ export default function FilterDrawer({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const { topics, isLoading } = useTopics();
-  const topicSlugs = topics.map((topic) => {
-    return topic.slug;
-  }); // move this inside useeffect?
-
-  const [selectedTopics, setSelectedTopics] = React.useState(topicSlugs);
-
-  //for  checkboxes
+  //for checkboxes
   React.useEffect(() => {
+    const slugs = topics.map((topic) => {
+      return topic.slug;
+    });
     if (topics.length > 0 && selectedTopics.length === 0) {
-      setSelectedTopics(topics.map((topic) => topic.slug));
+      //set the state for all topic slugs aswell as pre populating the selectedTopics to be used to precheck the checkboxes
+      setTopicSlugs(slugs);
+      setSelectedTopics(slugs);
     }
   }, [topics]);
 
