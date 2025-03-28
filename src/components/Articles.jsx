@@ -163,7 +163,12 @@ function Articles() {
             </FormLabel>
           </Box>
 
-          <FilterDrawer sx={{ position: "absolute", right: 0 }} />
+          <FilterDrawer
+            filteredArticles={filteredArticles}
+            setFilteredArticles={setFilteredArticles}
+            articles={articles}
+            sx={{ position: "absolute", right: 0 }}
+          />
         </Box>
 
         <Box sx={{ display: "flex" }}>
