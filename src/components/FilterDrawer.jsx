@@ -113,7 +113,7 @@ export default function FilterDrawer({
       <Button
         sx={(theme) => ({
           [theme.breakpoints.down("sm")]: {
-            position: "absolute",
+            position: "fixed",
             bottom: 5,
             zIndex: 1000,
             backgroundColor: "white",
