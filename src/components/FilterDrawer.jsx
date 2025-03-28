@@ -46,11 +46,15 @@ export default function FilterDrawer({
   const [isLargeScreen, setIsLargeScreen] = React.useState(
     window.innerWidth >= 900
   );
+  const [isSmallScreen, setIsSmallScreen] = React.useState(
+    window.innerWidth <= 600
+  );
   const anchor = isLargeScreen ? "right" : "bottom"; // Set anchor dynamically
   // Update screen size on resize
   React.useEffect(() => {
     const handleResize = () => {
-      setIsLargeScreen(window.innerWidth >= 900); // 900px breakpoint (md)
+      setIsLargeScreen(window.innerWidth >= 900); // > 900px breakpoint (md)
+      setIsSmallScreen(window.innerWidth <= 600); // < 600px breakpoint (xs)
     };
     window.addEventListener("resize", handleResize);
     // Cleanup listener on unmount
@@ -107,12 +111,24 @@ export default function FilterDrawer({
   return (
     <React.Fragment>
       <Button
+        sx={(theme) => ({
+          [theme.breakpoints.down("sm")]: {
+            position: "absolute",
+            bottom: 5,
+            zIndex: 1000,
+            backgroundColor: "white",
+            left: "50%", // Move left edge to center of parent
+            transform: "translateX(-50%)", // Shift back by half its width
+          },
+        })}
         variant="outlined"
         color="neutral"
         startDecorator={<TuneIcon />}
         onClick={() => setOpen(true)}
+        size="lg"
       >
         Filters
+        {/* {isSmallScreen ? <TuneIcon /> : "Filters"} */}
       </Button>
       <Drawer
         sx={(theme) => ({

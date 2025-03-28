@@ -17,7 +17,7 @@ function CommentCard({ comment, isLoading, handleDeleteComment }) {
 
   return (
     <>
-      <Card variant="plain" sx={{ minHeight: "280px", width: 320 }}>
+      <Card variant="plain" sx={{ height: "auto", width: 320 }}>
         {isLoading ? (
           <>
             <CardContent>
