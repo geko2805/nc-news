@@ -116,8 +116,10 @@ export default function FilterDrawer({
       </Button>
       <Drawer
         sx={(theme) => ({
+          maxWidth: "100vw",
+
           [theme.breakpoints.down("sm")]: {
-            maxWidth: "100vw",
+            width: "100%",
           },
         })}
         size="md"
@@ -131,7 +133,15 @@ export default function FilterDrawer({
               bgcolor: "transparent",
               p: { md: 3, sm: 0 },
               boxShadow: "none",
-              minWidth: 400,
+              width: "100%",
+              maxWidth: "100vw",
+              [theme.breakpoints.down("md")]: {
+                minWidth: "auto",
+                maxWidth: "100vw",
+              },
+              [theme.breakpoints.up("md")]: {
+                minWidth: 400,
+              },
             },
           },
         }}
@@ -145,6 +155,7 @@ export default function FilterDrawer({
             gap: 2,
             height: "100%",
             overflow: "auto",
+            maxWidth: "100vw",
           }}
         >
           <DialogTitle>Filters</DialogTitle>
