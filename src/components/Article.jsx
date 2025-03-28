@@ -215,7 +215,16 @@ function Article() {
                 src={article.article_img_url}
                 alt={article.title}
               />
-              <p style={{ width: "95%" }}>{article.body}</p>
+              <p
+                style={{
+                  width: "100%",
+                  textAlign: "left",
+                  maxWidth: "800px",
+                  padding: "5px",
+                }}
+              >
+                {article.body}
+              </p>
             </div>
           </>
         )}
