@@ -116,11 +116,10 @@ export default function FilterDrawer({
       </Button>
       <Drawer
         sx={(theme) => ({
-          maxWidth: "100vw",
-
           [theme.breakpoints.down("sm")]: {
             width: "100%",
           },
+          maxWidth: "100vw",
         })}
         size="md"
         variant="plain"
@@ -129,7 +128,7 @@ export default function FilterDrawer({
         onClose={() => setOpen(false)}
         slotProps={{
           content: {
-            sx: {
+            sx: (theme) => ({
               bgcolor: "transparent",
               p: { md: 3, sm: 0 },
               boxShadow: "none",
@@ -142,7 +141,7 @@ export default function FilterDrawer({
               [theme.breakpoints.up("md")]: {
                 minWidth: 400,
               },
-            },
+            }),
           },
         }}
       >
