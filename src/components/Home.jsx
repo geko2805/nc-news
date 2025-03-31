@@ -2,15 +2,14 @@ import { Link } from "react-router-dom";
 import Articles from "./Articles";
 import Topics from "./Topics";
 import { Box, Button } from "@mui/joy";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 function Home() {
   return (
     <>
       <Link to="/articles" className="all-items">
         <Button
           variant="outlined"
-          endDecorator={ArrowRightIcon}
+          endDecorator={<ArrowRightAltIcon />}
           sx={{
             "--Input-radius": "20px",
             p: 3,
