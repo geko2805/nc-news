@@ -17,10 +17,11 @@ import Topics from "./components/Topics";
 import ErrorFallback from "./components/ErrorFallback";
 import { TopicsProvider } from "./components/TopicsContext";
 import customTheme from "./theme";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 function App() {
   const searchInputRef = useRef(null);
+  const [shouldFocusSearch, setShouldFocusSearch] = useState(false);
 
   return (
     <>
@@ -28,13 +29,22 @@ function App() {
         <UserProvider>
           <TopicsProvider>
             <CssBaseline />
-            <Header searchInputRef={searchInputRef} />
+            <Header
+              searchInputRef={searchInputRef}
+              setShouldFocusSearch={setShouldFocusSearch}
+            />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route
                 path="/articles"
-                element={<Articles searchInputRef={searchInputRef} />}
+                element={
+                  <Articles
+                    searchInputRef={searchInputRef}
+                    shouldFocusSearch={shouldFocusSearch}
+                    setShouldFocusSearch={setShouldFocusSearch}
+                  />
+                }
               />
               <Route path="/articles/:article_id" element={<Article />} />
               <Route path="/topics" element={<Topics />} />
