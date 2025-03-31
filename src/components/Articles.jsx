@@ -203,13 +203,12 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
             sx={{ position: "absolute", right: 0 }}
           />
         </Box>
-
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "block", width: "80%", margin: "0 auto" }}>
           <Input
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
             //autoFocus
-            size="md"
+            size="lg"
             ref={searchInputRef}
             placeholder="Search"
             variant="plain"
@@ -221,8 +220,8 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
             }}
             sx={{
               display: {
-                xs: "block", // Visible on mobile
-                sm: "block", // Visible on medium
+                xs: "flex", // Visible on mobile
+                sm: "flex", // Visible on medium
                 md: "none", // Hidden on large+
               },
               fontSize: "16px",
