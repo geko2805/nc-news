@@ -131,6 +131,13 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
   return (
     <>
       <section>
+        {location.pathname !== "/" && (
+          <Typography level="h3" sx={{ textAlign: "center", mb: 2 }}>
+            {topic
+              ? topic[0].toUpperCase() + topic.slice(1) + " articles"
+              : "Articles"}
+          </Typography>
+        )}
         {location.pathname === "/" && (
           <Typography level="h3" sx={{ textAlign: "center", mb: 2 }}>
             Latest Articles
@@ -148,7 +155,13 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                 width: "100%", // Ensure the container spans the full width
               }}
             >
-              <Box sx={{ display: "flex", gap: "20px", ml: "3rem" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: "20px",
+                  ml: { xs: "1rem", sm: "3rem" },
+                }}
+              >
                 <FormLabel>
                   Sort by
                   <Select
