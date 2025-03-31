@@ -124,6 +124,10 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
     return <ErrorFallback error={error} />;
   }
 
+  const popularArticles = [...filteredArticles]
+    .sort((a, b) => b.votes - a.votes)
+    .slice(0, 3);
+
   return (
     <>
       <section>
@@ -272,12 +276,23 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
         )}
         <ArticleList
           articles={
+            //only show first 3 articles on hommepage
             location.pathname === "/"
               ? filteredArticles.slice(0, 3)
               : filteredArticles
           }
           isLoading={isLoading}
         />
+
+        {location.pathname === "/" && (
+          <>
+            <Typography level="h3" sx={{ textAlign: "center", mb: 2 }}>
+              Popular
+            </Typography>
+            <ArticleList articles={popularArticles} isLoading={isLoading} />
+          </>
+        )}
+
         {!isLoading && articles.length > 0 && filteredArticles.length === 0 && (
           <>
             {" "}
