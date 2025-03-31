@@ -19,13 +19,12 @@ import { UserContext } from "./UserContext";
 import { Search } from "@mui/icons-material";
 import FilterDrawer from "./FilterDrawer";
 
-function Articles() {
+function Articles({ searchInputRef }) {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const { searchQuery, setSearchQuery } = useContext(UserContext);
   const [filteredArticles, setFilteredArticles] = useState([]);
-  const searchInputRef = useRef(null);
 
   let { topic } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -37,7 +36,7 @@ function Articles() {
   const [order, setOrder] = useState(searchParams.get("order") || "DESC");
   const [error, setError] = useState(null);
 
-  //history to enable going back a page
+  // to enable going back a page
   const navigate = useNavigate();
 
   //api call to get articles
@@ -201,8 +200,9 @@ function Articles() {
           <Input
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
-            autoFocus
+            //autoFocus
             size="md"
+            ref={searchInputRef}
             placeholder="Search"
             variant="plain"
             endDecorator={<Search />}
@@ -259,10 +259,10 @@ function Articles() {
         )}
 
         {!isLoading && articles.length === 0 && (
-          <p style={{ padding: "20px" }}>
-            No articles found{" "}
+          <>
+            <p style={{ padding: "20px" }}>No articles found </p>
             <Button onClick={() => navigate(-1)}>Go back</Button>
-          </p>
+          </>
         )}
       </section>
     </>
