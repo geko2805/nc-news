@@ -20,9 +20,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Search } from "@mui/icons-material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ModeSwitcher from "./ModeSwitcher";
-import { DividerRoot } from "@mui/joy/Divider/Divider";
 
-function Header() {
+function Header({ searchInputRef }) {
   const {
     user,
     setUser,
@@ -37,6 +36,16 @@ function Header() {
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
+  };
+
+  //go to articles page and focus on the search input when the searcch button in header is clicked
+  const handleSearchIconClick = () => {
+    navigate("/articles");
+    setTimeout(() => {
+      if (searchInputRef.current) {
+        searchInputRef.current.firstChild.focus();
+      }
+    }, 100);
   };
 
   return (
@@ -89,8 +98,8 @@ function Header() {
         <Box
           sx={{
             display: {
-              xs: "block", // Visible on mobile
-              sm: "block", // Visible on medium
+              xs: "flex", // Visible on mobile
+              sm: "flex", // Visible on medium
               md: "none", // Hidden on large+
             },
             justifySelf: "end",
@@ -99,6 +108,10 @@ function Header() {
             zIndex: 1000,
           }}
         >
+          <Search
+            sx={{ fontSize: "26px", mt: "5px", mr: "5px", cursor: "pointer" }}
+            onClick={handleSearchIconClick}
+          />
           <DrawerBasic
             searchQuery={searchQuery}
             onSearchChange={handleSearchChange}

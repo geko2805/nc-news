@@ -15,9 +15,9 @@ import Home from "./components/Home";
 import { UserProvider } from "./components/UserContext";
 import Topics from "./components/Topics";
 import ErrorFallback from "./components/ErrorFallback";
-import { useContext, useRef, useState } from "react";
 import { TopicsProvider } from "./components/TopicsContext";
 import customTheme from "./theme";
+import { useRef } from "react";
 
 function App() {
   const searchInputRef = useRef(null);
@@ -38,10 +38,7 @@ function App() {
               />
               <Route path="/articles/:article_id" element={<Article />} />
               <Route path="/topics" element={<Topics />} />
-              <Route
-                path="/topics/:topic"
-                element={<Articles searchInputRef={searchInputRef} />}
-              />
+              <Route path="/topics/:topic" element={<Articles />} />
               <Route
                 path="*"
                 element={<ErrorFallback error="This page doesn't exist" />}
