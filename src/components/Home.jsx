@@ -27,6 +27,8 @@ function Home() {
           }}
           sx={{
             "--Input-radius": "20px",
+            borderWidth: "2px",
+
             p: 3,
             m: 1,
             // display: {
@@ -40,8 +42,27 @@ function Home() {
       <h2>Featured Topics</h2>
 
       <Topics />
-      <Link to="/topics" style={{ display: "block" }}>
-        <Button variant="solid">More this way</Button>
+
+      <Link to="/topics" className="all-items">
+        <Button
+          variant="outlined"
+          endDecorator={<ArrowRightAltIcon />}
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+          sx={{
+            "--Input-radius": "20px",
+            borderWidth: "2px",
+            p: 3,
+            m: 1,
+            // display: {
+            //   sm: "none", // Hidden on medium+
+            // },
+          }}
+        >
+          More this way{" "}
+        </Button>
+
       </Link>
     </>
   );
