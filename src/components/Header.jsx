@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/joy";
 import { Link as RouterLink } from "react-router";
-
+import Logo from "../../src/assets/logo.jpeg";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { useContext } from "react";
@@ -91,11 +91,7 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
           }}
         >
           <Link to="/">
-            <img
-              style={{ width: 100 }}
-              src="../../src/assets/logo.jpeg"
-              alt="NC News Logo"
-            />
+            <img style={{ width: 100 }} src={Logo} alt="NC News Logo" />
           </Link>
         </Box>
 
