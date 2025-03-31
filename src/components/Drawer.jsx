@@ -7,9 +7,6 @@ import Divider from "@mui/joy/Divider";
 import ListItem from "@mui/joy/ListItem";
 import ListItemButton from "@mui/joy/ListItemButton";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Avatar,
   IconButton,
   Input,
@@ -68,65 +65,37 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
           sx={{
             display: "flex",
             alignItems: "center",
+            justifyContent: "space-between",
             gap: 0.5,
-            ml: "auto",
+            width: "100%", // Ensures it spans the full width
             mt: 1,
             mr: 2,
           }}
         >
-          <Typography
-            component="label"
-            htmlFor="close-icon"
-            sx={{ fontSize: "sm", fontWeight: "lg", cursor: "pointer" }}
-          >
-            Close
-          </Typography>
-          <ModalClose id="close-icon" sx={{ position: "initial" }} />
-        </Box>
-        <ListItem>
-          {/* Dark mode switcher */}
-          <ModeSwitcher />
-        </ListItem>
-        <Divider />
-        <Link to="/articles">
-          <Input
-            onClick={toggleDrawer(false)}
-            onKeyDown={toggleDrawer(false)}
-            size="sm"
-            placeholder="Search"
-            variant="plain"
-            endDecorator={<Search />}
-            slotProps={{
-              input: {
-                "aria-label": "Search anything",
-              },
-            }}
+          <ListItem>
+            {/* Dark mode switcher */}
+            <ModeSwitcher />
+          </ListItem>
+
+          <Box
             sx={{
-              m: 3,
-              borderRadius: 0,
-              borderBottom: "2px solid",
-              borderColor: "neutral.outlinedBorder",
-              bgcolor: "neutral.200",
-              color: "text",
-              "&:hover": {
-                borderColor: "neutral.outlinedHoverBorder",
-              },
-              "&::before": {
-                border: "1px solid var(--Input-focusedHighlight)",
-                transform: "scaleX(0)",
-                left: 0,
-                right: 0,
-                bottom: "-2px",
-                top: "unset",
-                transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
-                borderRadius: 0,
-              },
-              "&:focus-within::before": {
-                transform: "scaleX(1)",
-              },
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
             }}
-          />
-        </Link>
+          >
+            <Typography
+              component="label"
+              htmlFor="close-icon"
+              sx={{ fontSize: "sm", fontWeight: "lg", cursor: "pointer" }}
+            >
+              Close
+            </Typography>
+
+            <ModalClose id="close-icon" sx={{ position: "initial" }} />
+          </Box>
+        </Box>
+
         <Box
           sx={{
             display: "flex",
@@ -190,6 +159,7 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
             </ListItem>
           ))}
         </List> */}
+        <Divider />
       </Drawer>
     </Box>
   );
