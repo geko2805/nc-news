@@ -224,7 +224,7 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
             gridRow: "1",
           }}
         >
-          <Link to="/articles">
+          <Link component={RouterLink} to="/articles">
             <Input
               value={searchQuery}
               onChange={handleSearchChange}
