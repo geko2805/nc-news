@@ -89,7 +89,7 @@ function CommentList({ article_id }) {
             </Button>
           </FormControl>
         ) : (
-          <p>
+          <p style={{ padding: "10px" }}>
             Please{" "}
             <Button
               variant="outlined"

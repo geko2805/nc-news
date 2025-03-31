@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { addComment, getArticle, getComments, incVotes } from "../../api";
 import { useParams } from "react-router-dom";
-import { Button, FormControl, Skeleton, Textarea } from "@mui/joy";
+import { Box, Button, FormControl, Link, Skeleton, Textarea } from "@mui/joy";
+import { Link as RouterLink } from "react-router";
+
 import CommentList from "./CommentList";
 import { UserContext } from "./UserContext";
 import ErrorFallback from "./ErrorFallback";
@@ -95,13 +97,6 @@ function Article() {
                 height={20}
                 style={{ margin: "auto" }}
               />
-              <Skeleton
-                variant="text"
-                animation="wave"
-                width={100}
-                height={20}
-                style={{ margin: "auto" }}
-              />
 
               <Skeleton
                 variant="rectangle"
@@ -131,6 +126,14 @@ function Article() {
                 height={20}
                 style={{ margin: "auto" }}
               />
+
+              <Skeleton
+                variant="text"
+                animation="wave"
+                width={100}
+                height={20}
+                style={{ margin: "auto" }}
+              />
               <p>
                 Vote:{" "}
                 <Button disabled={isLoading} onClick={() => handleVoteClick(1)}>
@@ -156,9 +159,11 @@ function Article() {
             >
               <h1>{article.title}</h1>
               <p>By {article.author}</p>
-              <p>Topic: {article.topic}</p>
-              <p>
-                Comments: {article.comment_count} Votes: {article.votes}
+              <p style={{ padding: "5px" }}>
+                Topic:{" "}
+                <Link component={RouterLink} to={`/topics/${article.topic}`}>
+                  {article.topic}
+                </Link>
               </p>
 
               <img
@@ -175,6 +180,9 @@ function Article() {
                 }}
               >
                 {article.body}
+              </p>
+              <p>
+                Comments: {article.comment_count} Votes: {article.votes}
               </p>
               <p style={{ padding: 5 }}>
                 Vote:
@@ -218,11 +226,11 @@ function Article() {
         )}
       </section>
 
-      <section>
+      <Box sx={{ mt: 2 }}>
         <h1>Comments</h1>
 
         <CommentList article_id={article_id} />
-      </section>
+      </Box>
     </>
   );
 }
