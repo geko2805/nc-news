@@ -79,7 +79,7 @@ function Article() {
                 animation="wave"
                 width={280}
                 height={40}
-                style={{ margin: "10px auto" }}
+                style={{ margin: "5px auto" }}
               />
               <Skeleton
                 variant="text"
@@ -99,6 +99,35 @@ function Article() {
                 variant="text"
                 animation="wave"
                 width={100}
+                height={20}
+                style={{ margin: "auto" }}
+              />
+
+              <Skeleton
+                variant="rectangle"
+                animation="wave"
+                width={700}
+                height={400}
+                style={{ maxWidth: "100%", margin: "auto", marginTop: "20px" }}
+              />
+              <Skeleton
+                variant="text"
+                animation="wave"
+                width={"80%"}
+                height={20}
+                style={{ margin: "auto" }}
+              />
+              <Skeleton
+                variant="text"
+                animation="wave"
+                width={"80%"}
+                height={20}
+                style={{ margin: "auto" }}
+              />
+              <Skeleton
+                variant="text"
+                animation="wave"
+                width={"80%"}
                 height={20}
                 style={{ margin: "auto" }}
               />
@@ -114,34 +143,6 @@ function Article() {
                   -
                 </Button>{" "}
               </p>
-              <Skeleton
-                variant="rectangle"
-                animation="wave"
-                width={700}
-                height={400}
-                style={{ maxWidth: "100%", margin: "auto" }}
-              />
-              <Skeleton
-                variant="text"
-                animation="wave"
-                width={"80%"}
-                height={20}
-                style={{ margin: "auto" }}
-              />
-              <Skeleton
-                variant="text"
-                animation="wave"
-                width={"80%"}
-                height={20}
-                style={{ margin: "auto" }}
-              />
-              <Skeleton
-                variant="text"
-                animation="wave"
-                width={"80%"}
-                height={20}
-                style={{ margin: "auto" }}
-              />
             </div>
           </>
         ) : (
@@ -160,6 +161,21 @@ function Article() {
                 Comments: {article.comment_count} Votes: {article.votes}
               </p>
 
+              <img
+                style={{ maxWidth: "100%", height: "auto" }}
+                src={article.article_img_url}
+                alt={article.title}
+              />
+              <p
+                style={{
+                  width: "100%",
+                  textAlign: "left",
+                  maxWidth: "800px",
+                  padding: "20px",
+                }}
+              >
+                {article.body}
+              </p>
               <p style={{ padding: 5 }}>
                 Vote:
                 <Button
@@ -192,39 +208,11 @@ function Article() {
                 </span>
               )}
 
-              {/* {!user.username && (
-                <span style={{ fontSize: 12, marginLeft: 5 }}>
-                  Please
-                  <span
-                    onClick={() => setModalOpen(true)}
-                    style={{ color: "green", cursor: "pointer" }}
-                  >
-                    {" "}
-                    Log in
-                  </span>{" "}
-                  to vote
-                </span>
-              )} */}
               {voteError && (
                 <p style={{ color: "red" }} onClick={clearVoteError}>
                   {voteError} (click to dismiss)
                 </p>
               )}
-              <img
-                style={{ maxWidth: "100%", height: "auto" }}
-                src={article.article_img_url}
-                alt={article.title}
-              />
-              <p
-                style={{
-                  width: "100%",
-                  textAlign: "left",
-                  maxWidth: "800px",
-                  padding: "5px",
-                }}
-              >
-                {article.body}
-              </p>
             </div>
           </>
         )}
