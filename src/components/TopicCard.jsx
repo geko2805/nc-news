@@ -9,6 +9,9 @@ function TopicCard({ topic, isLoading }) {
     <Link
       style={{ width: "50%", padding: 5, maxWidth: 450 }}
       to={`/topics/${topic.slug}`}
+      onClick={() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }}
     >
       <Card
         variant="outlined"
@@ -60,7 +63,6 @@ function TopicCard({ topic, isLoading }) {
               >
                 View articles
               </Button>
-
             </CardContent>
           </>
         )}
