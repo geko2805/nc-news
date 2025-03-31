@@ -7,6 +7,7 @@ import Sheet from "@mui/joy/Sheet";
 import { Input, Stack } from "@mui/joy";
 import { UserContext } from "./UserContext";
 import { getUserByUsername } from "../../api";
+import { Link } from "@mui/joy";
 
 export default function SignInModal() {
   // const [open, setOpen] = React.useState(false);
@@ -120,11 +121,10 @@ export default function SignInModal() {
                   {isLoading ? "Signing in..." : "Submit"}
                 </Button>
                 <Typography level="body2">
-                  Don't have an account?
-                  <span onClick={() => setIsSignUp(true) & setError(null)}>
-                    {" "}
+                  Don't have an account?{" "}
+                  <Link onClick={() => setIsSignUp(true) & setError(null)}>
                     Sign up
-                  </span>
+                  </Link>
                 </Typography>
               </Stack>
             </form>
@@ -186,11 +186,10 @@ export default function SignInModal() {
                   {isLoading ? "Signing up..." : "Submit"}
                 </Button>
                 <Typography level="body2">
-                  Already registered?
-                  <span onClick={() => setIsSignUp(false) & setError(null)}>
-                    {" "}
+                  Already registered?{" "}
+                  <Link onClick={() => setIsSignUp(false) & setError(null)}>
                     Sign in
-                  </span>
+                  </Link>
                 </Typography>
               </Stack>
             </form>

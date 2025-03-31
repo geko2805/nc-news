@@ -5,13 +5,16 @@ import {
   Divider,
   Dropdown,
   Input,
+  Link,
   ListDivider,
   Menu,
   MenuButton,
   MenuItem,
   Typography,
 } from "@mui/joy";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router";
+
+import { useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { useContext } from "react";
 import SignInModal from "./SignInModal";
@@ -274,12 +277,12 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
             zIndex: 1000,
           }}
         >
-          <Typography
+          <Link
             onClick={!user.name ? () => setModalOpen(true) : undefined}
             sx={{ fontSize: "1rem" }}
           >
             {user.name ? user.name : "Sign in/Register"}
-          </Typography>
+          </Link>
         </Box>
 
         {/* Nav (Large screens and up) */}
@@ -297,9 +300,15 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
           }}
         >
           <Box component="nav" sx={{ display: "flex", gap: 2 }}>
-            <Link to="/">Home</Link>
-            <Link to="/articles">Articles</Link>
-            <Link to="/topics">Topics</Link>
+            <Link component={RouterLink} to="/">
+              Home
+            </Link>
+            <Link component={RouterLink} to="/articles">
+              Articles
+            </Link>
+            <Link component={RouterLink} to="/topics">
+              Topics
+            </Link>
           </Box>
         </Box>
         {/* SignInModal */}
