@@ -28,6 +28,7 @@ function Home() {
           sx={{
             "--Input-radius": "20px",
             borderWidth: "2px",
+
             p: 3,
             m: 1,
             // display: {
@@ -61,6 +62,7 @@ function Home() {
         >
           More this way{" "}
         </Button>
+
       </Link>
     </>
   );

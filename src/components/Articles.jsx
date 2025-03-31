@@ -138,6 +138,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
               : "Articles"}
           </Typography>
         )}
+
         {location.pathname === "/" && (
           <Typography level="h3" sx={{ textAlign: "center", mb: 2 }}>
             Latest Articles
@@ -162,6 +163,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                   ml: { xs: "1rem", sm: "3rem" },
                 }}
               >
+
                 <FormLabel>
                   Sort by
                   <Select
