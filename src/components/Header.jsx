@@ -90,7 +90,7 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
             zIndex: 1000,
           }}
         >
-          <Link to="/">
+          <Link component={RouterLink} to="/">
             <img style={{ width: 100 }} src={Logo} alt="NC News Logo" />
           </Link>
         </Box>
