@@ -35,7 +35,6 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
   } = useContext(UserContext);
 
   const navigate = useNavigate();
-  let location = useLocation();
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
