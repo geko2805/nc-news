@@ -126,6 +126,7 @@ export default function FilterDrawer({
             left: "50%", // Move left edge to center of parent
             transform: "translateX(-50%)", // Shift back by half its width
           },
+          mr: "3rem",
         })}
         variant="outlined"
         color="neutral"

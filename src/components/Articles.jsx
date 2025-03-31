@@ -129,7 +129,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
             width: "100%", // Ensure the container spans the full width
           }}
         >
-          <Box sx={{ display: "flex", gap: "20px" }}>
+          <Box sx={{ display: "flex", gap: "20px", ml: "3rem" }}>
             <FormLabel>
               Sort by
               <Select

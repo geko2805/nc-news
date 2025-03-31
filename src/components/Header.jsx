@@ -313,7 +313,13 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
       {location.pathname !== "/" && (
         <Typography
           level="title-sm"
-          sx={{ mb: 2, cursor: "pointer", width: "30px", color: "primary" }}
+          sx={{
+            mb: 2,
+            ml: "2rem",
+            cursor: "pointer",
+            width: "30px",
+            color: "primary",
+          }}
           startDecorator={<ArrowBackIcon />}
           onClick={() => navigate(-1)}
         >
