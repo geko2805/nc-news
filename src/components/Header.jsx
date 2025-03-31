@@ -21,7 +21,7 @@ import { Search } from "@mui/icons-material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ModeSwitcher from "./ModeSwitcher";
 
-function Header({ searchInputRef }) {
+function Header({ searchInputRef, setShouldFocusSearch }) {
   const {
     user,
     setUser,
@@ -40,12 +40,14 @@ function Header({ searchInputRef }) {
 
   //go to articles page and focus on the search input when the searcch button in header is clicked
   const handleSearchIconClick = () => {
+    setShouldFocusSearch(true);
     navigate("/articles");
-    setTimeout(() => {
-      if (searchInputRef.current) {
-        searchInputRef.current.firstChild.focus();
-      }
-    }, 100);
+
+    // setTimeout(() => {
+    //   if (searchInputRef.current) {
+    //     searchInputRef.current.firstChild.focus();
+    //   }
+    // }, 100);
   };
 
   return (

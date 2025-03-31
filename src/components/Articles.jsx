@@ -19,7 +19,7 @@ import { UserContext } from "./UserContext";
 import { Search } from "@mui/icons-material";
 import FilterDrawer from "./FilterDrawer";
 
-function Articles({ searchInputRef }) {
+function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -70,6 +70,14 @@ function Articles({ searchInputRef }) {
       setFilteredArticles(filtered);
     }
   }, [articles, searchQuery]);
+
+  //focus searchbar on moount if the search icon in header was clicked (shouldFocusSearch is true)
+  useEffect(() => {
+    if (shouldFocusSearch && searchInputRef.current?.firstChild) {
+      searchInputRef.current.firstChild.focus();
+      setShouldFocusSearch(false); // Reset after focusing
+    }
+  }, [shouldFocusSearch]);
 
   const handleSortByChange = (newValue) => {
     setSortBy(newValue);
