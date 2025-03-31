@@ -22,6 +22,9 @@ function Home() {
         <Button
           variant="outlined"
           endDecorator={<ArrowRightAltIcon />}
+          onClick={() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
           sx={{
             "--Input-radius": "20px",
             p: 3,
