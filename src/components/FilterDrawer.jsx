@@ -30,12 +30,17 @@ import Done from "@mui/icons-material/Done";
 import { getTopics } from "../../api";
 import { useTopics } from "./TopicsContext";
 import { UserContext } from "./UserContext";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 export default function FilterDrawer({
   articles,
   filteredArticles,
   setFilteredArticles,
 }) {
+  let location = useLocation();
+  let { topic } = useParams(); // Extract topic param from URL
+  const navigate = useNavigate();
+
   const [open, setOpen] = React.useState(false);
   const [type, setType] = React.useState("All time"); //change to be date published !!!!!!!!!!!!
   const [hideNegative, setHideNegative] = React.useState(false);
@@ -77,7 +82,11 @@ export default function FilterDrawer({
     if (topics.length > 0 && selectedTopics.length === 0) {
       //set the state for all topic slugs aswell as pre populating the selectedTopics to be used to precheck the checkboxes
       setTopicSlugs(slugs);
+      // if (topic) {
+      //   setSelectedTopics([topic]);
+      // } else {
       setSelectedTopics(slugs);
+      //}
     }
   }, [topics]);
 
@@ -103,6 +112,8 @@ export default function FilterDrawer({
   }, [articles, selectedTopics, hideNegative, showAuthoredByUser, user]);
 
   const handleCheckboxChange = (topicSlug) => (event) => {
+    //navigate("/articles");
+
     setSelectedTopics((prev) => {
       if (event.target.checked) {
         // Add the topic if checked

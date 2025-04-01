@@ -4,7 +4,12 @@ import { Link } from "react-router-dom";
 function ArticleCard({ article, isLoading }) {
   return (
     <>
-      <Link to={isLoading ? "#" : `/articles/${article.article_id}`}>
+      <Link
+        to={isLoading ? "#" : `/articles/${article.article_id}`}
+        onClick={() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      >
         <Card sx={{ minHeight: "280px", width: 320, margin: 1 }}>
           {isLoading ? (
             <>
