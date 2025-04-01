@@ -22,6 +22,8 @@ import {
 import ErrorFallback from "./ErrorFallback";
 import { UserContext } from "./UserContext";
 import { Search } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
+
 import FilterDrawer from "./FilterDrawer";
 
 function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
@@ -163,7 +165,6 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                   ml: { xs: "1rem", sm: "3rem" },
                 }}
               >
-
                 <FormLabel>
                   Sort by
                   <Select
@@ -246,7 +247,13 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                 ref={searchInputRef}
                 placeholder="Search"
                 variant="plain"
-                endDecorator={<Search />}
+                endDecorator={
+                  searchQuery.length === 0 ? (
+                    <Search />
+                  ) : (
+                    <CloseIcon onClick={() => setSearchQuery("")} />
+                  )
+                }
                 slotProps={{
                   input: {
                     "aria-label": "Search anything",

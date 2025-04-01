@@ -21,6 +21,7 @@ import SignInModal from "./SignInModal";
 import DrawerBasic from "./Drawer";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Search } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ModeSwitcher from "./ModeSwitcher";
 
@@ -231,7 +232,13 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
               size="sm"
               placeholder="Search"
               variant="plain"
-              endDecorator={<Search />}
+              endDecorator={
+                searchQuery.length === 0 ? (
+                  <Search />
+                ) : (
+                  <CloseIcon onClick={() => setSearchQuery("")} />
+                )
+              }
               slotProps={{ input: { "aria-label": "Search anything" } }}
               sx={{
                 height: 30,
