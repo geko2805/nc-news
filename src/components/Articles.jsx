@@ -251,7 +251,10 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                   searchQuery.length === 0 ? (
                     <Search />
                   ) : (
-                    <CloseIcon onClick={() => setSearchQuery("")} />
+                    <CloseIcon
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => setSearchQuery("")}
+                    />
                   )
                 }
                 slotProps={{
