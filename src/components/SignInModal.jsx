@@ -38,7 +38,7 @@ export default function SignInModal() {
         setError(error.response.data.msg);
         setIsLoading(false);
         setUsernameInput("");
-        toast("Failed to sign in: " + error.response.data.msg);
+        toastError("Failed to sign in: " + error.response.data.msg);
       });
     // try {
     //   const user = await getUserByUsername(username);
