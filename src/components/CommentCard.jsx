@@ -17,7 +17,14 @@ function CommentCard({ comment, isLoading, handleDeleteComment }) {
 
   return (
     <>
-      <Card variant="plain" sx={{ height: "auto", width: 320 }}>
+      <Card
+        variant="plain"
+        sx={{
+          height: "auto",
+          width: 320,
+          bgcolor: "var(--joy-palette-background-body)",
+        }}
+      >
         {isLoading ? (
           <>
             <CardContent>

@@ -163,7 +163,7 @@ export default function FilterDrawer({
         slotProps={{
           content: {
             sx: (theme) => ({
-              bgcolor: "transparent",
+              bgcolor: "var(--joy-palette-background-transparent)",
               p: { md: 3, sm: 0 },
               boxShadow: "none",
               maxWidth: "100vw",
@@ -188,6 +188,7 @@ export default function FilterDrawer({
             height: "100%",
             overflow: "auto",
             maxWidth: "100vw",
+            bgcolor: "transparent",
           }}
         >
           <DialogTitle>Filters</DialogTitle>
@@ -234,7 +235,9 @@ export default function FilterDrawer({
                       key={item.name}
                       sx={{
                         boxShadow: "none",
-                        "&:hover": { bgcolor: "background.level1" },
+                        bgcolor: "var(--joy-palette-background-level1)",
+
+                        "&:hover": { bgcolor: "background." },
                       }}
                     >
                       <CardContent>

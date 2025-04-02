@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 function TopicCard({ topic, isLoading }) {
   return (
     <Link
-      style={{ width: "50%", padding: 5, maxWidth: 450 }}
+      style={{ width: "50%", padding: 5, maxWidth: 330 }}
       to={`/topics/${topic.slug}`}
       onClick={() => {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -19,9 +19,15 @@ function TopicCard({ topic, isLoading }) {
           minHeight: "200px",
           width: "100%",
           transition: "all 0.2s ease",
+          bgcolor: "var(--joy-palette-background-body)",
+
+          border: "3px solid var(--joy-palette-primary-500)",
+          borderRadius: "20px",
+
           "&:hover": {
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
             transform: "translateY(-2px)",
+            bgcolor: "var(--joy-palette-background-level1)",
           },
         }}
       >
@@ -48,16 +54,33 @@ function TopicCard({ topic, isLoading }) {
             </CardCover>
             <CardCover
               sx={{
+                opacity: 0.4,
                 background:
-                  "linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0) 200px), linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0) 300px)",
+                  "linear-gradient(to top, rgba(14, 82, 231, 0.4), rgba(0, 53, 211, 0) 200px), linear-gradient(to top, rgba(17, 66, 189, 0.8), var(--joy-palette-background-level1) 300px)",
               }}
             />
 
             <CardContent sx={{ justifyContent: "center" }}>
-              <Typography level="title-lg" textColor="#fff">
+              <Typography
+                level="title-lg"
+                textColor="#fff"
+                sx={{
+                  fontWeight: "800",
+                  color: "var(--joy-palette-text)",
+                }}
+              >
                 {topic.slug[0].toUpperCase() + topic.slug.slice(1)}
               </Typography>
-              <Typography textColor="#fff">{topic.description}</Typography>
+              <Typography
+                textColor="#fff"
+                sx={{
+                  fontWeight: "400",
+                  fontStyle: "italic",
+                  color: "var(--joy-neutral-500)",
+                }}
+              >
+                {topic.description}
+              </Typography>
               <Button
                 style={{ width: "auto", margin: "0 auto", display: "block" }}
               >

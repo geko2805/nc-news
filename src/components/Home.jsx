@@ -34,6 +34,10 @@ function Home() {
             // display: {
             //   sm: "none", // Hidden on medium+
             // },
+            "&:hover": {
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              transform: "scale(1.03)",
+            },
           }}
         >
           View all articles
@@ -58,11 +62,14 @@ function Home() {
             // display: {
             //   sm: "none", // Hidden on medium+
             // },
+            "&:hover": {
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              transform: "scale(1.03)",
+            },
           }}
         >
           More this way{" "}
         </Button>
-
       </Link>
     </>
   );
