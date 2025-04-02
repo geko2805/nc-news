@@ -4,7 +4,6 @@ import { addComment, deleteComment, getComments } from "../../api";
 import { Alert, Button, FormControl, Skeleton, Textarea } from "@mui/joy";
 import { UserContext } from "./UserContext";
 import SignInModal from "./SignInModal";
-import Toast from "./ToastContainer";
 
 function CommentList({ article_id }) {
   const [comments, setComments] = useState([]);
@@ -75,8 +74,6 @@ function CommentList({ article_id }) {
 
   return (
     <>
-      <Toast />
-
       <section style={{ flex: 1 }}>
         {user.username ? (
           <FormControl sx={{ p: 2, m: "0 auto", maxWidth: "800px" }}>

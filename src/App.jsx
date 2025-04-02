@@ -18,6 +18,7 @@ import ErrorFallback from "./components/ErrorFallback";
 import { TopicsProvider } from "./components/TopicsContext";
 import customTheme from "./theme";
 import { useRef, useState } from "react";
+import Toast from "./components/ToastContainer";
 
 function App() {
   const searchInputRef = useRef(null);
@@ -29,6 +30,8 @@ function App() {
         <UserProvider>
           <TopicsProvider>
             <CssBaseline />
+            <Toast />
+
             <Header
               searchInputRef={searchInputRef}
               setShouldFocusSearch={setShouldFocusSearch}

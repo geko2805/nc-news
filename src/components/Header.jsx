@@ -24,6 +24,7 @@ import { Search } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ModeSwitcher from "./ModeSwitcher";
+import Toast from "./ToastContainer";
 
 function Header({ searchInputRef, setShouldFocusSearch }) {
   const {
@@ -33,6 +34,7 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
     setModalOpen,
     searchQuery,
     setSearchQuery,
+    toastInfo,
   } = useContext(UserContext);
 
   const navigate = useNavigate();
@@ -151,7 +153,13 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
               {user.name && <MenuItem>Profile</MenuItem>}
               {user.name && <MenuItem>My account</MenuItem>}
               {user.name && (
-                <MenuItem onClick={() => setUser({})}>Logout</MenuItem>
+                <MenuItem
+                  onClick={() =>
+                    setUser({}) & toastInfo("You have been signed out")
+                  }
+                >
+                  Logout
+                </MenuItem>
               )}
               <Box
                 sx={{
