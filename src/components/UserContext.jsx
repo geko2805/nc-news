@@ -37,6 +37,18 @@ export const UserProvider = ({ children }) => {
       theme: mode === "system" ? systemMode : mode,
     });
 
+  const toastInfo = (message) =>
+    toast.info(message, {
+      position: "bottom-right",
+      autoClose: 8000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: mode === "system" ? systemMode : mode,
+    });
+
   return (
     <UserContext.Provider
       value={{
@@ -49,6 +61,7 @@ export const UserProvider = ({ children }) => {
         mode: mode === "system" ? systemMode : mode, //set mode to be either light or dark
         toastSuccess,
         toastError,
+        toastInfo,
       }}
     >
       {children}

@@ -16,7 +16,6 @@ import { Link as RouterLink } from "react-router";
 import CommentList from "./CommentList";
 import { UserContext } from "./UserContext";
 import ErrorFallback from "./ErrorFallback";
-import Toast from "./ToastContainer";
 
 function Article() {
   const [article, setArticle] = useState([]);
@@ -91,7 +90,6 @@ function Article() {
 
   return (
     <>
-      <Toast />
       <section>
         {isLoading ? (
           <>

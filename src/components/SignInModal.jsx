@@ -12,7 +12,8 @@ import { Link } from "@mui/joy";
 export default function SignInModal() {
   // const [open, setOpen] = React.useState(false);
   // const { user, setUser } = React.useContext(UserContext);
-  const { setUser, modalOpen, setModalOpen } = React.useContext(UserContext);
+  const { setUser, modalOpen, setModalOpen, toastSuccess, toastError } =
+    React.useContext(UserContext);
   const [error, setError] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [usernameInput, setUsernameInput] = React.useState("");
@@ -30,12 +31,14 @@ export default function SignInModal() {
         setModalOpen(false); // close modal on success
         setError(null); // clear errors
         setUsernameInput("");
+        toastSuccess("Signed in as " + user.name);
       })
       .catch((error) => {
         console.log(error.response.data.msg);
         setError(error.response.data.msg);
         setIsLoading(false);
         setUsernameInput("");
+        toast("Failed to sign in: " + error.response.data.msg);
       });
     // try {
     //   const user = await getUserByUsername(username);
@@ -104,6 +107,7 @@ export default function SignInModal() {
             <form onSubmit={handleSubmit}>
               <Stack spacing={1}>
                 <Input
+                  autoFocus
                   placeholder="Enter username (e.g. jessjelly)"
                   name="username"
                   value={usernameInput}
