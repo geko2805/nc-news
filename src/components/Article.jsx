@@ -1,12 +1,22 @@
 import { useContext, useEffect, useState } from "react";
 import { addComment, getArticle, getComments, incVotes } from "../../api";
 import { useParams } from "react-router-dom";
-import { Box, Button, FormControl, Link, Skeleton, Textarea } from "@mui/joy";
+import {
+  Box,
+  Button,
+  FormControl,
+  Link,
+  Skeleton,
+  Textarea,
+  Typography,
+} from "@mui/joy";
+import UndoIcon from "@mui/icons-material/Undo";
 import { Link as RouterLink } from "react-router";
 
 import CommentList from "./CommentList";
 import { UserContext } from "./UserContext";
 import ErrorFallback from "./ErrorFallback";
+import Toast from "./ToastContainer";
 
 function Article() {
   const [article, setArticle] = useState([]);
@@ -14,7 +24,8 @@ function Article() {
   const [error, setError] = useState(null); // Error for article
   const [voteError, setVoteError] = useState(null); // Error for voting
   const { article_id } = useParams();
-  const { user, setModalOpen } = useContext(UserContext);
+  const { user, setModalOpen, toastSuccess, toastError } =
+    useContext(UserContext);
 
   useEffect(() => {
     setIsLoading(true);
@@ -32,6 +43,7 @@ function Article() {
   }, [article_id]);
 
   function handleVoteClick(vote) {
+    //optimistic render update
     setArticle((currArticle) => ({
       ...currArticle,
       votes: currArticle.votes + vote,
@@ -40,6 +52,18 @@ function Article() {
     incVotes(article_id, vote)
       .then(() => {
         console.log("Vote successfully updated on server.");
+        toastSuccess("Voted successfully!");
+        //add jsx to include an undo option
+        // <div>
+        //   Voted successfully!{" "}
+        //   <Typography
+        //     endDecorator={<UndoIcon />}
+        //     style={{ cursor: "pointer" }}
+        //     onClick={() => console.log("Undo clicked")}
+        //   >
+        //     Undo
+        //   </Typography>
+        // </div>
       })
       .catch((error) => {
         console.log("Failed to update votes: ", error);
@@ -48,6 +72,7 @@ function Article() {
           votes: prevArticle.votes - vote, // Revert optimistic update
         }));
         setVoteError("Failed to update votes. Please try again.");
+        toastError(voteError);
       });
   }
 
@@ -66,6 +91,7 @@ function Article() {
 
   return (
     <>
+      <Toast />
       <section>
         {isLoading ? (
           <>
