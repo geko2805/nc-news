@@ -60,7 +60,11 @@ export default function SignInModal() {
         onClose={() =>
           setModalOpen(false) & setError(null) & setIsSignUp(false)
         }
-        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
         {/* container for sign in and signup sheets with perspective to rotate */}
         <Sheet
@@ -88,6 +92,7 @@ export default function SignInModal() {
               transform: isSignUp ? "rotateY(180deg)" : "rotateY(0deg)",
               transition: "transform 0.3s ease-in-out",
               position: isSignUp ? "absolute" : "relative",
+              bgcolor: "var(--joy-palette-background-body)",
             }}
           >
             <ModalClose variant="plain" sx={{ m: 1 }} />

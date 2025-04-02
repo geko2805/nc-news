@@ -257,6 +257,7 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
                 borderRadius: 0,
                 borderBottom: "2px solid",
                 borderColor: "neutral.outlinedBorder",
+                bgcolor: "var(--joy-palette-background-level1)",
                 "&:hover": { borderColor: "neutral.outlinedHoverBorder" },
                 "&::before": {
                   border: "1px solid var(--Input-focusedHighlight)",

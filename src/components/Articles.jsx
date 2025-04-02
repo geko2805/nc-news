@@ -270,6 +270,8 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                   },
                   fontSize: "16px",
                   margin: "0 auto",
+                  bgcolor: "var(--joy-palette-background-level1)",
+
                   borderRadius: 0,
                   borderBottom: "2px solid",
                   borderColor: "neutral.outlinedBorder",

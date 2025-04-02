@@ -10,7 +10,18 @@ function ArticleCard({ article, isLoading }) {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
       >
-        <Card sx={{ minHeight: "280px", width: 320, margin: 1 }}>
+        <Card
+          sx={{
+            minHeight: "280px",
+            width: 320,
+            margin: 1,
+            "&:hover": {
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+              transform: "scale(1.03)",
+              bgcolor: "var(--joy-palette-background-body)",
+            },
+          }}
+        >
           {isLoading ? (
             <>
               <CardCover>
