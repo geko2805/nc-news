@@ -4,6 +4,7 @@ import { addComment, deleteComment, getComments } from "../../api";
 import { Alert, Button, FormControl, Skeleton, Textarea } from "@mui/joy";
 import { UserContext } from "./UserContext";
 import SignInModal from "./SignInModal";
+import Toast from "./ToastContainer";
 
 function CommentList({ article_id }) {
   const [comments, setComments] = useState([]);
@@ -13,7 +14,8 @@ function CommentList({ article_id }) {
   const [commentSubmitted, setCommentSubmitted] = useState(0); // Trigger for re-fetch - change this to add the returned comment from api to comments
   //const [commentDeleted, setCommentDeleted] = useState(0); // Trigger for re-fetch
 
-  const { user, setModalOpen } = useContext(UserContext);
+  const { user, setModalOpen, toastSuccess, toastError } =
+    useContext(UserContext);
 
   useEffect(() => {
     setCommentsError(null);
@@ -33,12 +35,13 @@ function CommentList({ article_id }) {
   const handleCommentSubmit = async () => {
     try {
       setIsLoading(true);
-
       await addComment(article_id, user.username, commentInput);
       setCommentInput("");
       setCommentSubmitted((prev) => prev + 1); // trigger useEffect
+      toastSuccess("Comment posted successfully");
     } catch (error) {
       console.error("Error posting comment:", error);
+      toastError("Couldn't post comment: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -52,10 +55,11 @@ function CommentList({ article_id }) {
       setComments((prevComments) =>
         prevComments.filter((comment) => comment.comment_id !== commentId)
       );
+      toastSuccess("Comment deleted successfully");
       // setCommentDeleted(1);
     } catch (error) {
       console.error("Error deleting comment:", error);
-      // set an error state here
+      toastError("Couldn't delete comment: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -71,6 +75,8 @@ function CommentList({ article_id }) {
 
   return (
     <>
+      <Toast />
+
       <section style={{ flex: 1 }}>
         {user.username ? (
           <FormControl sx={{ p: 2, m: "0 auto", maxWidth: "800px" }}>
@@ -101,19 +107,23 @@ function CommentList({ article_id }) {
             to post comments
           </p>
         )}
-        {commentSubmitted > 0 ? (
-          <Alert
-            variant="solid"
-            color="success"
-            style={{ padding: 10, cursor: "pointer" }}
-            onClick={() => setCommentSubmitted(0)}
-          >
-            {" "}
-            Comment posted (click to dismiss)
-          </Alert>
+
+        {/* //Alert method for user feedback... replaced by Toast  */}
+        {/* {commentSubmitted > 0 ? (
+          <>
+            <Alert
+              variant="solid"
+              color="success"
+              style={{ padding: 10, cursor: "pointer" }}
+              onClick={() => setCommentSubmitted(0)}
+            >
+              {" "}
+              Comment posted (click to dismiss)
+            </Alert>
+          </>
         ) : (
           ""
-        )}
+        )} */}
       </section>
 
       {comments.length === 0 ? (

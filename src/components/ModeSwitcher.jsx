@@ -5,8 +5,11 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { Link } from "react-router-dom";
 
 export default function ModeSwitcher() {
-  const { mode, setMode } = useColorScheme(); // Access mode and setMode
-  const [checked, setChecked] = useState(mode === "dark");
+  const { mode, systemMode, setMode } = useColorScheme(); // Access mode and setMode
+  const [checked, setChecked] = useState(
+    //if mode is system then use systemmode to determine checked state (true if  dark)
+    mode === "system" ? systemMode === "dark" : mode === "dark"
+  );
 
   const handleChange = (event) => {
     const newMode = event.target.checked ? "dark" : "light";
