@@ -19,6 +19,7 @@ import { TopicsProvider } from "./components/TopicsContext";
 import customTheme from "./theme";
 import { useRef, useState } from "react";
 import Toast from "./components/ToastContainer";
+import Footer from "./components/Foooter";
 
 function App() {
   const searchInputRef = useRef(null);
@@ -57,6 +58,7 @@ function App() {
                 element={<ErrorFallback error="This page doesn't exist" />}
               />
             </Routes>
+            <Footer />
           </TopicsProvider>
         </UserProvider>
       </CssVarsProvider>
