@@ -103,27 +103,75 @@ const customTheme = extendTheme({
         },
       },
     },
-  },
-  JoyLink: {
-    defaultProps: {
-      color: "var(--joy-palette-primary-800)",
-      underline: "none",
+
+    JoyLink: {
+      defaultProps: {
+        color: "var(--joy-palette-primary-400)",
+        underline: "none",
+      },
+      styleOverrides: {
+        root: {
+          fontFamily: "var(--joy-fontFamily-body)",
+          fontWeight: 500,
+          transition: "color 0.2s ease, text-decoration-color 0.2s ease",
+          color: "var(--joy-palette-primary-400)",
+          "&:hover": {
+            color: "var(--joy-palette-primary-700)",
+            textDecorationColor: "var(--joy-palette-primary-700)", // Match underline to text
+          },
+          "&:visited": {
+            // color: "var(--joy-palette-neutral-500)", // Visited link color
+          },
+          "&:active": {
+            color: "var(--joy-palette-primary-500)", // Active state
+          },
+        },
+      },
     },
-    styleOverrides: {
-      root: {
-        fontFamily: "var(--joy-fontFamily-body)",
-        fontWeight: 500,
-        transition: "color 0.2s ease, text-decoration-color 0.2s ease",
-        color: "var(--joy-palette-primary-800)",
-        "&:hover": {
-          color: "var(--joy-palette-primary-700)",
-          textDecorationColor: "var(--joy-palette-primary-700)", // Match underline to text
+
+    JoyButton: {
+      // Default props for all buttons
+      defaultProps: {
+        variant: "solid", // Options: "solid", "soft", "outlined", "plain"
+        color: "primary", // Options: "primary", "neutral", "success", etc.
+        size: "md", // Options: "sm", "md", "lg"
+      },
+      // Global style overrides
+      styleOverrides: {
+        root: {
+          fontFamily: "var(--joy-fontFamily-body)",
+          borderRadius: "8px", // Rounded corners
+          padding: "8px 16px", // Custom padding
+          textTransform: "none", // Prevent uppercase text
+          transition: "background-color 0.2s ease, transform 0.1s ease", // Smooth transitions
+
+          "&:active": {
+            transform: "scale(0.98)", // Slight press effect
+          },
+          "&:focus": {
+            boxShadow: "0 0 0 3px var(--joy-palette-primary-200)", // Focus ring
+          },
+          "&.Mui-disabled": {
+            opacity: 0.6, // Dim when disabled
+            cursor: "not-allowed",
+          },
         },
-        "&:visited": {
-          color: "var(--joy-palette-neutral-500)", // Visited link color
+        // Variant-specific overrides
+        variantSolid: {
+          backgroundColor: "var(--joy-palette-primary-500)",
+          color: "#ffffff",
+          "&:hover": {
+            backgroundColor: "var(--joy-palette-primary-700)", // Darker shade on hover
+            transform: "scale(1.02)", // Slight scale-up effect
+          },
         },
-        "&:active": {
-          color: "var(--joy-palette-primary-500)", // Active state
+        variantOutlined: {
+          borderColor: "var(--joy-palette-neutral-500)",
+          color: "var(--joy-palette-text-primary)",
+          "&:hover": {
+            borderColor: "var(--joy-palette-primary-500)",
+            backgroundColor: "var(--joy-palette-neutral-50)",
+          },
         },
       },
     },

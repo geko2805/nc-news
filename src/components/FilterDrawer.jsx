@@ -129,14 +129,19 @@ export default function FilterDrawer({
     <React.Fragment>
       <Button
         sx={(theme) => ({
+          bgcolor: "var(--joy-palette-background-level1)",
+          "&:hover": {
+            backgroundColor: "var(--joy-palette-neutral-100)", // Lighten on hover
+          },
           [theme.breakpoints.down("sm")]: {
+            bgcolor: "var(--joy-palette-background-transparent)",
             position: "fixed",
             bottom: 5,
             zIndex: 1000,
-            backgroundColor: "white",
             left: "50%", // Move left edge to center of parent
             transform: "translateX(-50%)", // Shift back by half its width
           },
+
           mr: "3rem",
         })}
         variant="outlined"
