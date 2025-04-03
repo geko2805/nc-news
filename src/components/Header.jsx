@@ -24,7 +24,6 @@ import { Search } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ModeSwitcher from "./ModeSwitcher";
-import Toast from "./ToastContainer";
 
 function Header({ searchInputRef, setShouldFocusSearch }) {
   const {

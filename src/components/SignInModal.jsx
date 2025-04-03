@@ -112,6 +112,7 @@ export default function SignInModal() {
             <form onSubmit={handleSubmit}>
               <Stack spacing={1}>
                 <Input
+                  sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
                   autoFocus
                   placeholder="Enter username (e.g. jessjelly)"
                   name="username"
@@ -149,6 +150,8 @@ export default function SignInModal() {
               right: 0,
               bottom: 0,
               backfaceVisibility: "hidden",
+              bgcolor: "var(--joy-palette-background-body)",
+
               transform: isSignUp ? "rotateY(0deg)" : "rotateY(-180deg)",
               transition: "transform 0.3s ease-in-out",
               position: isSignUp ? "relative" : "absolute",
@@ -170,19 +173,22 @@ export default function SignInModal() {
               details to create an account
             </Typography>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} sx>
               <Stack spacing={1}>
                 <Input
+                  sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
                   placeholder="Enter a username"
                   name="username"
                   required
                 />
                 <Input
+                  sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
                   placeholder="Enter your full name"
                   name="name"
                   required
                 />
                 <Input
+                  sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
                   placeholder="Enter profile photo URL"
                   name="avatar_url"
                 />

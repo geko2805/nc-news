@@ -21,7 +21,7 @@ function TopicCard({ topic, isLoading }) {
           transition: "all 0.2s ease",
           bgcolor: "var(--joy-palette-background-body)",
 
-          border: "3px solid var(--joy-palette-primary-500)",
+          border: "3px solid var(--joy-palette-primary-700)",
           borderRadius: "20px",
 
           "&:hover": {

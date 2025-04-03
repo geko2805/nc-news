@@ -20,7 +20,6 @@ function Home() {
       </Box>
       <Link to="/articles" className="all-items">
         <Button
-          variant="outlined"
           endDecorator={<ArrowRightAltIcon />}
           onClick={() => {
             window.scrollTo({ top: 0, behavior: "smooth" });
@@ -49,7 +48,6 @@ function Home() {
 
       <Link to="/topics" className="all-items">
         <Button
-          variant="outlined"
           endDecorator={<ArrowRightAltIcon />}
           onClick={() => {
             window.scrollTo({ top: 0, behavior: "smooth" });
