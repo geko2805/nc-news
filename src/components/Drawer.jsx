@@ -145,14 +145,14 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
               "& > div": { justifyContent: "center" },
             }}
           >
-            {["Home", "Topics", "Articles"].map((text) => (
+            {["", "Topics", "Articles"].map((text) => (
               <ListItem
                 onClick={toggleDrawer(false)}
                 onKeyDown={toggleDrawer(false)}
                 key={text}
               >
                 <Link to={"/" + text}>
-                  <ListItemButton>{text}</ListItemButton>
+                  <ListItemButton>{text || "Home"}</ListItemButton>
                 </Link>
               </ListItem>
             ))}
