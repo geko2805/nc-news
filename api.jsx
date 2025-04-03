@@ -59,6 +59,14 @@ export function deleteComment(comment_id) {
     });
 }
 
+export function incCommentVotes(comment_id, inc_votes) {
+  return api
+    .patch(`/comments/${comment_id}`, { inc_votes })
+    .then(({ data }) => {
+      return data.comment;
+    });
+}
+
 export function getTopics() {
   return api.get(`/topics`).then(({ data }) => {
     return data.topics;
