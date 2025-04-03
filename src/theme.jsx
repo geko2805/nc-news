@@ -37,7 +37,7 @@ const customTheme = extendTheme({
         background: {
           body: "#ffffff", // Light mode background
           level1: "#f5f5f5",
-          transparent: "rgba(255, 255, 255, 0.8)", // White with 50% opacity for light mode
+          transparent: "rgba(255, 255, 255, 0.9)", // White with opacity for light mode
         },
         text: {
           primary: "#212121", // Light mode text
@@ -63,7 +63,7 @@ const customTheme = extendTheme({
         background: {
           body: "#121212", // Dark mode background
           level1: "#1e1e1e",
-          transparent: "rgba(0, 0, 0, 0.8)", // Black with 50% opacity for dark mode
+          transparent: "rgba(0, 0, 0, 0.85)", // Black with opacity for dark mode
         },
         text: {
           primary: "#e0e0e0", // Dark mode text
