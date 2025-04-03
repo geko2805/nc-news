@@ -13,13 +13,15 @@ function Footer() {
           alignItems: { xs: "center", lg: "center" },
           justifyContent: "space-between",
           p: 4,
-          mb: 2,
+          mb: 1,
         }}
       >
         <Typography>
           Created by <Link href="https://gethsworld.com">Gethin Jones</Link>
         </Typography>
-        <Typography sx={{ minWidth: "300px", maxWidth: "500px" }}>
+        <Typography
+          sx={{ minWidth: "300px", maxWidth: "500px", pt: { xs: 1, lg: 0 } }}
+        >
           This portfolio project was created as part of a Digital Skills
           Bootcamp in Software Engineering provided by{" "}
           <Link href="https://northcoders.com/">Northcoders</Link>
@@ -29,6 +31,7 @@ function Footer() {
             display: "flex",
             flexWrap: "wrap",
             gap: 2,
+            pt: { xs: 2, lg: 0 },
           }}
         >
           <Link href="https://github.com/geko2805/my_nc_news">Backend</Link>

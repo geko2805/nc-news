@@ -74,6 +74,27 @@ export default function FilterDrawer({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  //hide filter button when user has scrolled to bottom
+  const [isVisible, setIsVisible] = React.useState(true); // start visible
+  const bottomThreshold = 150; // hide when within 150px of the bottom to stop button covering footer
+  React.useEffect(() => {
+    const handleScroll = () => {
+      // Calculate distance from bottom
+      const scrollY = window.scrollY; // pixels scrolled from top
+      const windowHeight = window.innerHeight; // viewport height
+      const documentHeight = document.documentElement.scrollHeight; // total document height
+      const distanceFromBottom = documentHeight - (scrollY + windowHeight);
+      // hide if within threshold of bottom, show otherwise
+      setIsVisible(distanceFromBottom > bottomThreshold);
+    };
+    // scroll event listener
+    window.addEventListener("scroll", handleScroll);
+    // cleanup listener on unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   //for checkboxes
   React.useEffect(() => {
     const slugs = topics.map((topic) => {
@@ -127,32 +148,34 @@ export default function FilterDrawer({
 
   return (
     <React.Fragment>
-      <Button
-        sx={(theme) => ({
-          bgcolor: "var(--joy-palette-background-level1)",
-          "&:hover": {
-            backgroundColor: "var(--joy-palette-neutral-100)", // Lighten on hover
-          },
-          [theme.breakpoints.down("sm")]: {
-            bgcolor: "var(--joy-palette-background-transparent)",
-            position: "fixed",
-            bottom: 5,
-            zIndex: 1000,
-            left: "50%", // Move left edge to center of parent
-            transform: "translateX(-50%)", // Shift back by half its width
-          },
+      {isVisible && (
+        <Button
+          sx={(theme) => ({
+            bgcolor: "var(--joy-palette-background-level1)",
+            "&:hover": {
+              backgroundColor: "var(--joy-palette-neutral-100)", // Lighten on hover
+            },
+            [theme.breakpoints.down("sm")]: {
+              bgcolor: "var(--joy-palette-background-transparent)",
+              position: "fixed",
+              bottom: 5,
+              zIndex: 1000,
+              left: "50%", // Move left edge to center of parent
+              transform: "translateX(-50%)", // Shift back by half its width
+            },
 
-          mr: "3rem",
-        })}
-        variant="outlined"
-        color="neutral"
-        startDecorator={<TuneIcon />}
-        onClick={() => setOpen(true)}
-        size="lg"
-      >
-        Filters
-        {/* {isSmallScreen ? <TuneIcon /> : "Filters"} */}
-      </Button>
+            mr: "3rem",
+          })}
+          variant="outlined"
+          color="neutral"
+          startDecorator={<TuneIcon />}
+          onClick={() => setOpen(true)}
+          size="lg"
+        >
+          Filters
+          {/* {isSmallScreen ? <TuneIcon /> : "Filters"} */}
+        </Button>
+      )}
       <Drawer
         sx={(theme) => ({
           [theme.breakpoints.down("sm")]: {
