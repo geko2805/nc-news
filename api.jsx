@@ -10,16 +10,25 @@ const api = axios.create({
 //   });
 // }
 
-export function getArticles(topic, sort_by = "created_at", order = "DESC") {
+export function getArticles(
+  topic,
+  sort_by = "created_at",
+  order = "DESC",
+  page = 1,
+  limit = 12
+) {
   const queryParams = new URLSearchParams();
   if (topic) queryParams.append("topic", topic);
   if (sort_by) queryParams.append("sort_by", sort_by);
   if (order) queryParams.append("order", order);
+  // always include page & limit
+  queryParams.append("page", page);
+  queryParams.append("limit", limit);
 
   const query = queryParams.toString() ? `?${queryParams.toString()}` : "";
 
   return api.get(`/articles${query}`).then(({ data }) => {
-    return data.articles;
+    return data;
   });
 }
 

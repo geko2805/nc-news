@@ -23,12 +23,12 @@ import ErrorFallback from "./ErrorFallback";
 import { UserContext } from "./UserContext";
 import { Search } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
-
 import FilterDrawer from "./FilterDrawer";
 
 function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [totalCount, setTotalCount] = useState(0); // article count for pagination
 
   const { searchQuery, setSearchQuery } = useContext(UserContext);
   const [filteredArticles, setFilteredArticles] = useState([]);
@@ -43,6 +43,8 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
     searchParams.get("sort_by") || "created_at"
   );
   const [order, setOrder] = useState(searchParams.get("order") || "DESC");
+  const [page, setPage] = useState(Number(searchParams.get("page")) || 1); // pagination
+  const limit = 12; // default set in B.E.
   const [error, setError] = useState(null);
 
   // to enable going back a page
@@ -51,10 +53,11 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
   //api call to get articles
   useEffect(() => {
     setIsLoading(true);
-    getArticles(topic, sortBy, order)
-      .then((articles) => {
+    getArticles(topic, sortBy, order, page, limit)
+      .then(({ articles, total_count }) => {
         setArticles(articles);
         setFilteredArticles(articles);
+        setTotalCount(total_count);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -62,7 +65,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
         setError(error.response.data.msg);
         setIsLoading(false);
       });
-  }, [topic, sortBy, order]);
+  }, [topic, sortBy, order, page]);
 
   //useEffect for search
   useEffect(() => {
@@ -102,6 +105,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
         ...Object.fromEntries(searchParams),
         sort_by: newValue,
         order: "DESC",
+        page: "1",
       });
     } else {
       setOrder("ASC");
@@ -109,17 +113,47 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
         ...Object.fromEntries(searchParams),
         sort_by: newValue,
         order: "ASC",
+        page: "1",
       });
     }
+    setPage(1); // reset page state on sort change
   };
 
   const handleOrderChange = (newValue) => {
     setOrder(newValue);
-    setSearchParams({ ...Object.fromEntries(searchParams), order: newValue });
+    setSearchParams({
+      ...Object.fromEntries(searchParams),
+      order: newValue,
+      page: "1",
+    });
+    setPage(1); // Reset page state on order change
   };
 
   const handleClearSelections = () => {
     setSearchQuery("");
+  };
+
+  // pagination handlers
+  const totalPages = Math.ceil(totalCount / limit);
+  const handlePreviousPage = () => {
+    if (page > 1) {
+      const newPage = page - 1;
+      setPage(newPage);
+      setSearchParams({
+        ...Object.fromEntries(searchParams),
+        page: newPage.toString(),
+      });
+    }
+  };
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      const newPage = page + 1;
+      setPage(newPage);
+      setSearchParams({
+        ...Object.fromEntries(searchParams),
+        page: newPage.toString(),
+      });
+    }
   };
 
   if (error) {
@@ -228,7 +262,6 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                   </Select>
                 </FormLabel>
               </Box>
-
               <FilterDrawer
                 filteredArticles={filteredArticles}
                 setFilteredArticles={setFilteredArticles}
@@ -310,6 +343,23 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
           }
           isLoading={isLoading}
         />
+
+        {/* Pagination Controls (not on homepage) */}
+        {location.pathname !== "/" && (
+          <Box
+            sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
+          >
+            <Button onClick={handlePreviousPage} disabled={page === 1}>
+              Previous
+            </Button>
+            <Typography>
+              Page {page} of {totalPages} (Total: {totalCount})
+            </Typography>
+            <Button onClick={handleNextPage} disabled={page === totalPages}>
+              Next
+            </Button>
+          </Box>
+        )}
 
         {location.pathname === "/" && (
           <>
