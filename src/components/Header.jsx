@@ -152,6 +152,12 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
               {user.name && <MenuItem>Profile</MenuItem>}
               {user.name && <MenuItem>My account</MenuItem>}
               {user.name && (
+                <Link component={RouterLink} to="/submit">
+                  <MenuItem sx={{ width: "100%" }}>Post Article</MenuItem>
+                </Link>
+              )}
+
+              {user.name && (
                 <MenuItem
                   onClick={() =>
                     setUser({}) & toastInfo("You have been signed out")
