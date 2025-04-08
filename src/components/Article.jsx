@@ -191,7 +191,7 @@ function Article() {
               </p>
 
               <img
-                style={{ maxWidth: "100%", height: "auto" }}
+                style={{ width: "700px", maxWidth: "100%", height: "auto" }}
                 src={article.article_img_url}
                 alt={article.title}
               />
