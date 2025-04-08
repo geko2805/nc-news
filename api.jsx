@@ -87,3 +87,11 @@ export function getUserByUsername(username) {
     return data.user;
   });
 }
+
+export function submitArticle(author, title, body, topic, article_img_url) {
+  return api
+    .post(`/articles`, { author, title, body, topic, article_img_url })
+    .then(({ data }) => {
+      return data.article;
+    });
+}

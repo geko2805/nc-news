@@ -11,12 +11,14 @@ import {
   IconButton,
   Input,
   ListDivider,
+  Link,
   ModalClose,
   Typography,
 } from "@mui/joy";
+import { Link as RouterLink } from "react-router";
+
 import Search from "@mui/icons-material/Search";
 import { Menu } from "@mui/icons-material";
-import { Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import SignInModal from "./SignInModal";
 import ModeSwitcher from "./ModeSwitcher";
@@ -126,13 +128,23 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
 
           {user.name && (
             <List>
-              {["Profile", "Post article", "My articles", "Settings"].map(
-                (text) => (
-                  <ListItem key={text}>
-                    <ListItemButton>{text}</ListItemButton>
+              {[
+                { text: "Profile", route: "/my-profile" },
+                { text: "Post article", route: "/submit" },
+                { text: "My articles", route: "/articles" },
+                { text: "Settings", route: "/settings" },
+              ].map((link) => (
+                <RouterLink to={link.route} sx={{ width: "100%" }}>
+                  <ListItem
+                    key={link.text}
+                    sx={{ width: "100%" }}
+                    onClick={toggleDrawer(false)}
+                    onKeyDown={toggleDrawer(false)}
+                  >
+                    <ListItemButton>{link.text}</ListItemButton>
                   </ListItem>
-                )
-              )}
+                </RouterLink>
+              ))}
             </List>
           )}
           <ListDivider />
