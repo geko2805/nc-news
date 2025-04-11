@@ -15,7 +15,8 @@ export function getArticles(
   sort_by = "created_at",
   order = "DESC",
   page = 1,
-  limit = 12
+  limit = 12,
+  filters = {}
 ) {
   const queryParams = new URLSearchParams();
   if (topic) queryParams.append("topic", topic);
@@ -24,6 +25,12 @@ export function getArticles(
   // always include page & limit
   queryParams.append("page", page);
   queryParams.append("limit", limit);
+  //filter params
+  if (filters.hide_negative) queryParams.append("hide_negative", "true");
+  if (filters.author) queryParams.append("author", filters.author);
+  if (filters.date_range) queryParams.append("date_range", filters.date_range);
+  if (filters.selected_topics)
+    queryParams.append("selected_topics", filters.selected_topics.join(","));
 
   const query = queryParams.toString() ? `?${queryParams.toString()}` : "";
 
