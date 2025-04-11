@@ -47,13 +47,33 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
   const limit = 12; // default set in B.E.
   const [error, setError] = useState(null);
 
+  //fillters state to store set filters in an object, and use  params if available
+  const [filters, setFilters] = useState(() => {
+    const initialFilters = {};
+    if (searchParams.get("date_range")) {
+      initialFilters.date_range = searchParams.get("date_range");
+    }
+    if (searchParams.get("hide_negative") === "true") {
+      initialFilters.hide_negative = true;
+    }
+    if (searchParams.get("author")) {
+      initialFilters.author = searchParams.get("author");
+    }
+    if (searchParams.get("selected_topics")) {
+      initialFilters.selected_topics = searchParams
+        .get("selected_topics")
+        .split(",");
+    }
+    return initialFilters;
+  });
+
   // to enable going back a page
   const navigate = useNavigate();
 
   //api call to get articles
   useEffect(() => {
     setIsLoading(true);
-    getArticles(topic, sortBy, order, page, limit)
+    getArticles(topic, sortBy, order, page, limit, filters)
       .then(({ articles, total_count }) => {
         setArticles(articles);
         setFilteredArticles(articles);
@@ -65,7 +85,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
         setError(error.response.data.msg);
         setIsLoading(false);
       });
-  }, [topic, sortBy, order, page]);
+  }, [topic, sortBy, order, page, filters, searchParams]);
 
   //useEffect for search
   useEffect(() => {
@@ -131,6 +151,8 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
 
   const handleClearSelections = () => {
     setSearchQuery("");
+    setFilters({}); // Clear filters
+    setSearchParams({ page: "1" }); // Reset URL
   };
 
   // pagination handlers
@@ -263,6 +285,10 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                 </FormLabel>
               </Box>
               <FilterDrawer
+                filters={filters}
+                setFilters={setFilters}
+                searchParams={searchParams}
+                setSearchParams={setSearchParams}
                 filteredArticles={filteredArticles}
                 setFilteredArticles={setFilteredArticles}
                 articles={articles}
@@ -345,7 +371,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
         />
 
         {/* Pagination Controls (not on homepage) */}
-        {location.pathname !== "/" && (
+        {location.pathname !== "/" && filteredArticles.length > 0 && (
           <Box
             sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
           >
@@ -372,19 +398,35 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
 
         {!isLoading && articles.length > 0 && filteredArticles.length === 0 && (
           <>
-            {" "}
-            <p style={{ padding: "20px" }}>
-              No articles found for your selections
-            </p>
-            <Button onClick={handleClearSelections}>Clear selections</Button>
+            <p style={{ padding: "20px" }}>No articles found for your search</p>
+            <Button onClick={handleClearSelections}>Clear search</Button>
           </>
         )}
-        {!isLoading && articles.length === 0 && (
-          <>
-            <p style={{ padding: "20px" }}>No articles found </p>
-            <Button onClick={() => navigate(-1)}>Go back</Button>
-          </>
-        )}
+
+        {!isLoading &&
+          filteredArticles.length === 0 &&
+          Object.keys(filters).length > 0 && (
+            <>
+              <p style={{ padding: "20px" }}>
+                No articles found for your selections
+              </p>
+              <Button onClick={handleClearSelections}>Clear selections</Button>
+            </>
+          )}
+        {!isLoading &&
+          articles.length === 0 &&
+          Object.keys(filters).length === 0 && (
+            <>
+              <p style={{ padding: "20px" }}>No articles found</p>
+              <Button
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                Go back
+              </Button>
+            </>
+          )}
       </section>
     </>
   );

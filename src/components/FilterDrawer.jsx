@@ -36,15 +36,29 @@ export default function FilterDrawer({
   articles,
   filteredArticles,
   setFilteredArticles,
+  filters,
+  setFilters,
+  searchParams,
+  setSearchParams,
 }) {
   let location = useLocation();
   let { topic } = useParams(); // Extract topic param from URL
   const navigate = useNavigate();
 
   const [open, setOpen] = React.useState(false);
-  const [type, setType] = React.useState("All time"); //change to be date published !!!!!!!!!!!!
-  const [hideNegative, setHideNegative] = React.useState(false);
-  const [showAuthoredByUser, setShowAuthoredByUser] = React.useState(false);
+
+  //set filter states - use params where available, otherwise filter object from articles otherwise defaults
+  const [dateRange, setDateRange] = React.useState(
+    searchParams.get("date_range") || filters.date_range || "all"
+  );
+  const [hideNegative, setHideNegative] = React.useState(
+    searchParams.get("hide_negative") === "true" ||
+      filters.hide_negative ||
+      false
+  );
+  const [showAuthoredByUser, setShowAuthoredByUser] = React.useState(
+    filters.author || false
+  );
 
   //from context
   const { topics, isLoading } = useTopics();
@@ -53,7 +67,16 @@ export default function FilterDrawer({
   //state for all the topic titles populated from topic context -----MOVE THESE UP TO ARTICLES SO THE STATE CAN BE RESET EASILY IS NO ARTICLES AVAILABLE
   const [topicSlugs, setTopicSlugs] = React.useState([]);
   // state for topics selected by checkbox filters
-  const [selectedTopics, setSelectedTopics] = React.useState(topicSlugs);
+  // const [selectedTopics, setSelectedTopics] = React.useState(
+  //   filters.selected_topics || []
+  // );
+  const [selectedTopics, setSelectedTopics] = React.useState(() => {
+    const topicsParam = searchParams.get("selected_topics");
+    if (topicsParam) {
+      return topicsParam.split(",");
+    }
+    return filters.selected_topics || [];
+  });
 
   // detect screen size
   const [isLargeScreen, setIsLargeScreen] = React.useState(
@@ -74,18 +97,23 @@ export default function FilterDrawer({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  //hide filter button when user has scrolled to bottom
+  //hide filter button when user has scrolled to bottom so it doesnt cover the footer links
   const [isVisible, setIsVisible] = React.useState(true); // start visible
   const bottomThreshold = 150; // hide when within 150px of the bottom to stop button covering footer
   React.useEffect(() => {
     const handleScroll = () => {
-      // Calculate distance from bottom
-      const scrollY = window.scrollY; // pixels scrolled from top
-      const windowHeight = window.innerHeight; // viewport height
-      const documentHeight = document.documentElement.scrollHeight; // total document height
-      const distanceFromBottom = documentHeight - (scrollY + windowHeight);
-      // hide if within threshold of bottom, show otherwise
-      setIsVisible(distanceFromBottom > bottomThreshold);
+      //only change visible state of filter button on small screens
+      if (isSmallScreen) {
+        // Calculate distance from bottom
+        const scrollY = window.scrollY; // pixels scrolled from top
+        const windowHeight = window.innerHeight; // viewport height
+        const documentHeight = document.documentElement.scrollHeight; // total document height
+        const distanceFromBottom = documentHeight - (scrollY + windowHeight);
+        // hide if within threshold of bottom on small screen, show otherwise
+        setIsVisible(distanceFromBottom > bottomThreshold);
+      } else {
+        setIsVisible(true); // Filter button always visible on larger screens
+      }
     };
     // scroll event listener
     window.addEventListener("scroll", handleScroll);
@@ -93,47 +121,103 @@ export default function FilterDrawer({
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [isSmallScreen]);
 
-  //for checkboxes
+  //set selectedTopics if empty so searchParams are not overridden
   React.useEffect(() => {
-    const slugs = topics.map((topic) => {
-      return topic.slug;
-    });
+    const slugs = topics.map((topic) => topic.slug);
+    //set the state for all topic slugs aswell as pre populating the selectedTopics to be used to precheck the checkboxes
+    setTopicSlugs(slugs);
     if (topics.length > 0 && selectedTopics.length === 0) {
-      //set the state for all topic slugs aswell as pre populating the selectedTopics to be used to precheck the checkboxes
-      setTopicSlugs(slugs);
-      // if (topic) {
-      //   setSelectedTopics([topic]);
-      // } else {
-      setSelectedTopics(slugs);
-      //}
+      if (topic) {
+        setSelectedTopics([topic]);
+      } else {
+        setSelectedTopics(slugs);
+      }
     }
-  }, [topics]);
+  }, [topic, topics]);
 
+  // Sync filters with searchParams and apply them
   React.useEffect(() => {
-    let filtered = [...articles]; // start with all articles
-
-    // filter by selected topics
-    filtered = filtered.filter((article) =>
-      selectedTopics.includes(article.topic)
+    setDateRange(searchParams.get("date_range") || filters.date_range || "all");
+    setHideNegative(
+      searchParams.get("hide_negative") === "true" ||
+        filters.hide_negative ||
+        false
     );
+    setShowAuthoredByUser(
+      (user && searchParams.get("author") === user.username) ||
+        filters.author ||
+        false
+    );
+    const topicsParam = searchParams.get("selected_topics");
+    if (topicsParam) {
+      setSelectedTopics(topicsParam.split(","));
+    } else if (filters.selected_topics) {
+      setSelectedTopics(filters.selected_topics);
+    }
+  }, [searchParams, filters, user]);
 
-    // filter to hide negative vote counts if hideNegative is true
-    if (hideNegative) {
-      filtered = filtered.filter((article) => article.votes >= 0);
+  const applyFilters = () => {
+    const newFilters = {};
+    if (dateRange !== "all") newFilters.date_range = dateRange; //set to either all, week, month or year
+    if (hideNegative) newFilters.hide_negative = true;
+    if (showAuthoredByUser && user?.username) newFilters.author = user.username;
+    if (
+      selectedTopics.length > 0 &&
+      selectedTopics.length < topicSlugs.length
+    ) {
+      newFilters.selected_topics = selectedTopics;
+    }
+    setFilters(newFilters);
+
+    // Update URL search params
+    const updatedParams = {
+      ...Object.fromEntries(searchParams),
+      ...(newFilters.date_range && { date_range: newFilters.date_range }),
+      ...(newFilters.hide_negative && { hide_negative: "true" }),
+      ...(newFilters.author && { author: newFilters.author }),
+      ...(newFilters.selected_topics && {
+        selected_topics: newFilters.selected_topics.join(","),
+      }),
+      page: "1", // Reset to page 1 when filters change
+    };
+
+    // Remove params if their values are cleared
+    if (!newFilters.date_range) delete updatedParams.date_range;
+    if (!newFilters.hide_negative) delete updatedParams.hide_negative;
+    if (!newFilters.author) delete updatedParams.author;
+    if (
+      !newFilters.selected_topics ||
+      newFilters.selected_topics.length === topicSlugs.length
+    ) {
+      delete updatedParams.selected_topics;
     }
 
-    // filter only user authored articles when showAuthoredByUser is true
-    if (showAuthoredByUser && user?.username) {
-      filtered = filtered.filter((article) => article.author === user.username);
-    }
+    setSearchParams(updatedParams);
+    setOpen(false);
+  };
 
-    setFilteredArticles(filtered);
-  }, [articles, selectedTopics, hideNegative, showAuthoredByUser, user]);
+  //old client side filtering
+  // React.useEffect(() => {
+  //   let filtered = [...articles]; // start with all articles
+  //   // filter by selected topics
+  //   filtered = filtered.filter((article) =>
+  //     selectedTopics.includes(article.topic)
+  //   );
+  //   // filter to hide negative vote counts if hideNegative is true
+  //   if (hideNegative) {
+  //     filtered = filtered.filter((article) => article.votes >= 0);
+  //   }
+  //   // filter only user authored articles when showAuthoredByUser is true
+  //   if (showAuthoredByUser && user?.username) {
+  //     filtered = filtered.filter((article) => article.author === user.username);
+  //   }
+  //   setFilteredArticles(filtered);
+  // }, [articles, selectedTopics, hideNegative, showAuthoredByUser, user]);
 
   const handleCheckboxChange = (topicSlug) => (event) => {
-    //navigate("/articles");
+    navigate("/articles");
 
     setSelectedTopics((prev) => {
       if (event.target.checked) {
@@ -228,9 +312,9 @@ export default function FilterDrawer({
                 Published
               </FormLabel>
               <RadioGroup
-                value={type || ""}
+                value={dateRange || ""}
                 onChange={(event) => {
-                  setType(event.target.value);
+                  setDateRange(event.target.value);
                 }}
               >
                 <Box
@@ -245,22 +329,26 @@ export default function FilterDrawer({
                     {
                       name: "All time",
                       icon: <HomeRoundedIcon />,
+                      value: "all",
                     },
                     {
                       name: "Last week",
                       icon: <ApartmentRoundedIcon />,
+                      value: "week",
                     },
                     {
                       name: "Last month",
                       icon: <MeetingRoomRoundedIcon />,
+                      value: "month",
                     },
                     {
                       name: "Last year",
                       icon: <HotelRoundedIcon />,
+                      value: "year",
                     },
                   ].map((item) => (
                     <Card
-                      key={item.name}
+                      key={item.value}
                       sx={{
                         boxShadow: "none",
                         bgcolor: "var(--joy-palette-background-level1)",
@@ -275,15 +363,15 @@ export default function FilterDrawer({
                       <Radio
                         disableIcon
                         overlay
-                        checked={type === item.name}
+                        checked={dateRange === item.value}
                         variant="outlined"
                         color="neutral"
-                        value={item.name}
+                        value={item.value}
                         sx={{ mt: -2 }}
                         slotProps={{
                           action: {
                             sx: {
-                              ...(type === item.name && {
+                              ...(dateRange === item.value && {
                                 borderWidth: 2,
                                 borderColor:
                                   "var(--joy-palette-primary-outlinedBorder)",
@@ -417,15 +505,20 @@ export default function FilterDrawer({
               variant="outlined"
               color="neutral"
               onClick={() => {
-                setType("All time");
+                // CLIENT SIDE VERSION
+                //setFilteredArticles(articles);
+                setDateRange("all");
                 setSelectedTopics(topicSlugs);
-                setFilteredArticles(articles);
-                setShowAuthoredByUser(false);
                 setHideNegative(false);
+                setShowAuthoredByUser(false);
+                setSearchParams({ page: "1" });
+                setFilters({});
               }}
             >
               Reset
             </Button>
+            <Button onClick={applyFilters}>Apply Filters</Button>
+
             <Button onClick={() => setOpen(false)}>
               Show {filteredArticles.length} articles
             </Button>
