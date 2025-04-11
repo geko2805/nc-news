@@ -519,9 +519,9 @@ export default function FilterDrawer({
             </Button>
             <Button onClick={applyFilters}>Apply Filters</Button>
 
-            <Button onClick={() => setOpen(false)}>
+            {/* <Button onClick={() => setOpen(false)}>
               Show {filteredArticles.length} articles
-            </Button>
+            </Button> */}
           </Stack>
         </Sheet>
       </Drawer>
