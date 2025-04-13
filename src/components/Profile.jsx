@@ -7,6 +7,7 @@ import { UserContext } from "./UserContext";
 import React, { useEffect, useState } from "react";
 import { getArticles } from "../../api";
 import { format } from "date-fns";
+import AlertDialogModal from "./AlertDialogModal.jsx";
 
 function Profile() {
   const { user, toastSuccess, toastError, setModalOpen } =
@@ -138,13 +139,16 @@ function Profile() {
                   <Typography>Topic: {article.topic}</Typography>
                   <Typography>Comments: {article.comment_count}</Typography>
                   <Typography>Votes: {article.votes}</Typography>
-                  <Button
-                    color="danger"
-                    variant="soft"
-                    sx={{ position: "absolute", right: "20px", bottom: "20px" }}
+
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      right: "20px",
+                      bottom: "20px",
+                    }}
                   >
-                    Delete
-                  </Button>
+                    <AlertDialogModal article={article} />
+                  </Box>
                 </li>
               ))}
             </ul>
