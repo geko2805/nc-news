@@ -16,19 +16,46 @@ function Profile() {
   const [isLoading, setIsLoading] = useState([]);
   const [error, setError] = useState("");
 
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+
+  const articlesPerPage = 9;
+
   useEffect(() => {
     setIsLoading(true);
-    getArticles(null, "created_at", "DESC", 1, 12, { author: user.username })
+    getArticles(null, "created_at", "DESC", 1, articlesPerPage, {
+      author: user.username,
+    })
       .then(({ articles, total_count }) => {
         setUsersArticles(articles);
+        setTotalCount(total_count);
         setIsLoading(false);
       })
       .catch((error) => {
         console.log(error);
-        setError(error.response.data.msg);
+        setError(error.response?.data?.msg || "Failed to load articles");
         setIsLoading(false);
       });
   }, [user]);
+
+  const loadMoreArticles = () => {
+    const nextPage = page + 1;
+    setIsLoading(true);
+    getArticles(null, "created_at", "DESC", nextPage, articlesPerPage, {
+      author: user.username,
+    })
+      .then(({ articles }) => {
+        setUsersArticles((prevArticles) => [...prevArticles, ...articles]); // Append new articles
+        setPage(nextPage); // Update page
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(error.response?.data?.msg || "Failed to load more articles");
+        setIsLoading(false);
+      });
+  };
+
   return (
     <Box
       sx={{
@@ -121,6 +148,23 @@ function Profile() {
                 </li>
               ))}
             </ul>
+          )}
+
+          {usersArticles.length < totalCount && (
+            <Button
+              onClick={loadMoreArticles}
+              disabled={isLoading}
+              sx={{ mt: 2 }}
+            >
+              {isLoading ? (
+                <>
+                  <CircularProgress size="sm" sx={{ mr: 1 }} />
+                  Loading...
+                </>
+              ) : (
+                "Show Older"
+              )}
+            </Button>
           )}
         </>
       ) : (
