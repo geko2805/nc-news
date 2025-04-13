@@ -1,0 +1,141 @@
+import { Avatar, Box, Button, Link, Typography } from "@mui/joy";
+import CircularProgress from "@mui/joy/CircularProgress";
+
+import { Link as RouterLink } from "react-router";
+
+import { UserContext } from "./UserContext";
+import React, { useEffect, useState } from "react";
+import { getArticles } from "../../api";
+
+function Profile() {
+  const { user, toastSuccess, toastError, setModalOpen } =
+    React.useContext(UserContext);
+
+  const [usersArticles, setUsersArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState([]);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    setIsLoading(true);
+    getArticles(null, "created_at", "DESC", 1, 12, { author: user.username })
+      .then(({ articles, total_count }) => {
+        setUsersArticles(articles);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setError(error.response.data.msg);
+        setIsLoading(false);
+      });
+  }, [user]);
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 2,
+        padding: 2,
+      }}
+    >
+      <h2>My Profile</h2>
+
+      {user.username ? (
+        <>
+          <h3>{user.name}</h3>
+          <Typography>Username: {user.username}</Typography>
+
+          <Avatar
+            alt={user.name ? user.name : ""}
+            src={user.avatar_url ? user.avatar_url : ""}
+            size="lg"
+          />
+
+          {user.avatar_url !== "" && (
+            <Button onClick={() => {}}>Change profile pic</Button>
+          )}
+
+          {user.avatar_url === "" && (
+            <Button onClick={() => {}}>Add profile pic</Button>
+          )}
+
+          <h3>My Articles</h3>
+
+          {isLoading ? (
+            <>
+              <CircularProgress variant="solid" size="sm" />
+              <Typography>Loading your articles...</Typography>
+            </>
+          ) : (
+            <ul
+              style={{
+                listStyle: "none",
+                textAlign: "left",
+                display: "flex",
+                justifyContent: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              {usersArticles.map((article) => (
+                <li
+                  style={{
+                    padding: "30px",
+                    margin: "10px",
+                    position: "relative",
+                    width: "400px",
+
+                    maxWidth: "400px",
+                    backgroundColor: "var(--joy-palette-background-level1)",
+                    borderRadius: "10px",
+                  }}
+                  key={article.article_id}
+                >
+                  <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+                    <Avatar
+                      alt={article.title}
+                      src={article.article_img_url}
+                      size="lg"
+                    />
+                    <Link
+                      component={RouterLink}
+                      to={`/articles/${article.article_id}`}
+                    >
+                      {article.title}
+                    </Link>
+                  </Box>
+                  <Typography>
+                    Published: {article.created_at.slice(0, 10)}
+                  </Typography>
+                  <Typography>Topic: {article.topic}</Typography>
+                  <Typography>Comments: {article.comment_count}</Typography>
+                  <Typography>Votes: {article.votes}</Typography>
+                  <Button
+                    color="danger"
+                    variant="soft"
+                    sx={{ position: "absolute", right: "20px", bottom: "20px" }}
+                  >
+                    Delete
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
+      ) : (
+        <Typography sx={{ p: 2 }}>
+          Please{" "}
+          <Button
+            variant="outlined"
+            color="neutral"
+            onClick={() => setModalOpen(true)}
+          >
+            Log in
+          </Button>{" "}
+          to view profile info
+        </Typography>
+      )}
+    </Box>
+  );
+}
+
+export default Profile;

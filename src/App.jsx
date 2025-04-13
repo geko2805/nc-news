@@ -21,6 +21,7 @@ import { useRef, useState } from "react";
 import Toast from "./components/ToastContainer";
 import Footer from "./components/Foooter";
 import SubmitArticle from "./components/SubmitArticle";
+import Profile from "./components/Profile";
 
 function App() {
   const searchInputRef = useRef(null);
@@ -54,6 +55,7 @@ function App() {
               <Route path="/articles/:article_id" element={<Article />} />
               <Route path="/topics" element={<Topics />} />
               <Route path="/submit" element={<SubmitArticle />} />
+              <Route path="/profile" element={<Profile />} />
 
               <Route path="/topics/:topic" element={<Articles />} />
               <Route
