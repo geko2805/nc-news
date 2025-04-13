@@ -11,23 +11,34 @@ export default function ModeSwitcher() {
     mode === "system" ? systemMode === "dark" : mode === "dark"
   );
 
-  const handleChange = (event) => {
-    const newMode = event.target.checked ? "dark" : "light";
+  const handleToggle = () => {
+    const newChecked = !checked;
+    const newMode = newChecked ? "dark" : "light";
     setMode(newMode);
-    setChecked(event.target.checked);
+    setChecked(newChecked);
   };
 
   return (
-    <Link overlay onClick={handleChange} checked={checked}>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1, m: 3 }}>
-        <LightModeIcon />
-        <Switch
-          checked={checked}
-          onChange={handleChange}
-          inputProps={{ "aria-label": "toggle dark mode" }}
-        />
-        <DarkModeIcon />
-      </Box>
-    </Link>
+    <Box
+      component="button"
+      onClick={handleToggle}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+        m: 3,
+        border: "none",
+        background: "transparent",
+        cursor: "pointer",
+      }}
+    >
+      <LightModeIcon />
+      <Switch
+        checked={checked}
+        onChange={handleToggle}
+        aria-label="toggle dark mode switch"
+      />
+      <DarkModeIcon />
+    </Box>
   );
 }

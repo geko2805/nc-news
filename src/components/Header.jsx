@@ -305,7 +305,9 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
           }}
         >
           <Link
-            onClick={!user.name ? () => setModalOpen(true) : undefined}
+            onClick={
+              !user.name ? () => setModalOpen(true) : () => navigate("/profile")
+            }
             sx={{ fontSize: "1rem" }}
           >
             {user.name ? user.name : "Sign in/Register"}
