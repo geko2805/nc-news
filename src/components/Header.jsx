@@ -153,7 +153,11 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
                 <MenuItem onClick={() => setModalOpen(true)}>Log in</MenuItem>
               )}
               <MenuItem>Settings</MenuItem>
-              {user.name && <MenuItem>Profile</MenuItem>}
+              {user.name && (
+                <Link component={RouterLink} to="/profile">
+                  <MenuItem sx={{ width: "100%" }}>Profile</MenuItem>{" "}
+                </Link>
+              )}
               {user.name && <MenuItem>My account</MenuItem>}
               {user.name && (
                 <Link component={RouterLink} to="/submit">

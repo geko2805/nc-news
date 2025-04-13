@@ -129,7 +129,7 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
           {user.name && (
             <List>
               {[
-                { text: "Profile", route: "/my-profile" },
+                { text: "Profile", route: "/profile" },
                 { text: "Post article", route: "/submit" },
                 { text: "My articles", route: "/articles" },
                 { text: "Settings", route: "/settings" },
