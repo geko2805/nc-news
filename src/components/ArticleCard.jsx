@@ -1,5 +1,6 @@
 import { Card, CardContent, CardCover, Skeleton, Typography } from "@mui/joy";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
 
 function ArticleCard({ article, isLoading }) {
   return (
@@ -69,7 +70,9 @@ function ArticleCard({ article, isLoading }) {
                 <Typography textColor="#fff">By: {article.author}</Typography>
                 <Typography textColor="#fff">Topic: {article.topic}</Typography>
                 <Typography textColor="#fff">
-                  Published: {article.created_at.slice(0, 10)}
+                  {/* Published: {article.created_at.slice(0, 10)} */}
+                  Published:{" "}
+                  {format(new Date(article.created_at), "dd/MM/yyyy")}
                 </Typography>
                 <Typography textColor="#fff">
                   Comments: {article.comment_count} Votes: {article.votes}

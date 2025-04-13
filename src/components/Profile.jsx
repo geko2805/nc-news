@@ -6,6 +6,7 @@ import { Link as RouterLink } from "react-router";
 import { UserContext } from "./UserContext";
 import React, { useEffect, useState } from "react";
 import { getArticles } from "../../api";
+import { format } from "date-fns";
 
 function Profile() {
   const { user, toastSuccess, toastError, setModalOpen } =
@@ -104,7 +105,8 @@ function Profile() {
                     </Link>
                   </Box>
                   <Typography>
-                    Published: {article.created_at.slice(0, 10)}
+                    Published:{" "}
+                    {format(new Date(article.created_at), "dd/MM/yyyy")}
                   </Typography>
                   <Typography>Topic: {article.topic}</Typography>
                   <Typography>Comments: {article.comment_count}</Typography>
