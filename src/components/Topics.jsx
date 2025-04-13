@@ -9,7 +9,10 @@ function Topics() {
   return (
     <>
       {location.pathname !== "/" && <h2>Topics</h2>}
-      <TopicsList topics={topics} isLoading={isLoading} />
+      <TopicsList
+        topics={location.pathname === "/" ? topics.slice(0, 3) : topics}
+        isLoading={isLoading}
+      />
     </>
   );
 }

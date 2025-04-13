@@ -76,8 +76,18 @@ function CommentList({ article_id }) {
     <>
       <section style={{ flex: 1 }}>
         {user.username ? (
-          <FormControl sx={{ p: 2, m: "0 auto", maxWidth: "800px" }}>
+          <FormControl
+            sx={{
+              p: 2,
+              m: "0 auto",
+              maxWidth: "800px",
+            }}
+          >
             <Textarea
+              sx={{
+                color: "var(--joy-palette-text-primary)",
+                bgcolor: "var(--joy-palette-background-level1)",
+              }}
               minRows={2}
               placeholder="Enter your comment..."
               value={commentInput}

@@ -23,8 +23,14 @@ export function TopicsProvider({ children }) {
       });
   }, []);
 
+  const addTopicToContext = (newTopic) => {
+    setTopics((prevTopics) => [...prevTopics, newTopic]);
+  };
+
   return (
-    <TopicsContext.Provider value={{ topics, isLoading, error }}>
+    <TopicsContext.Provider
+      value={{ topics, addTopicToContext, isLoading, error }}
+    >
       {children}
     </TopicsContext.Provider>
   );

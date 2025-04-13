@@ -12,7 +12,7 @@ function TopicsList({ topics, isLoading }) {
       }}
     >
       {isLoading
-        ? [...Array(3)].map((_, index) => (
+        ? [...Array(location.pathname === "/" ? 3 : 9)].map((_, index) => (
             <TopicCard key={index} topic={{}} isLoading={true} />
           ))
         : topics.map((topic) => {

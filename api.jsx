@@ -89,6 +89,23 @@ export function getTopics() {
   });
 }
 
+export function addTopic({ slug, description }) {
+  return api
+    .post("/topics", { slug, description })
+    .then(({ data }) => {
+      console.log("addTopic response:", data);
+      return data.topic;
+    })
+    .catch((error) => {
+      console.error("addTopic error:", {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+      });
+      throw error;
+    });
+}
+
 export function getUserByUsername(username) {
   return api.get(`/users/${username}`).then(({ data }) => {
     return data.user;
