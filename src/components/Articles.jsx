@@ -23,6 +23,8 @@ import ErrorFallback from "./ErrorFallback";
 import { UserContext } from "./UserContext";
 import { Search } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import FilterDrawer from "./FilterDrawer";
 
 function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
@@ -383,20 +385,37 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
           isLoading={isLoading}
         />
 
+        {location.pathname === "/" && (
+          <>
+            <Typography level="h3" sx={{ textAlign: "center", mb: 2 }}>
+              Popular
+            </Typography>
+            <ArticleList articles={popularArticles} isLoading={isLoading} />
+          </>
+        )}
+
         {/* Pagination Controls (not on homepage) */}
         {location.pathname !== "/" && filteredArticles.length > 0 && (
           <>
             <Box
               sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
             >
-              <Button onClick={handlePreviousPage} disabled={page === 1}>
-                Previous
+              <Button
+                onClick={handlePreviousPage}
+                disabled={page === 1}
+                startDecorator={<NavigateBeforeIcon />}
+              >
+                Prev
               </Button>
               <Typography sx={{ mt: 1 }}>
                 Page {page} of {totalPages}
               </Typography>
 
-              <Button onClick={handleNextPage} disabled={page === totalPages}>
+              <Button
+                onClick={handleNextPage}
+                disabled={page === totalPages}
+                endDecorator={<NavigateNextIcon />}
+              >
                 Next
               </Button>
             </Box>
@@ -426,15 +445,6 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
               </FormLabel>
               <Typography sx={{ mt: 2 }}>(Total: {totalCount})</Typography>
             </Box>
-          </>
-        )}
-
-        {location.pathname === "/" && (
-          <>
-            <Typography level="h3" sx={{ textAlign: "center", mb: 2 }}>
-              Popular
-            </Typography>
-            <ArticleList articles={popularArticles} isLoading={isLoading} />
           </>
         )}
 
