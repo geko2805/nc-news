@@ -123,3 +123,9 @@ export function submitArticle(author, title, body, topic, article_img_url) {
 export const deleteArticle = (article_id) => {
   return api.delete(`/articles/${article_id}`).catch((err) => console.log(err));
 };
+
+export function updateAvatar(username, avatar_url) {
+  return api.patch(`/users/${username}`, { avatar_url }).then(({ data }) => {
+    return data.user;
+  });
+}

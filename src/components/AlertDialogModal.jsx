@@ -9,7 +9,11 @@ import ModalDialog from "@mui/joy/ModalDialog";
 import DeleteForever from "@mui/icons-material/DeleteForever";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 
-function AlertDialogModal({ article, handleArticleDelete }) {
+function AlertDialogModal({
+  itemToDelete, //the description of the thing to confirm delete of in desciption
+  handler, //passed handler function to execute on submit
+  handlerArg, //argument for the passed function
+}) {
   const [open, setOpen] = React.useState(false);
   return (
     <React.Fragment>
@@ -33,15 +37,13 @@ function AlertDialogModal({ article, handleArticleDelete }) {
           </DialogTitle>
           <Divider />
           <DialogContent>
-            Are you sure you want to delete {article.title}?
+            Are you sure you want to delete {itemToDelete}?
           </DialogContent>
           <DialogActions>
             <Button
               variant="solid"
               color="danger"
-              onClick={() =>
-                setOpen(false) & handleArticleDelete(article.article_id)
-              }
+              onClick={() => setOpen(false) & handler(handlerArg)}
             >
               Delete
             </Button>
