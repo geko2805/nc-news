@@ -31,6 +31,7 @@ import { getTopics } from "../../api";
 import { useTopics } from "./TopicsContext";
 import { UserContext } from "./UserContext";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Badge } from "@mui/joy";
 
 export default function FilterDrawer({
   articles,
@@ -233,32 +234,45 @@ export default function FilterDrawer({
   return (
     <React.Fragment>
       {isVisible && (
-        <Button
+        <Badge
           sx={(theme) => ({
-            bgcolor: "var(--joy-palette-background-level1)",
-            "&:hover": {
-              backgroundColor: "var(--joy-palette-neutral-100)", // Lighten on hover
-            },
             [theme.breakpoints.down("sm")]: {
-              bgcolor: "var(--joy-palette-background-transparent)",
               position: "fixed",
               bottom: 5,
-              zIndex: 1000,
+              zIndex: 1001,
               left: "50%", // Move left edge to center of parent
               transform: "translateX(-50%)", // Shift back by half its width
             },
-
             mr: "3rem",
           })}
-          variant="outlined"
-          color="neutral"
-          startDecorator={<TuneIcon />}
-          onClick={() => setOpen(true)}
-          size="lg"
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          // badgeInset="30%"
+          badgeContent={Object.keys(filters).length}
         >
-          Filters
-          {/* {isSmallScreen ? <TuneIcon /> : "Filters"} */}
-        </Button>
+          <Button
+            sx={(theme) => ({
+              bgcolor: "var(--joy-palette-background-level1)",
+              "&:hover": {
+                backgroundColor: "var(--joy-palette-neutral-100)", // Lighten on hover
+              },
+              [theme.breakpoints.down("sm")]: {
+                bgcolor: "var(--joy-palette-background-transparent)",
+                position: "static",
+              },
+            })}
+            variant="outlined"
+            color="neutral"
+            startDecorator={<TuneIcon />}
+            onClick={() => setOpen(true)}
+            size="lg"
+          >
+            Filters
+            {/* {isSmallScreen ? <TuneIcon /> : "Filters"} */}
+          </Button>
+        </Badge>
       )}
       <Drawer
         sx={(theme) => ({
