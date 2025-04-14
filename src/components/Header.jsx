@@ -66,6 +66,8 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
       <Box
         component="header"
         sx={{
+          transition: "all 0.3s ease-in-out",
+
           display: "grid",
           gridTemplateColumns: {
             xs: "auto auto", // Mobile: logo (left), drawer (right)
@@ -81,7 +83,11 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
           },
           gap: 2,
           alignItems: "center",
-          p: 2,
+          p: {
+            xs: 1,
+            sm: 1,
+            md: 2,
+          },
           maxWidth: "100%",
           boxSizing: "border-box",
         }}
@@ -157,8 +163,12 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
             </MenuButton>
             <Menu placement="bottom-start">
               {!user.name && (
-                <MenuItem onClick={() => setModalOpen(true)}>
-                  Log in <LoginIcon />
+                <MenuItem
+                  onClick={() => setModalOpen(true)}
+                  sx={{ width: "100%" }}
+                >
+                  <LoginIcon />
+                  Log in
                 </MenuItem>
               )}
               {user.name && (
@@ -171,7 +181,7 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
               )}
               {user.name && (
                 <Link component={RouterLink} to="/my-articles">
-                  <MenuItem>
+                  <MenuItem sx={{ width: "100%" }}>
                     <ArticleIcon />
                     My Articles
                   </MenuItem>
@@ -196,7 +206,8 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
                     setUser({}) & toastInfo("You have been signed out")
                   }
                 >
-                  Logout <LogoutIcon />
+                  <LogoutIcon />
+                  Logout
                 </MenuItem>
               )}
               <Box
@@ -290,8 +301,8 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
               }
               slotProps={{ input: { "aria-label": "Search anything" } }}
               sx={{
-                height: 30,
-                width: { md: 150, xl: 200 },
+                height: 40,
+                width: { md: 280, xl: 200 },
                 borderRadius: 0,
                 borderBottom: "2px solid",
                 borderColor: "neutral.outlinedBorder",
@@ -304,7 +315,7 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
                   right: 0,
                   bottom: "-2px",
                   top: "unset",
-                  transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+                  transition: "transform 1s cubic-bezier(0.1,0.9,0.2,1)",
                   borderRadius: 0,
                 },
                 "&:focus-within::before": { transform: "scaleX(1)" },
@@ -347,13 +358,22 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
               sm: "none", // Hidden on medium
               md: "flex", // Visible on large+
             },
+            mt: {
+              md: 3,
+              xl: 0,
+            },
+
+            mx: {
+              xl: 15,
+            },
+
             justifyContent: "center",
             gridColumn: { md: "1 / -1", xl: "5" },
             gridRow: { md: "2", xl: "1" },
             zIndex: 1000,
           }}
         >
-          <Box component="nav" sx={{ display: "flex", gap: 2 }}>
+          <Box component="nav" sx={{ display: "flex", gap: { md: 3, xl: 4 } }}>
             <Link component={RouterLink} to="/">
               Home
             </Link>
@@ -372,8 +392,12 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
         <Typography
           level="title-sm"
           sx={{
-            mb: 2,
-            ml: "2rem",
+            mb: 0,
+            ml: { xs: 1, sm: 5 },
+            mt: {
+              xs: 0,
+              xl: 2,
+            },
             cursor: "pointer",
             width: "30px",
             color: "primary",

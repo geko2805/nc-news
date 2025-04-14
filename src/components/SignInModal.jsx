@@ -4,10 +4,11 @@ import Modal from "@mui/joy/Modal";
 import ModalClose from "@mui/joy/ModalClose";
 import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
-import { Input, Stack } from "@mui/joy";
+import { Box, Input, Stack } from "@mui/joy";
 import { UserContext } from "./UserContext";
 import { getUserByUsername } from "../../api";
 import { Link } from "@mui/joy";
+import CircularProgress from "@mui/joy/CircularProgress";
 
 export default function SignInModal() {
   // const [open, setOpen] = React.useState(false);
@@ -111,16 +112,22 @@ export default function SignInModal() {
             </Typography>
             <form onSubmit={handleSubmit}>
               <Stack spacing={1}>
-                <Input
-                  sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
-                  autoFocus
-                  placeholder="Enter username (e.g. jessjelly)"
-                  name="username"
-                  value={usernameInput}
-                  onChange={(event) => setUsernameInput(event.target.value)}
-                  disabled={isLoading ? true : false}
-                  required
-                />
+                {isLoading ? (
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <CircularProgress size="sm" />
+                  </Box>
+                ) : (
+                  <Input
+                    sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
+                    autoFocus
+                    placeholder="Enter username (e.g. jessjelly)"
+                    name="username"
+                    value={usernameInput}
+                    onChange={(event) => setUsernameInput(event.target.value)}
+                    disabled={isLoading ? true : false}
+                    required
+                  />
+                )}
                 {/* <Input placeholder="*******" disabled /> */}
                 {error && (
                   <Typography color="danger" level="body2">

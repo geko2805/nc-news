@@ -16,6 +16,8 @@ function ArticleCard({ article, isLoading }) {
             minHeight: "280px",
             width: 320,
             margin: 1,
+            transition: "all 0.3s ease-in-out",
+
             "&:hover": {
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
               transform: "scale(1.03)",
@@ -53,14 +55,50 @@ function ArticleCard({ article, isLoading }) {
             </>
           )}
 
-          <CardContent sx={{ justifyContent: "flex-end" }}>
+          <CardContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 0,
+            }}
+          >
             {isLoading ? (
               <>
-                <Skeleton width="80%" height={40} sx={{ mb: 1 }} />
-                <Skeleton width="60%" height={20} sx={{ mb: 1 }} />
-                <Skeleton width="50%" height={20} sx={{ mb: 1 }} />
-                <Skeleton width="90%" height={20} sx={{ mb: 1 }} />
-                <Skeleton width="70%" height={20} />
+                {/* <Skeleton variant="text" animation="wave" width="60%" />
+                <Skeleton variant="text" animation="wave" width="30%" />
+                <Skeleton variant="text" animation="wave" width="35%" />
+                <Skeleton variant="text" animation="wave" width="45%" />
+                <Skeleton variant="text" animation="wave" width="40%" /> */}
+
+                <Skeleton variant="text" width="90%" height={20} />
+                <Skeleton variant="text" width="70%" />
+
+                <Skeleton
+                  variant="text"
+                  width="30%"
+                  level="body-xs"
+                  height={15}
+                />
+                <Skeleton
+                  variant="text"
+                  width="35%"
+                  level="body-xs"
+                  height={15}
+                />
+                <Skeleton
+                  variant="text"
+                  width="45%"
+                  level="body-xs"
+                  height={15}
+                />
+                <Skeleton
+                  variant="text"
+                  width="40%"
+                  level="body-xs"
+                  height={15}
+                />
               </>
             ) : (
               <>

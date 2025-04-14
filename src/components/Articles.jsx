@@ -205,7 +205,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
     <>
       <section>
         {location.pathname !== "/" && (
-          <Typography level="h3" sx={{ textAlign: "center", mb: 2 }}>
+          <Typography level="h4" sx={{ textAlign: "center", mb: 2 }}>
             {topic
               ? topic[0].toUpperCase() + topic.slice(1) + " articles"
               : "Articles"}
@@ -213,10 +213,11 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
         )}
 
         {location.pathname === "/" && (
-          <Typography level="h3" sx={{ textAlign: "center", mb: 2 }}>
+          <Typography level="h4" sx={{ textAlign: "center", mb: 2 }}>
             Latest Articles
           </Typography>
         )}
+
         {/* only show filters, sort and search if not on homepage */}
         {location.pathname !== "/" && (
           <>
@@ -359,7 +360,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                     right: 0,
                     bottom: "-2px",
                     top: "unset",
-                    transition: "transform .15s cubic-bezier(0.1,0.9,0.2,1)",
+                    transition: "transform 1s cubic-bezier(0.1,0.9,0.2,1)",
                     borderRadius: 0,
                   },
                   "&:focus-within::before": {
@@ -387,7 +388,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
 
         {location.pathname === "/" && (
           <>
-            <Typography level="h3" sx={{ textAlign: "center", mb: 2 }}>
+            <Typography level="h4" sx={{ textAlign: "center", m: 2 }}>
               Popular
             </Typography>
             <ArticleList articles={popularArticles} isLoading={isLoading} />

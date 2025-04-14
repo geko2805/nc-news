@@ -8,31 +8,23 @@ function Home() {
 
   return (
     <>
-      <Box
-      // sx={{
-      //   display: {
-      //     xs: "block", // Hidden on medium+
-      //     sm: "block",
-      //   },
-      // }}
-      >
+      <Box sx={{ m: 2 }}>
         <Articles />
       </Box>
+
       <Link to="/articles" className="all-items">
         <Button
+          variant="outlined"
+          color="neutral"
+          size="sm"
           endDecorator={<ArrowRightAltIcon />}
           onClick={() => {
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
           sx={{
-            "--Input-radius": "20px",
-            borderWidth: "2px",
-
-            p: 3,
-            m: 1,
-            // display: {
-            //   sm: "none", // Hidden on medium+
-            // },
+            borderRadius: "8px",
+            p: 2,
+            m: 2,
             "&:hover": {
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
               transform: "scale(1.03)",
@@ -42,24 +34,23 @@ function Home() {
           View all articles
         </Button>
       </Link>
-      <h2>Featured Topics</h2>
 
-      <Topics />
+      <Box sx={{ m: 2 }}>
+        <Topics />
+      </Box>
 
       <Link to="/topics" className="all-items">
         <Button
+          variant="outlined"
+          color="neutral"
           endDecorator={<ArrowRightAltIcon />}
           onClick={() => {
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
           sx={{
-            "--Input-radius": "20px",
-            borderWidth: "2px",
-            p: 3,
-            m: 1,
-            // display: {
-            //   sm: "none", // Hidden on medium+
-            // },
+            borderRadius: "8px",
+            p: 2,
+            m: 2,
             "&:hover": {
               boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
               transform: "scale(1.03)",

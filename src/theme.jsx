@@ -37,10 +37,12 @@ const customTheme = extendTheme({
         background: {
           body: "#ffffff", // Light mode background
           level1: "#f5f5f5",
+          surface: "#ffffff",
           transparent: "rgba(255, 255, 255, 0.9)", // White with opacity for light mode
         },
         text: {
           primary: "#212121", // Light mode text
+          secondary: "#6b7280",
         },
       },
     },
@@ -63,10 +65,12 @@ const customTheme = extendTheme({
         background: {
           body: "#121212", // Dark mode background
           level1: "#1e1e1e",
+          surface: "#1c2526",
           transparent: "rgba(0, 0, 0, 0.85)", // Black with opacity for dark mode
         },
         text: {
           primary: "#e0e0e0", // Dark mode text
+          secondary: "#bdbdbd",
         },
       },
     },
@@ -143,7 +147,7 @@ const customTheme = extendTheme({
           borderRadius: "8px", // Rounded corners
           padding: "8px 16px", // Custom padding
           textTransform: "none", // Prevent uppercase text
-          transition: "background-color 0.2s ease, transform 0.1s ease", // Smooth transitions
+          transition: "all 0.3s ease-in-out",
 
           "&:active": {
             transform: "scale(0.98)", // Slight press effect
