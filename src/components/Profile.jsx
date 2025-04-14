@@ -2,10 +2,24 @@ import { Avatar, Box, Button, Link, Typography } from "@mui/joy";
 import { UserContext } from "./UserContext";
 import React from "react";
 import UserAvatar from "../../src/assets/avatar.png";
+import UpdateAvatarModal from "./UpdateAvatarModal";
+import AlertDialogModal from "./AlertDialogModal";
+import { updateAvatar } from "../../api";
 
 function Profile() {
-  const { user, toastSuccess, toastError, setModalOpen } =
+  const { user, setUser, toastSuccess, toastError, setModalOpen } =
     React.useContext(UserContext);
+
+  const handleRemoveImage = async (username) => {
+    try {
+      //patch avatar_url to bbe an empty string and update user context
+      await updateAvatar(username, "");
+      setUser((prevUser) => ({
+        ...prevUser,
+        avatar_url: "",
+      }));
+    } catch {}
+  };
 
   return (
     <Box
@@ -33,12 +47,12 @@ function Profile() {
             alt={user.name ? user.name : ""}
             src={user.avatar_url ? user.avatar_url : UserAvatar}
           />
-          {user.avatar_url !== "" && (
-            <Button onClick={() => {}}>Change profile pic</Button>
-          )}
-          {user.avatar_url === "" && (
-            <Button onClick={() => {}}>Add profile pic</Button>
-          )}{" "}
+          <UpdateAvatarModal />
+          <AlertDialogModal
+            itemToDelete={"Profile photo"} //use this string in the modal description
+            handler={handleRemoveImage} //function to run on modal confirm
+            handlerArg={user.username} //argument to pass to handler
+          />
           <Typography>Username: {user.username}</Typography>
         </>
       ) : (

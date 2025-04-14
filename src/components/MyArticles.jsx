@@ -154,8 +154,9 @@ function MyArticles() {
                     }}
                   >
                     <AlertDialogModal
-                      article={article}
-                      handleArticleDelete={handleArticleDelete}
+                      itemToDelete={article.title}
+                      handler={handleArticleDelete}
+                      handlerArg={article.article_id}
                     />
                   </Box>
                 </li>
