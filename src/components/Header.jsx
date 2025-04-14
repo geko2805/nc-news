@@ -395,12 +395,12 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
             mb: 0,
             ml: { xs: 1, sm: 5 },
             mt: {
-              xs: 0,
+              xs: 1,
               xl: 2,
             },
             cursor: "pointer",
             width: "30px",
-            color: "primary",
+            color: "var(--joy-palette-primary-500)",
           }}
           startDecorator={<ArrowBackIcon />}
           onClick={() => navigate(-1)}

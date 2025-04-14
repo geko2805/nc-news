@@ -16,21 +16,27 @@ export function getArticles(
   order = "DESC",
   page = 1,
   limit = 12,
-  filters = {}
+  filters = {},
+  count_only = false
 ) {
   const queryParams = new URLSearchParams();
   if (topic) queryParams.append("topic", topic);
   if (sort_by) queryParams.append("sort_by", sort_by);
   if (order) queryParams.append("order", order);
-  // always include page & limit
-  queryParams.append("page", page);
-  queryParams.append("limit", limit);
+  if (!count_only) {
+    // include page & limit only if not count_only
+    queryParams.append("page", page);
+    queryParams.append("limit", limit);
+  }
   //filter params
   if (filters.hide_negative) queryParams.append("hide_negative", "true");
   if (filters.author) queryParams.append("author", filters.author);
   if (filters.date_range) queryParams.append("date_range", filters.date_range);
   if (filters.selected_topics)
     queryParams.append("selected_topics", filters.selected_topics.join(","));
+
+  //append count_only as true to return only the count when count_only is true
+  if (count_only) queryParams.append("count_only", "true");
 
   const query = queryParams.toString() ? `?${queryParams.toString()}` : "";
 

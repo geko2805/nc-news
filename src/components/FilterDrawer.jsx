@@ -27,11 +27,11 @@ import ApartmentRoundedIcon from "@mui/icons-material/ApartmentRounded";
 import MeetingRoomRoundedIcon from "@mui/icons-material/MeetingRoomRounded";
 import HotelRoundedIcon from "@mui/icons-material/HotelRounded";
 import Done from "@mui/icons-material/Done";
-import { getTopics } from "../../api";
+import { getArticles, getTopics } from "../../api";
 import { useTopics } from "./TopicsContext";
 import { UserContext } from "./UserContext";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { Badge } from "@mui/joy";
+import { Badge, CircularProgress, IconButton } from "@mui/joy";
 
 export default function FilterDrawer({
   articles,
@@ -60,6 +60,9 @@ export default function FilterDrawer({
   const [showAuthoredByUser, setShowAuthoredByUser] = React.useState(
     filters.author || false
   );
+  //to store total count of filtered results for real time feedback
+  const [filteredCount, setFilteredCount] = React.useState(null);
+  const [isFetchingCount, setIsFetchingCount] = React.useState(false);
 
   //from context
   const { topics, isLoading } = useTopics();
@@ -67,10 +70,8 @@ export default function FilterDrawer({
 
   //state for all the topic titles populated from topic context -----MOVE THESE UP TO ARTICLES SO THE STATE CAN BE RESET EASILY IS NO ARTICLES AVAILABLE
   const [topicSlugs, setTopicSlugs] = React.useState([]);
+
   // state for topics selected by checkbox filters
-  // const [selectedTopics, setSelectedTopics] = React.useState(
-  //   filters.selected_topics || []
-  // );
   const [selectedTopics, setSelectedTopics] = React.useState(() => {
     const topicsParam = searchParams.get("selected_topics");
     if (topicsParam) {
@@ -88,6 +89,41 @@ export default function FilterDrawer({
   );
   const anchor = isLargeScreen ? "right" : "bottom"; // Set anchor dynamically
   // Update screen size on resize
+
+  // Debounce function
+  const debounce = (func, wait) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  };
+
+  // Fetch filtered count
+  const fetchFilteredCount = React.useCallback(
+    debounce((newFilters) => {
+      setIsFetchingCount(true);
+      getArticles(
+        topic,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        newFilters,
+        true
+      )
+        .then((data) => {
+          setFilteredCount(data.total_count);
+          setIsFetchingCount(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching count:", error);
+          setIsFetchingCount(false);
+        });
+    }, 300),
+    [topic]
+  );
+
   React.useEffect(() => {
     const handleResize = () => {
       setIsLargeScreen(window.innerWidth >= 900); // > 900px breakpoint (md)
@@ -158,6 +194,29 @@ export default function FilterDrawer({
       setSelectedTopics(filters.selected_topics);
     }
   }, [searchParams, filters, user]);
+
+  // Update filtered count in real-time
+  React.useEffect(() => {
+    const newFilters = {};
+    if (dateRange !== "all") newFilters.date_range = dateRange;
+    if (hideNegative) newFilters.hide_negative = true;
+    if (showAuthoredByUser && user?.username) newFilters.author = user.username;
+    if (
+      selectedTopics.length > 0 &&
+      selectedTopics.length < topicSlugs.length
+    ) {
+      newFilters.selected_topics = selectedTopics;
+    }
+    fetchFilteredCount(newFilters);
+  }, [
+    dateRange,
+    hideNegative,
+    showAuthoredByUser,
+    selectedTopics,
+    user,
+    topicSlugs,
+    fetchFilteredCount,
+  ]);
 
   const applyFilters = () => {
     const newFilters = {};
@@ -317,7 +376,27 @@ export default function FilterDrawer({
             bgcolor: "transparent",
           }}
         >
-          <DialogTitle>Filters</DialogTitle>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <DialogTitle>Filters</DialogTitle>
+            <Typography sx={{ mr: 5 }} level="body-sm">
+              Apply filters to load{" "}
+              {isFetchingCount ? (
+                <CircularProgress
+                  variant="solid"
+                  color="primary"
+                  sx={{
+                    "--CircularProgress-trackThickness": "2px",
+                    "--CircularProgress-progressThickness": "2px",
+                    "--CircularProgress-size": "15px",
+                  }}
+                />
+              ) : (
+                filteredCount
+              )}{" "}
+              results
+            </Typography>
+          </Box>
+
           <ModalClose />
           <Divider sx={{ mt: "auto" }} />
           <DialogContent sx={{ gap: 2 }}>
@@ -367,11 +446,13 @@ export default function FilterDrawer({
                         boxShadow: "none",
                         bgcolor: "var(--joy-palette-background-level1)",
 
-                        "&:hover": { bgcolor: "background." },
+                        "&:hover": {
+                          bgcolor: "var(--joy-palette-primary-50)",
+                        },
                       }}
                     >
                       <CardContent>
-                        {item.icon}
+                        {/* {item.icon} */}
                         <Typography level="title-md">{item.name}</Typography>
                       </CardContent>
                       <Radio
@@ -407,54 +488,80 @@ export default function FilterDrawer({
               Topics
             </Typography>
             <div role="group" aria-labelledby="rank">
-              <List
-                orientation="horizontal"
-                size="sm"
-                sx={(theme) => ({
-                  //[theme.breakpoints.up("md")]: {
-                  display: "flex",
-                  justifyContent: "start",
-                  flexWrap: "wrap",
-                  //  },
-                  gap: "12px",
-                  "--ListItem-radius": "20px",
-                })}
-              >
-                {topics.map((topic, index) => {
-                  const selected = selectedTopics.includes(topic.slug);
-                  return (
-                    <ListItem key={topic.slug}>
-                      <AspectRatio
-                        variant={selected ? "solid" : "outlined"}
-                        color={selected ? "primary" : "neutral"}
-                        ratio={1}
-                        sx={{ width: 20, borderRadius: 20, ml: -0.5, mr: 0.75 }}
-                      >
-                        <div>{selected && <Done fontSize="md" />}</div>
-                      </AspectRatio>
-                      <Checkbox
-                        size="sm"
-                        color="neutral"
-                        disableIcon
-                        overlay
-                        label={topic.slug}
-                        variant="outlined"
-                        checked={selected}
-                        onChange={handleCheckboxChange(topic.slug)} // Update state
-                        slotProps={{
-                          action: {
-                            sx: {
-                              "&:hover": {
-                                bgcolor: "transparent",
-                              },
-                            },
+              {isLoading ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <CircularProgress size="sm" />
+                  <Typography>Topics loading...</Typography>
+                </Box>
+              ) : (
+                <List
+                  orientation="horizontal"
+                  size="sm"
+                  sx={(theme) => ({
+                    //[theme.breakpoints.up("md")]: {
+                    display: "flex",
+                    justifyContent: "start",
+                    flexWrap: "wrap",
+                    //  },
+                    gap: "12px",
+                    "--ListItem-radius": "20px",
+                  })}
+                >
+                  {topics.map((topic, index) => {
+                    const selected = selectedTopics.includes(topic.slug);
+                    return (
+                      <ListItem
+                        key={topic.slug}
+                        sx={{
+                          "&:hover": {
+                            bgcolor: "var(--joy-palette-primary-50)",
                           },
                         }}
-                      />
-                    </ListItem>
-                  );
-                })}
-              </List>
+                      >
+                        <AspectRatio
+                          variant={selected ? "solid" : "outlined"}
+                          color={selected ? "primary" : "neutral"}
+                          ratio={1}
+                          sx={{
+                            width: 20,
+                            borderRadius: 20,
+                            ml: -0.5,
+                            mr: 0.75,
+                          }}
+                        >
+                          <div>{selected && <Done fontSize="md" />}</div>
+                        </AspectRatio>
+                        <Checkbox
+                          size="sm"
+                          color="neutral"
+                          disableIcon
+                          overlay
+                          label={topic.slug}
+                          variant="outlined"
+                          checked={selected}
+                          onChange={handleCheckboxChange(topic.slug)} // Update state
+                          slotProps={{
+                            action: {
+                              sx: {
+                                "&:hover": {
+                                  bgcolor: "transparent",
+                                },
+                              },
+                            },
+                          }}
+                        />
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              )}
             </div>
 
             <Typography level="title-md" sx={{ fontWeight: "bold", mt: 2 }}>
@@ -463,27 +570,29 @@ export default function FilterDrawer({
             <FormControl orientation="horizontal">
               <Box sx={{ flex: 1, pr: 1 }}>
                 <FormLabel sx={{ typography: "title-sm" }}>Votes</FormLabel>
-                <FormHelperText sx={{ typography: "body-sm" }}>
+                <FormHelperText sx={{ typography: "body-sm", mt: 1 }}>
                   Hide articles with negative vote counts
                 </FormHelperText>
               </Box>
               <Switch
+                sx={{ mt: 3 }}
                 checked={hideNegative}
                 onChange={(event) => setHideNegative(event.target.checked)}
                 inputProps={{ "aria-label": "controlled" }}
               />
             </FormControl>
+            <Divider />
 
             <FormControl orientation="horizontal">
-              <Box sx={{ flex: 1, mt: 1, mr: 1 }}>
+              <Box sx={{ flex: 1, mr: 1 }}>
                 <FormLabel sx={{ typography: "title-sm" }}>
                   My Articles
                 </FormLabel>
-                <FormHelperText sx={{ typography: "body-sm" }}>
+                <FormHelperText sx={{ typography: "body-sm", mt: 1 }}>
                   {user.name ? (
                     "Only show articles which I published"
                   ) : (
-                    <p>
+                    <Typography>
                       Please{" "}
                       <Button
                         variant="outlined"
@@ -493,11 +602,12 @@ export default function FilterDrawer({
                         Log in
                       </Button>{" "}
                       to view your articles
-                    </p>
+                    </Typography>
                   )}
                 </FormHelperText>
               </Box>
               <Switch
+                sx={{ mt: 3 }}
                 checked={showAuthoredByUser}
                 onChange={(event) =>
                   setShowAuthoredByUser(event.target.checked)
@@ -527,11 +637,44 @@ export default function FilterDrawer({
                 setShowAuthoredByUser(false);
                 setSearchParams({ page: "1" });
                 setFilters({});
+                setFilteredCount(null);
               }}
             >
               Reset
             </Button>
-            <Button onClick={applyFilters}>Apply Filters</Button>
+            <Button
+              sx={{ width: "140px" }}
+              // disabled={isFetchingCount}
+              onClick={applyFilters}
+            >
+              {filteredCount !== null ? (
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                  }}
+                >
+                  {/* Show{" "} */}
+                  {isFetchingCount ? (
+                    <CircularProgress
+                      variant="solid"
+                      color="primary"
+                      sx={{
+                        "--CircularProgress-trackThickness": "2px",
+                        "--CircularProgress-progressThickness": "2px",
+                        "--CircularProgress-size": "15px",
+                      }}
+                      aria-label="Loading article count"
+                    />
+                  ) : (
+                    `Show ${filteredCount} articles`
+                  )}
+                </Box>
+              ) : (
+                "Apply Filters" //if filtered  count is null
+              )}
+            </Button>
 
             {/* <Button onClick={() => setOpen(false)}>
               Show {filteredArticles.length} articles
