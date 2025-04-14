@@ -9,7 +9,7 @@ import ModalDialog from "@mui/joy/ModalDialog";
 import DeleteForever from "@mui/icons-material/DeleteForever";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 
-function AlertDialogModal({ article }) {
+function AlertDialogModal({ article, handleArticleDelete }) {
   const [open, setOpen] = React.useState(false);
   return (
     <React.Fragment>
@@ -22,7 +22,11 @@ function AlertDialogModal({ article }) {
         Delete
       </Button>
       <Modal open={open} onClose={() => setOpen(false)}>
-        <ModalDialog variant="outlined" role="alertdialog">
+        <ModalDialog
+          variant="outlined"
+          role="alertdialog"
+          sx={{ bgcolor: "var(--joy-palette-background-transparent)" }}
+        >
           <DialogTitle>
             <WarningRoundedIcon />
             Confirmation
@@ -35,7 +39,9 @@ function AlertDialogModal({ article }) {
             <Button
               variant="solid"
               color="danger"
-              onClick={() => setOpen(false)}
+              onClick={() =>
+                setOpen(false) & handleArticleDelete(article.article_id)
+              }
             >
               Delete
             </Button>

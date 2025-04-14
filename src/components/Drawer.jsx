@@ -17,7 +17,13 @@ import {
 } from "@mui/joy";
 import { Link as RouterLink } from "react-router";
 
-import Search from "@mui/icons-material/Search";
+import PostAddIcon from "@mui/icons-material/PostAdd";
+import ArticleIcon from "@mui/icons-material/Article";
+import SettingsIcon from "@mui/icons-material/Settings";
+import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from "@mui/icons-material/Login";
+import PersonIcon from "@mui/icons-material/Person";
+
 import { Menu } from "@mui/icons-material";
 import { UserContext } from "./UserContext";
 import SignInModal from "./SignInModal";
@@ -122,17 +128,33 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
                   : () => setModalOpen(true)
               }
             >
-              {user.name ? "Log out" : "Log in"}
+              {user.name ? (
+                <>
+                  Log out <LogoutIcon sx={{ ml: 1 }} />
+                </>
+              ) : (
+                <>
+                  Log in <LoginIcon sx={{ ml: 1 }} />
+                </>
+              )}
             </Button>
           </Box>
 
           {user.name && (
             <List>
               {[
-                { text: "Profile", route: "/profile" },
-                { text: "Post article", route: "/submit" },
-                { text: "My articles", route: "/articles" },
-                { text: "Settings", route: "/settings" },
+                { text: "Profile", route: "/profile", icon: PersonIcon },
+                {
+                  text: "My articles",
+                  route: "/my-articles",
+                  icon: ArticleIcon,
+                },
+                {
+                  text: "Post article",
+                  route: "/submit",
+                  icon: PostAddIcon,
+                },
+                { text: "Settings", route: "/settings", icon: SettingsIcon },
               ].map((link) => (
                 <RouterLink to={link.route} sx={{ width: "100%" }}>
                   <ListItem
@@ -141,7 +163,11 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
                     onClick={toggleDrawer(false)}
                     onKeyDown={toggleDrawer(false)}
                   >
-                    <ListItemButton>{link.text}</ListItemButton>
+                    <ListItemButton>
+                      <link.icon sx={{ mr: 1 }} />
+
+                      {link.text}
+                    </ListItemButton>
                   </ListItem>
                 </RouterLink>
               ))}

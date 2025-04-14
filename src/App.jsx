@@ -22,6 +22,7 @@ import Toast from "./components/ToastContainer";
 import Footer from "./components/Foooter";
 import SubmitArticle from "./components/SubmitArticle";
 import Profile from "./components/Profile";
+import MyArticles from "./components/MyArticles";
 
 function App() {
   const searchInputRef = useRef(null);
@@ -56,6 +57,7 @@ function App() {
               <Route path="/topics" element={<Topics />} />
               <Route path="/submit" element={<SubmitArticle />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/my-articles" element={<MyArticles />} />
 
               <Route path="/topics/:topic" element={<Articles />} />
               <Route
