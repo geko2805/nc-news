@@ -25,6 +25,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ModeSwitcher from "./ModeSwitcher";
 
+import PostAddIcon from "@mui/icons-material/PostAdd";
+import ArticleIcon from "@mui/icons-material/Article";
+import SettingsIcon from "@mui/icons-material/Settings";
+import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from "@mui/icons-material/Login";
+import PersonIcon from "@mui/icons-material/Person";
+
 function Header({ searchInputRef, setShouldFocusSearch }) {
   const {
     user,
@@ -148,22 +155,40 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
               />
               <ExpandMoreIcon />
             </MenuButton>
-            <Menu placement="bottom-end">
+            <Menu placement="bottom-start">
               {!user.name && (
-                <MenuItem onClick={() => setModalOpen(true)}>Log in</MenuItem>
+                <MenuItem onClick={() => setModalOpen(true)}>
+                  Log in <LoginIcon />
+                </MenuItem>
               )}
-              <MenuItem>Settings</MenuItem>
               {user.name && (
                 <Link component={RouterLink} to="/profile">
-                  <MenuItem sx={{ width: "100%" }}>Profile</MenuItem>{" "}
+                  <MenuItem sx={{ width: "100%" }}>
+                    <PersonIcon />
+                    Profile
+                  </MenuItem>{" "}
                 </Link>
               )}
-              {user.name && <MenuItem>My account</MenuItem>}
+              {user.name && (
+                <Link component={RouterLink} to="/my-articles">
+                  <MenuItem>
+                    <ArticleIcon />
+                    My Articles
+                  </MenuItem>
+                </Link>
+              )}
               {user.name && (
                 <Link component={RouterLink} to="/submit">
-                  <MenuItem sx={{ width: "100%" }}>Post Article</MenuItem>
+                  <MenuItem sx={{ width: "100%" }}>
+                    <PostAddIcon />
+                    Post Article
+                  </MenuItem>
                 </Link>
               )}
+              <MenuItem>
+                <SettingsIcon />
+                Settings
+              </MenuItem>
 
               {user.name && (
                 <MenuItem
@@ -171,7 +196,7 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
                     setUser({}) & toastInfo("You have been signed out")
                   }
                 >
-                  Logout
+                  Logout <LogoutIcon />
                 </MenuItem>
               )}
               <Box

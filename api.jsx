@@ -119,3 +119,7 @@ export function submitArticle(author, title, body, topic, article_img_url) {
       return data.article;
     });
 }
+
+export const deleteArticle = (article_id) => {
+  return api.delete(`/articles/${article_id}`).catch((err) => console.log(err));
+};
