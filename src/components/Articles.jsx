@@ -44,7 +44,9 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
   );
   const [order, setOrder] = useState(searchParams.get("order") || "DESC");
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1); // pagination
-  const limit = 12; // default set in B.E.
+  const [limit, setLimit] = useState(
+    Number(searchParams.get("limit")) || 12 // Initialize from URL or default to backend default 12
+  );
   const [error, setError] = useState(null);
 
   //fillters state to store set filters in an object, and use  params if available
@@ -82,10 +84,10 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
       })
       .catch((error) => {
         console.log(error);
-        setError(error.response.data.msg);
+        setError(error.response?.data?.msg || "Failed to load articles");
         setIsLoading(false);
       });
-  }, [topic, sortBy, order, page, filters, searchParams]);
+  }, [topic, sortBy, order, page, filters, searchParams, limit]);
 
   //useEffect for search
   useEffect(() => {
@@ -147,6 +149,17 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
       page: "1",
     });
     setPage(1); // Reset page state on order change
+  };
+
+  const handleLimitChange = (event, newValue) => {
+    const newLimit = Number(newValue);
+    setLimit(newLimit);
+    setSearchParams({
+      ...Object.fromEntries(searchParams),
+      limit: newLimit.toString(),
+      page: "1",
+    });
+    setPage(1);
   };
 
   const handleClearSelections = () => {
@@ -372,19 +385,48 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
 
         {/* Pagination Controls (not on homepage) */}
         {location.pathname !== "/" && filteredArticles.length > 0 && (
-          <Box
-            sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
-          >
-            <Button onClick={handlePreviousPage} disabled={page === 1}>
-              Previous
-            </Button>
-            <Typography>
-              Page {page} of {totalPages} (Total: {totalCount})
-            </Typography>
-            <Button onClick={handleNextPage} disabled={page === totalPages}>
-              Next
-            </Button>
-          </Box>
+          <>
+            <Box
+              sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
+            >
+              <Button onClick={handlePreviousPage} disabled={page === 1}>
+                Previous
+              </Button>
+              <Typography sx={{ mt: 1 }}>
+                Page {page} of {totalPages}
+              </Typography>
+
+              <Button onClick={handleNextPage} disabled={page === totalPages}>
+                Next
+              </Button>
+            </Box>
+
+            <Box
+              sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
+            >
+              <FormLabel>
+                Results:
+                <Select
+                  value={limit}
+                  onChange={handleLimitChange}
+                  sx={{
+                    width: "80px",
+                    m: 1,
+                    bgcolor: "background.level1",
+                    "&:hover": {
+                      bgcolor: "background.level2",
+                    },
+                  }}
+                >
+                  <Option value={12}>12</Option>
+                  <Option value={24}>24</Option>
+                  <Option value={36}>36</Option>
+                  <Option value={48}>48</Option>
+                </Select>
+              </FormLabel>
+              <Typography sx={{ mt: 2 }}>(Total: {totalCount})</Typography>
+            </Box>
+          </>
         )}
 
         {location.pathname === "/" && (
