@@ -1,7 +1,15 @@
 import * as React from "react";
 import Button from "@mui/joy/Button";
 import Typography from "@mui/joy/Typography";
-import { Box, Input, Option, Select, Stack, Textarea } from "@mui/joy";
+import {
+  Box,
+  CircularProgress,
+  Input,
+  Option,
+  Select,
+  Stack,
+  Textarea,
+} from "@mui/joy";
 import { UserContext } from "./UserContext";
 import { Link } from "@mui/joy";
 import { useTopics } from "./TopicsContext";
@@ -124,7 +132,7 @@ export default function SubmitArticle() {
       const postedArticle = await submitArticle(
         user.username,
         title.trim(),
-        body.trim(),
+        body,
         topic.trim().toLowerCase(),
         articleImgUrl.trim() || undefined
       );
@@ -150,79 +158,95 @@ export default function SubmitArticle() {
       {user.username ? (
         <form onSubmit={handleArticleSubmit}>
           <Stack spacing={1}>
-            <Typography>Your name: {user.name}</Typography>
-            <Input
-              sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
-              placeholder="Enter a title"
-              name="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
-            <Select
-              value={isNewTopic ? "newTopic" : topic}
-              onChange={handleTopicChange}
-              name="topic"
-              placeholder="Choose a topic"
-              sx={{
-                m: 1,
-                bgcolor: "background.level1",
-                "&:hover": {
-                  bgcolor: "background.level2",
-                },
-              }}
-            >
-              {topics.map((t) => (
-                <Option value={t.slug} key={t.slug}>
-                  {t.slug}
-                </Option>
-              ))}
-              <Option value="newTopic">
-                <AddIcon />
-                Add a new topic
-              </Option>
-            </Select>
-            {isNewTopic && (
+            {isSubmitLoading ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  height: "150px",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <CircularProgress size="sm" />
+              </Box>
+            ) : (
               <>
+                <Typography>Your name: {user.name}</Typography>
                 <Input
                   sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
-                  placeholder="Enter topic title"
+                  placeholder="Enter a title"
+                  name="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                />
+                <Select
+                  value={isNewTopic ? "newTopic" : topic}
+                  onChange={handleTopicChange}
                   name="topic"
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                />
+                  placeholder="Choose a topic"
+                  sx={{
+                    m: 1,
+                    bgcolor: "background.level1",
+                    "&:hover": {
+                      bgcolor: "background.level2",
+                    },
+                  }}
+                >
+                  {topics.map((t) => (
+                    <Option value={t.slug} key={t.slug}>
+                      {t.slug}
+                    </Option>
+                  ))}
+                  <Option value="newTopic">
+                    <AddIcon />
+                    Add a new topic
+                  </Option>
+                </Select>
+                {isNewTopic && (
+                  <>
+                    <Input
+                      sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
+                      placeholder="Enter topic title"
+                      name="topic"
+                      value={topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                    />
+                    <Input
+                      sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
+                      placeholder="Enter topic description"
+                      name="topicDesc"
+                      value={topicDesc}
+                      onChange={(e) => setTopicDesc(e.target.value)}
+                    />
+                  </>
+                )}
+                <Textarea
+                  sx={{
+                    bgcolor: "var(--joy-palette-background-level1)",
+                    minHeight: "80px",
+                  }}
+                  placeholder="Please enter your article text here"
+                  name="body"
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  required
+                ></Textarea>
+
                 <Input
                   sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
-                  placeholder="Enter topic description"
-                  name="topicDesc"
-                  value={topicDesc}
-                  onChange={(e) => setTopicDesc(e.target.value)}
+                  placeholder="Enter article photo URL"
+                  name="article_img_url"
+                  value={articleImgUrl}
+                  onChange={(e) => setArticleImgUrl(e.target.value)}
                 />
+                {error && (
+                  <Typography color="danger" level="body2">
+                    Error- {error}
+                  </Typography>
+                )}
               </>
-            )}
-            <Textarea
-              sx={{
-                bgcolor: "var(--joy-palette-background-level1)",
-                minHeight: "80px",
-              }}
-              placeholder="Please enter your article text here"
-              name="body"
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              required
-            ></Textarea>
-
-            <Input
-              sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
-              placeholder="Enter article photo URL"
-              name="article_img_url"
-              value={articleImgUrl}
-              onChange={(e) => setArticleImgUrl(e.target.value)}
-            />
-            {error && (
-              <Typography color="danger" level="body2">
-                Error- {error}
-              </Typography>
             )}
             <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
               <Button type="submit" disabled={isSubmitLoading || isLoading}>

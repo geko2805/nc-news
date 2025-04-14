@@ -198,6 +198,7 @@ function Article() {
               <p
                 style={{
                   width: "100%",
+                  whiteSpace: "pre-wrap",
                   textAlign: "left",
                   maxWidth: "800px",
                   padding: "20px",

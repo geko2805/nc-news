@@ -189,9 +189,9 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
                 onKeyDown={toggleDrawer(false)}
                 key={text}
               >
-                <Link to={"/" + text}>
+                <RouterLink to={"/" + text}>
                   <ListItemButton>{text || "Home"}</ListItemButton>
-                </Link>
+                </RouterLink>
               </ListItem>
             ))}
           </List>
