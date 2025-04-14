@@ -1,6 +1,7 @@
 import { Avatar, Box, Button, Link, Typography } from "@mui/joy";
 import { UserContext } from "./UserContext";
 import React from "react";
+import UserAvatar from "../../src/assets/avatar.png";
 
 function Profile() {
   const { user, toastSuccess, toastError, setModalOpen } =
@@ -20,22 +21,25 @@ function Profile() {
 
       {user.username ? (
         <>
+          {" "}
           <h3>{user.name}</h3>
-          <Typography>Username: {user.username}</Typography>
-
-          <Avatar
+          <img
+            style={{
+              borderRadius: "50%",
+              width: "120px",
+              height: "120px",
+              padding: "10px",
+            }}
             alt={user.name ? user.name : ""}
-            src={user.avatar_url ? user.avatar_url : ""}
-            size="lg"
+            src={user.avatar_url ? user.avatar_url : UserAvatar}
           />
-
           {user.avatar_url !== "" && (
             <Button onClick={() => {}}>Change profile pic</Button>
           )}
-
           {user.avatar_url === "" && (
             <Button onClick={() => {}}>Add profile pic</Button>
-          )}
+          )}{" "}
+          <Typography>Username: {user.username}</Typography>
         </>
       ) : (
         <Typography sx={{ p: 2 }}>
