@@ -37,14 +37,14 @@ function App() {
       0% { transform: rotate(0deg)  scale(1); }
       20% { transform: rotate(7deg) scale(1.1); } /* Clockwise */
       40% { transform: rotate(-7deg) scale(1.2); } /* Counterclockwise */
-      60% { transform: rotate(0deg)  scale(1.2); }
-      80% { transform: rotate(7deg) scale(1.1); } /* Clockwise */
-      100% { transform: rotate(-7deg) scale(1.1); } /* Counterclockwise */
+      60% { transform: rotate(0deg)  scale(1.4); }
+      80% { transform: rotate(7deg) scale(1.5); } /* Clockwise */
+      100% { transform: rotate(-7deg) scale(1); } /* Counterclockwise */
 
     }   
       @keyframes grow {
             0% { transform: scale(1); }
-            50% { transform: scale(1.4); }
+            80% { transform: scale(1.5); }
             100% { transform: scale(1); }
           }
   `}
