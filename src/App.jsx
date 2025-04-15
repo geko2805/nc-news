@@ -47,6 +47,13 @@ function App() {
             80% { transform: scale(1.5); }
             100% { transform: scale(1); }
           }
+
+          @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+
+          }
   `}
       />
       <CssVarsProvider theme={customTheme} defaultMode="light">
