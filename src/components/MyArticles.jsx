@@ -9,6 +9,8 @@ import { deleteArticle, getArticles } from "../../api";
 import { format } from "date-fns";
 import AlertDialogModal from "./AlertDialogModal.jsx";
 
+import Lottie from "lottie-react";
+import aniNoSearch from "../assets/aniNoSearch.json";
 function MyArticles() {
   const { user, toastSuccess, toastError, setModalOpen } =
     React.useContext(UserContext);
@@ -94,8 +96,21 @@ function MyArticles() {
       {user.username ? (
         <>
           {!isLoading && usersArticles.length === 0 && (
-            <>
-              <Typography>You have not uploaded any articles yet...</Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Lottie
+                style={{ width: "150px" }}
+                animationData={aniNoSearch}
+                loop={true}
+              />
+              <Typography sx={{ p: 2 }}>
+                You have not uploaded any articles yet...
+              </Typography>
 
               <Button
                 variant="outlined"
@@ -104,7 +119,7 @@ function MyArticles() {
               >
                 Post article
               </Button>
-            </>
+            </Box>
           )}
           {isLoading ? (
             <>
