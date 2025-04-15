@@ -33,6 +33,10 @@ import aniNoSearch from "../assets/aniNoSearch.json";
 function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [popularArticles, setPopularArticles] = useState([]); // New state for top-voted articles
+  const [isPopularLoading, setIsPopularLoading] = useState(true);
+
   const [totalCount, setTotalCount] = useState(0); // article count for pagination
 
   const { searchQuery, setSearchQuery } = useContext(UserContext);
@@ -95,6 +99,23 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
         setIsLoading(false);
       });
   }, [topic, sortBy, order, page, filters, searchParams, limit]);
+
+  // fetch 3 popular articles for homepage
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setIsPopularLoading(true);
+      getArticles(undefined, "votes", "DESC", 1, 3, {}) // no topic, sort by votes descendig, limit 3, no filters
+        .then(({ articles }) => {
+          setPopularArticles(articles);
+          setIsPopularLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching popular articles:", error);
+          setIsPopularLoading(false);
+          //add error  state?
+        });
+    }
+  }, [location.pathname]);
 
   //useEffect for search
   useEffect(() => {
@@ -201,10 +222,6 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
   if (errorObj) {
     return <ErrorFallback error={errorObj} />;
   }
-
-  const popularArticles = [...filteredArticles]
-    .sort((a, b) => b.votes - a.votes)
-    .slice(0, 3);
 
   return (
     <>
@@ -396,7 +413,10 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
             <Typography level="h4" sx={{ textAlign: "center", m: 2 }}>
               Popular
             </Typography>
-            <ArticleList articles={popularArticles} isLoading={isLoading} />
+            <ArticleList
+              articles={popularArticles}
+              isLoading={isPopularLoading}
+            />
           </>
         )}
 
