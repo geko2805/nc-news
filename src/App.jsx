@@ -62,7 +62,14 @@ function App() {
               <Route path="/topics/:topic" element={<Articles />} />
               <Route
                 path="*"
-                element={<ErrorFallback error="This page doesn't exist" />}
+                element={
+                  <ErrorFallback
+                    error={{
+                      response: { data: { msg: "This page doesn't exist" } },
+                      status: 404,
+                    }}
+                  />
+                }
               />
             </Routes>
             <Footer />

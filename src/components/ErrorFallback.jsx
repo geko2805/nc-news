@@ -27,10 +27,10 @@ function ErrorFallback({ error }) {
     <Box sx={{ width: "100vw" }}>
       <Box sx={{ width: "20%", minWidth: "300px", margin: "0 auto" }}>
         <Typography level="h1" sx={{ fontSize: "3rem" }}>
-          Ooops{" "}
+          {status === 404 ? 404 : "Ooops"}
         </Typography>
         <Typography sx={{ fontSize: "1rem" }}>
-          something went wrong :({" "}
+          {status === 404 ? "Not found" : "something went wrong :("}
         </Typography>
         {status === 404 ? (
           <Lottie animationData={notFoundAnimation} loop={true} />
@@ -44,8 +44,7 @@ function ErrorFallback({ error }) {
 
         <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
           <Typography level="body-sm" sx={{ p: 1 }}>
-            {status && <> Status: {status}</>}
-            {msg && <> "{msg}"</>}
+            {status === 404 ? `"${msg}"` : `Status ${status} - "${msg}"`}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mt: 2 }}>
