@@ -36,15 +36,15 @@ function App() {
     @keyframes wiggle {
       0% { transform: rotate(0deg)  scale(1); }
       20% { transform: rotate(7deg) scale(1.1); } /* Clockwise */
-      40% { transform: rotate(-7deg) scale(1.1); } /* Counterclockwise */
-      60% { transform: rotate(0deg)  scale(1.1); }
+      40% { transform: rotate(-7deg) scale(1.2); } /* Counterclockwise */
+      60% { transform: rotate(0deg)  scale(1.2); }
       80% { transform: rotate(7deg) scale(1.1); } /* Clockwise */
       100% { transform: rotate(-7deg) scale(1.1); } /* Counterclockwise */
 
     }   
       @keyframes grow {
             0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
+            50% { transform: scale(1.4); }
             100% { transform: scale(1); }
           }
   `}
