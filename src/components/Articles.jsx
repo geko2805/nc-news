@@ -1,3 +1,4 @@
+import React from "react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { getArticles } from "../../api";
 import ArticleList from "./ArticleList";
@@ -26,6 +27,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import FilterDrawer from "./FilterDrawer";
+import Lottie from "lottie-react";
+import aniNoSearch from "../assets/aniNoSearch.json";
 
 function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
   const [articles, setArticles] = useState([]);
@@ -452,27 +455,64 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
         )}
 
         {!isLoading && articles.length > 0 && filteredArticles.length === 0 && (
-          <>
-            <p style={{ padding: "20px" }}>No articles found for your search</p>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Lottie
+              style={{ width: "150px" }}
+              animationData={aniNoSearch}
+              loop={true}
+            />
+            <Typography sx={{ p: 2 }}>
+              No articles found for your search
+            </Typography>
+
             <Button onClick={handleClearSelections}>Clear search</Button>
-          </>
+          </Box>
         )}
 
         {!isLoading &&
           filteredArticles.length === 0 &&
           Object.keys(filters).length > 0 && (
-            <>
-              <p style={{ padding: "20px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Lottie
+                style={{ width: "150px" }}
+                animationData={aniNoSearch}
+                loop={true}
+              />
+              <Typography sx={{ p: 2 }}>
                 No articles found for your selections
-              </p>
+              </Typography>
+
               <Button onClick={handleClearSelections}>Clear selections</Button>
-            </>
+            </Box>
           )}
         {!isLoading &&
           articles.length === 0 &&
           Object.keys(filters).length === 0 && (
-            <>
-              <p style={{ padding: "20px" }}>No articles found</p>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Lottie
+                style={{ width: "150px" }}
+                animationData={aniNoSearch}
+                loop={true}
+              />
+              <Typography sx={{ p: 2 }}>No articles found</Typography>
               <Button
                 onClick={() => {
                   navigate(-1);
@@ -480,7 +520,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
               >
                 Go back
               </Button>
-            </>
+            </Box>
           )}
       </section>
     </>
