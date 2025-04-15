@@ -206,10 +206,14 @@ function Article() {
               >
                 {article.body}
               </p>
-              <p>
-                Comments: {article.comment_count} Votes: {article.votes}
-              </p>
-              <p style={{ padding: 5 }}>
+              <Box sx={{ display: "flex", gap: 2, p: 2 }}>
+                <Typography level="title-md">
+                  Comments: {article.comment_count}
+                </Typography>
+                <Typography level="title-md">Votes: {article.votes}</Typography>
+              </Box>
+
+              <p style={{ padding: "10px" }}>
                 Vote:
                 <Button
                   onClick={
@@ -252,14 +256,11 @@ function Article() {
       </section>
 
       <Box sx={{ mt: 2 }}>
-        <Typography level="h3">Comments</Typography>
-        {user.username && (
-          <Typography level="body-sm">
-            Let {article.author} and others know what you thought...
-          </Typography>
-        )}
-
-        <CommentList article_id={article_id} />
+        <CommentList
+          article_id={article_id}
+          author={article.author}
+          setArticle={setArticle}
+        />
       </Box>
     </>
   );
