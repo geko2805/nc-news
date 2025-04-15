@@ -5,6 +5,7 @@ import {
   Box,
   CssBaseline,
   CssVarsProvider,
+  GlobalStyles,
   Switch,
   Typography,
   useColorScheme,
@@ -30,6 +31,24 @@ function App() {
 
   return (
     <>
+      <GlobalStyles
+        styles={`
+    @keyframes wiggle {
+      0% { transform: rotate(0deg)  scale(1); }
+      20% { transform: rotate(7deg) scale(1.1); } /* Clockwise */
+      40% { transform: rotate(-7deg) scale(1.1); } /* Counterclockwise */
+      60% { transform: rotate(0deg)  scale(1.1); }
+      80% { transform: rotate(7deg) scale(1.1); } /* Clockwise */
+      100% { transform: rotate(-7deg) scale(1.1); } /* Counterclockwise */
+
+    }   
+      @keyframes grow {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+          }
+  `}
+      />
       <CssVarsProvider theme={customTheme} defaultMode="light">
         <UserProvider>
           <TopicsProvider>

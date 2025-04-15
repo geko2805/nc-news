@@ -16,15 +16,24 @@ import { Link as RouterLink } from "react-router";
 import CommentList from "./CommentList";
 import { UserContext } from "./UserContext";
 import ErrorFallback from "./ErrorFallback";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import SouthIcon from "@mui/icons-material/South";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 
 function Article() {
-  const [article, setArticle] = useState([]);
+  const [article, setArticle] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null); // Error for article
   const [voteError, setVoteError] = useState(null); // Error for voting
   const { article_id } = useParams();
   const { user, setModalOpen, toastSuccess, toastError } =
     useContext(UserContext);
+
+  const [clickedButton, setClickedButton] = useState(null); // Track clicked button
 
   useEffect(() => {
     setIsLoading(true);
@@ -42,17 +51,24 @@ function Article() {
       });
   }, [article_id]);
 
-  function handleVoteClick(vote) {
+  function handleVoteClick(vote, e) {
+    const buttonId = e.currentTarget.dataset.button; // get data-id from event of clicked button
+
     //optimistic render update
+    console.log(e.target);
     setArticle((currArticle) => ({
       ...currArticle,
       votes: currArticle.votes + vote,
     }));
 
+    setClickedButton(buttonId); //trigger wiggle effect for clicked button
+    setTimeout(() => setClickedButton(null), 800); // reset state after animation finishes
+
     incVotes(article_id, vote)
       .then(() => {
         console.log("Vote successfully updated on server.");
         toastSuccess("Voted successfully!");
+
         //add jsx to include an undo option
         // <div>
         //   Voted successfully!{" "}
@@ -158,18 +174,6 @@ function Article() {
                 height={20}
                 style={{ margin: "auto" }}
               />
-              <p>
-                Vote:{" "}
-                <Button disabled={isLoading} onClick={() => handleVoteClick(1)}>
-                  +
-                </Button>
-                <Button
-                  disabled={isLoading}
-                  onClick={() => handleVoteClick(-1)}
-                >
-                  -
-                </Button>{" "}
-              </p>
             </div>
           </>
         ) : (
@@ -211,44 +215,95 @@ function Article() {
                   whiteSpace: "pre-wrap",
                   textAlign: "left",
                   maxWidth: "800px",
-                  padding: "20px",
+                  padding: "15px",
                 }}
               >
                 {article.body}
               </p>
-              <Box sx={{ display: "flex", gap: 2, p: 2 }}>
+
+              <Box sx={{ display: "flex", gap: 1, p: 1 }}>
                 <Typography level="title-md">
                   Comments: {article.comment_count}
                 </Typography>
                 <Typography level="title-md">Votes: {article.votes}</Typography>
               </Box>
 
-              <p style={{ padding: "10px" }}>
-                Vote:
+              <Box
+                sx={{
+                  gap: 1,
+                  p: 2,
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography sx={{ mt: 1 }} level="body-md">
+                  Vote:
+                </Typography>
                 <Button
                   onClick={
                     user.username
-                      ? () => handleVoteClick(+1)
+                      ? (e) => handleVoteClick(+1, e)
                       : () => setModalOpen(true)
                   }
                   disabled={user.username === article.author ? true : false}
-                  style={{ marginLeft: 5 }}
+                  data-button="upvote" // Identifier for upvote button
+                  sx={{
+                    borderRadius: "50%",
+                    width: 36,
+                    height: 36,
+                    minWidth: 36,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.2rem",
+                    lineHeight: 1,
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+                    "& .wiggle": {
+                      transform: "scale(1)",
+                      transformOrigin: "center",
+                      transition: "transform 0.4s ease-in-out",
+                      ...(clickedButton === "upvote" && {
+                        animation: "grow 0.8s ease-in-out",
+                      }),
+                    },
+                  }}
                 >
-                  +
+                  <ThumbUpAltIcon className="wiggle" />
                 </Button>
                 <Button
                   // onClick={() => handleVoteClick(-1)}
                   onClick={
                     user.username
-                      ? () => handleVoteClick(-1)
+                      ? (e) => handleVoteClick(-1, e)
                       : () => setModalOpen(true)
                   }
                   disabled={user.username === article.author ? true : false}
-                  style={{ marginLeft: 5 }}
+                  data-button="downvote" // Identifier for downvote button
+                  sx={{
+                    borderRadius: "50%",
+                    width: 36,
+                    height: 36,
+                    minWidth: 36,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.2rem",
+                    lineHeight: 1,
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+                    "& .wiggle": {
+                      transform: "scale(1)",
+                      transformOrigin: "center",
+                      transition: "transform 0.4s ease-in-out",
+                      ...(clickedButton === "downvote" && {
+                        animation: "wiggle 0.8s ease-in-out",
+                      }),
+                    },
+                  }}
                 >
-                  -
+                  <ThumbDownAltIcon className="wiggle" />
                 </Button>
-              </p>
+              </Box>
               {user.username === article.author && (
                 <span style={{ fontSize: 12 }}>
                   You cant vote on your own article
