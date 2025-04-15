@@ -172,7 +172,7 @@ export default function SubmitArticle() {
               </Box>
             ) : (
               <>
-                <Typography>Your name: {user.name}</Typography>
+                <Typography sx={{ p: 2 }}>Your name: {user.name}</Typography>
                 <Input
                   sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
                   placeholder="Enter a title"
@@ -248,7 +248,9 @@ export default function SubmitArticle() {
                 )}
               </>
             )}
-            <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
+            <Box
+              sx={{ display: "flex", justifyContent: "center", gap: 1, p: 2 }}
+            >
               <Button type="submit" disabled={isSubmitLoading || isLoading}>
                 {isSubmitLoading ? "Submitting..." : "Submit"}
               </Button>

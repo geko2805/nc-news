@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, Link, Typography } from "@mui/joy";
 import CircularProgress from "@mui/joy/CircularProgress";
 
-import { Link as RouterLink } from "react-router";
+import { Link as RouterLink, useNavigate } from "react-router";
 
 import { UserContext } from "./UserContext";
 import React, { useEffect, useState } from "react";
@@ -23,6 +23,8 @@ function MyArticles() {
   const [totalCount, setTotalCount] = useState(0);
 
   const articlesPerPage = 9;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoading(true);
@@ -91,6 +93,19 @@ function MyArticles() {
 
       {user.username ? (
         <>
+          {!isLoading && usersArticles.length === 0 && (
+            <>
+              <Typography>You have not uploaded any articles yet...</Typography>
+
+              <Button
+                variant="outlined"
+                color="neutral"
+                onClick={() => navigate("/submit")}
+              >
+                Post article
+              </Button>
+            </>
+          )}
           {isLoading ? (
             <>
               <CircularProgress variant="solid" size="sm" />
@@ -164,7 +179,7 @@ function MyArticles() {
             </ul>
           )}
 
-          {usersArticles.length < totalCount && (
+          {usersArticles.length > 0 && usersArticles.length < totalCount && (
             <Button
               onClick={loadMoreArticles}
               disabled={isLoading}
