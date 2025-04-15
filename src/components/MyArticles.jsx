@@ -106,7 +106,7 @@ function MyArticles() {
               <Lottie
                 style={{ width: "150px" }}
                 animationData={aniNoSearch}
-                loop={true}
+                loop={false}
               />
               <Typography sx={{ p: 2 }}>
                 You have not uploaded any articles yet...
