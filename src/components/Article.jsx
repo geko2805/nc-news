@@ -253,9 +253,11 @@ function Article() {
 
       <Box sx={{ mt: 2 }}>
         <Typography level="h3">Comments</Typography>
-        <Typography level="body-sm">
-          Let {article.author} and others know what you thought...
-        </Typography>
+        {user.username && (
+          <Typography level="body-sm">
+            Let {article.author} and others know what you thought...
+          </Typography>
+        )}
 
         <CommentList article_id={article_id} />
       </Box>

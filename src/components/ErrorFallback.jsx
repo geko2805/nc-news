@@ -1,7 +1,9 @@
 import { Box, Button, Typography } from "@mui/joy";
 import React from "react";
 import Lottie from "lottie-react";
-import errorAnimation from "../assets/404.json";
+import errorAnimation from "../assets/aniError.json";
+import notFoundAnimation from "../assets/404.json";
+
 import { useNavigate } from "react-router-dom";
 
 function ErrorFallback({ error }) {
@@ -30,13 +32,17 @@ function ErrorFallback({ error }) {
         <Typography sx={{ fontSize: "1rem" }}>
           something went wrong :({" "}
         </Typography>
-        <Lottie
-          style={{ padding: "0px", marginTop: "-60px" }}
-          animationData={errorAnimation}
-          loop={true}
-        />
+        {status === 404 ? (
+          <Lottie animationData={notFoundAnimation} loop={true} />
+        ) : (
+          <Lottie
+            style={{ marginTop: "-60px", marginBottom: "-40px" }}
+            animationData={errorAnimation}
+            loop={true}
+          />
+        )}
 
-        <Box sx={{ display: "flex", justifyContent: "center", gap: 1, mt: -4 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
           <Typography level="body-sm" sx={{ p: 1 }}>
             {status && <> Status: {status}</>}
             {msg && <> "{msg}"</>}

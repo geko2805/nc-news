@@ -1,9 +1,20 @@
+import React from "react";
 import CommentCard from "./CommentCard";
 import { useContext, useEffect, useState } from "react";
 import { addComment, deleteComment, getComments } from "../../api";
-import { Alert, Button, FormControl, Skeleton, Textarea } from "@mui/joy";
+import {
+  Alert,
+  Box,
+  Button,
+  FormControl,
+  Skeleton,
+  Textarea,
+  Typography,
+} from "@mui/joy";
 import { UserContext } from "./UserContext";
 import SignInModal from "./SignInModal";
+import Lottie from "lottie-react";
+import aniComments from "../assets/aniComments.json";
 
 function CommentList({ article_id }) {
   const [comments, setComments] = useState([]);
@@ -134,7 +145,23 @@ function CommentList({ article_id }) {
       </section>
 
       {comments.length === 0 ? (
-        <p>No comments available, be the first...</p>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Lottie
+            style={{ width: "50px" }}
+            animationData={aniComments}
+            loop={true}
+          />
+          <Typography level="body-sm">
+            No comments available, be the first...
+          </Typography>
+        </Box>
       ) : (
         <ul
           style={{
