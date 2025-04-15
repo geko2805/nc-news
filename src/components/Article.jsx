@@ -53,6 +53,7 @@ function Article() {
 
   function handleVoteClick(vote, e) {
     const buttonId = e.currentTarget.dataset.button; // get data-id from event of clicked button
+    e.currentTarget.blur();
 
     //optimistic render update
     console.log(e.target);

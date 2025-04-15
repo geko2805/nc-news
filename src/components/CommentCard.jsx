@@ -27,7 +27,7 @@ function CommentCard({ comment, isLoading, handleDeleteComment }) {
 
   function handleCommentVoteClick(comment_id, vote, e) {
     const buttonId = e.currentTarget.dataset.button; // get data-id from event of clicked button
-
+    e.currentTarget.blur();
     //optimistic render
     setVotes((prevVotes) => prevVotes + vote);
 
