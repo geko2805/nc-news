@@ -50,6 +50,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
     Number(searchParams.get("limit")) || 12 // Initialize from URL or default to backend default 12
   );
   const [error, setError] = useState(null);
+  const [errorObj, setErrorObj] = useState(null);
 
   //fillters state to store set filters in an object, and use  params if available
   const [filters, setFilters] = useState(() => {
@@ -87,6 +88,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
       .catch((error) => {
         console.log(error);
         setError(error.response?.data?.msg || "Failed to load articles");
+        setErrorObj(error);
         setIsLoading(false);
       });
   }, [topic, sortBy, order, page, filters, searchParams, limit]);
@@ -193,8 +195,8 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
     }
   };
 
-  if (error) {
-    return <ErrorFallback error={error} />;
+  if (errorObj) {
+    return <ErrorFallback error={errorObj} />;
   }
 
   const popularArticles = [...filteredArticles]

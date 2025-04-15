@@ -35,8 +35,9 @@ function Article() {
         setIsLoading(false);
       })
       .catch((error) => {
-        console.log(error.response.data.msg);
-        setError(error.response.data.msg);
+        console.log(error);
+        setError(error);
+
         setIsLoading(false);
       });
   }, [article_id]);
@@ -81,11 +82,10 @@ function Article() {
 
   if (error || !article) {
     if (article.length === 0) {
-      //return <p style={{ color: "red" }}>Article not found.</p>;
       console.log(error, "error in error");
       return <ErrorFallback error={error} />;
     }
-    return <p style={{ color: "red" }}>{error}</p>;
+    return <ErrorFallback error={error} />;
   }
 
   return (
@@ -252,7 +252,10 @@ function Article() {
       </section>
 
       <Box sx={{ mt: 2 }}>
-        <h1>Comments</h1>
+        <Typography level="h3">Comments</Typography>
+        <Typography level="body-sm">
+          Let {article.author} and others know what you thought...
+        </Typography>
 
         <CommentList article_id={article_id} />
       </Box>
