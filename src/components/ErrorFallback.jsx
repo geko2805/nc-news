@@ -43,7 +43,14 @@ function ErrorFallback({ error }) {
         )}
 
         <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
-          <Typography level="body-sm" sx={{ p: 1 }}>
+          <Typography
+            level="body-sm"
+            sx={{
+              p: 1,
+              transition: "transform 0.2s ease-in-out",
+              animation: "pulse 2s ease-in-out infinite",
+            }}
+          >
             {status === 404 ? `"${msg}"` : `Status ${status} - "${msg}"`}
           </Typography>
         </Box>

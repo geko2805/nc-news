@@ -125,10 +125,17 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
             gridColumn: { xs: "2", sm: "3" },
             gridRow: "1",
             zIndex: 1000,
+            gap: 2,
+            mr: 2,
           }}
         >
           <Search
-            sx={{ fontSize: "26px", mt: "5px", mr: "5px", cursor: "pointer" }}
+            sx={{
+              fontSize: "28px",
+              mt: "5px",
+              mr: "5px",
+              cursor: "pointer",
+            }}
             onClick={handleSearchIconClick}
           />
           <DrawerBasic
