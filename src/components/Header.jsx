@@ -392,7 +392,10 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
         <Typography
           level="title-sm"
           sx={{
-            mb: 0,
+            mb: {
+              xs: 2,
+              md: 0,
+            },
             ml: { xs: 1, sm: 5 },
             mt: {
               xs: 1,

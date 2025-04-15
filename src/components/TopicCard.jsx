@@ -37,7 +37,7 @@ function TopicCard({ topic, isLoading }) {
           "&:hover": {
             boxShadow: "0 6px 16px rgba(0, 0, 0, 0.1)",
             transform: "translateY(-4px)",
-            border: "2px solid var(--joy-palette-primary-400)",
+            border: "1px solid var(--joy-palette-primary-100)",
             bgcolor: "var(--joy-palette-background-level1)",
           },
 
@@ -58,7 +58,7 @@ function TopicCard({ topic, isLoading }) {
           <>
             <CardCover
               sx={{
-                opacity: 0.4,
+                opacity: 0.2,
                 background:
                   "linear-gradient(to top, var(--joy-palette-primary-200), var(--joy-palette-primary-100) 200px)",
               }}
@@ -111,6 +111,7 @@ function TopicCard({ topic, isLoading }) {
                   fontWeight: 600,
                   borderRadius: "8px",
                   px: 2,
+                  bgcolor: "var(--joy-palette-primary-500)",
                   "&:hover": {
                     bgcolor: "var(--joy-palette-primary-600)",
                   },

@@ -181,8 +181,18 @@ function Article() {
                 alignItems: "center",
               }}
             >
-              <h1>{article.title}</h1>
-              <p>By {article.author}</p>
+              <Typography
+                level="h3"
+                sx={{
+                  mx: {
+                    xs: 2,
+                    md: 0,
+                  },
+                }}
+              >
+                {article.title}
+              </Typography>
+              <Typography level="title-md">By {article.author}</Typography>
               <p style={{ padding: "5px" }}>
                 Topic:{" "}
                 <Link component={RouterLink} to={`/topics/${article.topic}`}>
