@@ -160,7 +160,7 @@ export default function FilterDrawer({
     };
   }, [isSmallScreen]);
 
-  //set selectedTopics if empty so searchParams are not overridden
+  //set selectedTopics to topic or all if empty so topic searchParam is not overridden
   React.useEffect(() => {
     const slugs = topics.map((topic) => topic.slug);
     //set the state for all topic slugs aswell as pre populating the selectedTopics to be used to precheck the checkboxes
@@ -220,7 +220,7 @@ export default function FilterDrawer({
 
   const applyFilters = () => {
     const newFilters = {};
-    if (dateRange !== "all") newFilters.date_range = dateRange; //set to either all, week, month or year
+    if (dateRange !== "all") newFilters.date_range = dateRange; //set to either all (default)  or week, month or year
     if (hideNegative) newFilters.hide_negative = true;
     if (showAuthoredByUser && user?.username) newFilters.author = user.username;
     if (

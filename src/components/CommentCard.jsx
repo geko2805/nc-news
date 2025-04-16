@@ -102,7 +102,23 @@ function CommentCard({ comment, isLoading, handleDeleteComment }) {
             }}
           >
             <Typography level="title-md">{comment.author}</Typography>
-            <Typography>{comment.body}</Typography>
+            {/* <Box
+              sx={{
+                height: "180px",
+                overflow: "scroll",
+                scrollbarColor: "var(--joy-palette-primary-200) auto", // For Firefox
+                "&::-webkit-scrollbar": {
+                  width: "8px", // Adjust scrollbar width
+                  height: "0px",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "var(--joy-palette-primary-200)", // Thumb color
+                  borderRadius: "4px", // Optional: rounded corners
+                },
+              }}
+            > */}
+            <Typography sx={{ maxheight: "100%" }}>{comment.body}</Typography>
+            {/* </Box> */}
 
             <Box
               sx={{ display: "flex", justifyContent: "center", gap: 1, p: 1 }}

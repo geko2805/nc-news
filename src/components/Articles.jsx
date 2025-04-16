@@ -398,6 +398,12 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
             </Box>
           </>
         )}
+
+        {searchQuery.length > 0 && (
+          <Typography level="title-md" sx={{ p: 1 }}>
+            Results matching {searchQuery}
+          </Typography>
+        )}
         <ArticleList
           articles={
             //only show first 3 articles on hommepage
