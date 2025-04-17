@@ -23,6 +23,7 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import { format, formatDistance, formatRelative, subDays } from "date-fns";
 
 function Article() {
   const [article, setArticle] = useState({});
@@ -210,6 +211,7 @@ function Article() {
                 src={article.article_img_url}
                 alt={article.title}
               />
+
               <p
                 style={{
                   width: "100%",
@@ -221,13 +223,6 @@ function Article() {
               >
                 {article.body}
               </p>
-
-              <Box sx={{ display: "flex", gap: 1, p: 1 }}>
-                <Typography level="title-md">
-                  Comments: {article.comment_count}
-                </Typography>
-                <Typography level="title-md">Votes: {article.votes}</Typography>
-              </Box>
 
               <Box
                 sx={{
@@ -305,11 +300,23 @@ function Article() {
                   <ThumbDownAltIcon className="wiggle" />
                 </Button>
               </Box>
+
               {user.username === article.author && (
                 <span style={{ fontSize: 12 }}>
                   You cant vote on your own article
                 </span>
               )}
+
+              <Box sx={{ display: "flex", gap: 1, p: 1 }}>
+                <Typography level="title-md">
+                  Comments: {article.comment_count}
+                </Typography>
+                <Typography level="title-md">Votes: {article.votes}</Typography>
+              </Box>
+
+              <Typography level="body-sm">
+                Published: {format(new Date(article.created_at), "d MMMM yyyy")}
+              </Typography>
 
               {voteError && (
                 <p style={{ color: "red" }} onClick={clearVoteError}>

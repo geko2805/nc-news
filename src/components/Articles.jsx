@@ -399,10 +399,19 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
           </>
         )}
 
-        {searchQuery.length > 0 && (
-          <Typography level="title-md" sx={{ p: 1 }}>
-            Results matching {searchQuery}
-          </Typography>
+        {searchQuery.length > 0 && filteredArticles.length > 0 && (
+          <>
+            <Typography level="title-md" sx={{ p: 1 }}>
+              Results matching {searchQuery}
+            </Typography>
+            <Button
+              onClick={() => {
+                setSearchQuery("");
+              }}
+            >
+              Clear Search
+            </Button>
+          </>
         )}
         <ArticleList
           articles={

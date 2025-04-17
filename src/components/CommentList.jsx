@@ -152,7 +152,7 @@ function CommentList({ article_id, author, setArticle }) {
         Comments
       </Typography>
 
-      {comments.length === 0 ? (
+      {comments.length === 0 && !isLoading ? (
         <Box
           sx={{
             display: "flex",
