@@ -115,7 +115,19 @@ function ArticleCard({ article, isLoading }) {
               </>
             ) : (
               <>
-                <Typography level="title-lg" textColor="#fff">
+                <Typography
+                  level="title-lg"
+                  textColor="#fff"
+                  sx={{
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2, // Limits to 2 lines
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "normal",
+                    maxWidth: "100%",
+                  }}
+                >
                   {article.title}
                 </Typography>
                 <Typography sx={{ mb: 1 }} textColor="#fff">
