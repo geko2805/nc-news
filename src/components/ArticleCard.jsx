@@ -1,6 +1,18 @@
-import { Card, CardContent, CardCover, Skeleton, Typography } from "@mui/joy";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardCover,
+  Chip,
+  Skeleton,
+  Typography,
+} from "@mui/joy";
 import { Link } from "react-router-dom";
 import { format, formatDistance, formatRelative, subDays } from "date-fns";
+import CommentIcon from "@mui/icons-material/Comment";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import { NoEncryption } from "@mui/icons-material";
 
 function ArticleCard({ article, isLoading }) {
   return (
@@ -62,6 +74,7 @@ function ArticleCard({ article, isLoading }) {
               alignItems: "center",
               justifyContent: "center",
               gap: 0,
+              position: "relative",
             }}
           >
             {isLoading ? (
@@ -105,20 +118,81 @@ function ArticleCard({ article, isLoading }) {
                 <Typography level="title-lg" textColor="#fff">
                   {article.title}
                 </Typography>
-                <Typography textColor="#fff">By: {article.author}</Typography>
-                <Typography textColor="#fff">Topic: {article.topic}</Typography>
-                <Typography textColor="#fff">
-                  Published:{" "}
-                  {/* {format(new Date(article.created_at), "dd/MM/yyyy")} */}
-                  {formatDistance(
-                    subDays(new Date(article.created_at), 3),
-                    new Date(),
-                    { addSuffix: true }
-                  )}
+                <Typography sx={{ mb: 1 }} textColor="#fff">
+                  By: {article.author}
                 </Typography>
-                <Typography textColor="#fff">
-                  Comments: {article.comment_count} Votes: {article.votes}
-                </Typography>
+
+                <Box
+                  sx={{
+                    mt: 1,
+                    mb: 1,
+                    display: "flex",
+                    alignContent: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <ScheduleIcon
+                    fontSize="small"
+                    sx={{ color: "#fff", mr: 0.5 }}
+                  />
+                  <span
+                    style={{ marginTop: "-5px", color: "#fff" }}
+                    aria-label="Published"
+                  >
+                    {formatDistance(
+                      subDays(new Date(article.created_at), 3),
+                      new Date(),
+                      { addSuffix: true }
+                    )}{" "}
+                  </span>
+                </Box>
+
+                <Box
+                  sx={{
+                    mt: 1,
+                    display: "flex",
+                    alignContent: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {/* Comments */}
+                  <CommentIcon
+                    fontSize="small"
+                    sx={{ color: "#fff", mr: 0.5 }}
+                  />
+                  <span
+                    style={{ marginTop: "-5px", color: "#fff" }}
+                    aria-label="Comment count"
+                  >
+                    {article.comment_count}
+                  </span>
+                  {/* Votes */}
+                  <ThumbUpAltIcon
+                    fontSize="small"
+                    sx={{ color: "#fff", mr: 0.5, ml: 2 }}
+                  />
+                  <span
+                    style={{ marginTop: "-5px", color: "#fff" }}
+                    aria-label="Vote count"
+                  >
+                    {article.votes}
+                  </span>
+
+                  <Chip
+                    variant="outlined"
+                    size="md"
+                    sx={{
+                      position: "absolute",
+                      backgroundColor: "transparent",
+                      color: "#fff",
+                      bottom: 8,
+                      textTransform: "capitalize",
+                    }}
+                    aria-label="Topic"
+                  >
+                    {article.topic}
+                  </Chip>
+                </Box>
               </>
             )}
           </CardContent>
