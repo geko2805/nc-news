@@ -40,12 +40,16 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
   const [totalCount, setTotalCount] = useState(0); // article count for pagination
 
   const { searchQuery, setSearchQuery } = useContext(UserContext);
-  const [filteredArticles, setFilteredArticles] = useState([]);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(searchQuery);
+
+  const [filteredArticles, setFilteredArticles] = useState([]); //is this redundant now?
 
   let { topic } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
 
   let location = useLocation();
+  // to enable going back a page
+  const navigate = useNavigate();
 
   // get sort_by and order from URL, otherwise use defaults
   const [sortBy, setSortBy] = useState(
@@ -79,16 +83,53 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
     return initialFilters;
   });
 
-  // to enable going back a page
-  const navigate = useNavigate();
+  // use search query from URL on mount
+  useEffect(() => {
+    const urlSearchQuery = searchParams.get("search") || "";
+    setSearchQuery(urlSearchQuery);
+    setDebouncedSearchQuery(urlSearchQuery);
+  }, []);
+
+  // Debounce search query
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+      // Update URL with search query
+      setSearchParams(
+        (prev) => {
+          const newParams = new URLSearchParams(prev);
+          if (searchQuery.trim()) {
+            newParams.set("search", searchQuery);
+          } else {
+            newParams.delete("search");
+          }
+          newParams.set("page", "1"); // Reset to page 1 on search change
+          return newParams;
+        },
+        { replace: true }
+      );
+    }, 500); // 500ms debounce delay
+
+    return () => clearTimeout(handler); // Cleanup timeout
+  }, [searchQuery, setSearchParams]);
 
   //api call to get articles
   useEffect(() => {
     setIsLoading(true);
-    getArticles(topic, sortBy, order, page, limit, filters)
+    getArticles(
+      topic,
+      sortBy,
+      order,
+      page,
+      limit,
+      filters,
+      false, //count only = false
+      debouncedSearchQuery
+    )
       .then(({ articles, total_count }) => {
         setArticles(articles);
-        setFilteredArticles(articles);
+        console.log(articles);
+        setFilteredArticles(articles); // now redundant due to backend filtering
         setTotalCount(total_count);
         setIsLoading(false);
       })
@@ -98,13 +139,22 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
         setErrorObj(error);
         setIsLoading(false);
       });
-  }, [topic, sortBy, order, page, filters, searchParams, limit]);
+  }, [
+    topic,
+    sortBy,
+    order,
+    page,
+    filters,
+    limit,
+    debouncedSearchQuery,
+    searchParams,
+  ]);
 
   // fetch 3 popular articles for homepage
   useEffect(() => {
     if (location.pathname === "/") {
       setIsPopularLoading(true);
-      getArticles(undefined, "votes", "DESC", 1, 3, {}) // no topic, sort by votes descendig, limit 3, no filters
+      getArticles(undefined, "votes", "DESC", 1, 3, {}, false, null) // no topic, sort by votes descendig, limit 3, no filters
         .then(({ articles }) => {
           setPopularArticles(articles);
           setIsPopularLoading(false);
@@ -117,21 +167,21 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
     }
   }, [location.pathname]);
 
-  //useEffect for search
-  useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setFilteredArticles(articles);
-    } else {
-      const query = searchQuery.toLowerCase();
-      const filtered = articles.filter(
-        (article) =>
-          article.title.toLowerCase().includes(query) ||
-          article.topic.toLowerCase().includes(query) ||
-          article.author.toLowerCase().includes(query)
-      );
-      setFilteredArticles(filtered);
-    }
-  }, [articles, searchQuery]);
+  //useEffect for search- client side version
+  // useEffect(() => {
+  //   if (searchQuery.trim() === "") {
+  //     setFilteredArticles(articles);
+  //   } else {
+  //     const query = searchQuery.toLowerCase();
+  //     const filtered = articles.filter(
+  //       (article) =>
+  //         article.title.toLowerCase().includes(query) ||
+  //         article.topic.toLowerCase().includes(query) ||
+  //         article.author.toLowerCase().includes(query)
+  //     );
+  //     setFilteredArticles(filtered);
+  //   }
+  // }, [articles, searchQuery]);
 
   //focus searchbar on moount if the search icon in header was clicked (shouldFocusSearch is true)
   useEffect(() => {
@@ -194,6 +244,20 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
     setSearchQuery("");
     setFilters({}); // Clear filters
     setSearchParams({ page: "1" }); // Reset URL
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    // Update URL to remove search param but retain filters
+    setSearchParams(
+      (prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.delete("search");
+        newParams.set("page", "1");
+        return newParams;
+      },
+      { replace: true }
+    );
   };
 
   // pagination handlers
@@ -332,6 +396,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                 articles={articles}
                 sortBy={sortBy}
                 order={order}
+                searchQuery={searchQuery}
                 sx={{ position: "absolute", right: 0 }}
               />
             </Box>
@@ -350,7 +415,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                   ) : (
                     <CloseIcon
                       sx={{ cursor: "pointer" }}
-                      onClick={() => setSearchQuery("")}
+                      onClick={handleClearSearch}
                     />
                   )
                 }
@@ -399,28 +464,51 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
           </>
         )}
 
-        {searchQuery.length > 0 && filteredArticles.length > 0 && (
-          <>
-            <Typography level="title-md" sx={{ p: 1 }}>
-              Results matching {searchQuery}
-            </Typography>
-            <Button
-              onClick={() => {
-                setSearchQuery("");
-              }}
-            >
-              Clear Search
-            </Button>
-          </>
-        )}
+        {searchQuery &&
+          searchQuery.length > 0 &&
+          articles &&
+          articles.length > 0 && (
+            <>
+              <Typography
+                level="title-md"
+                sx={{
+                  m: 2,
+                  display: "flex", // Use flex to keep quotes and searchQuery together
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "auto",
+                  maxWidth: "300px", // Fixed width
+                  margin: "10px auto",
+                  whiteSpace: "nowrap", // Prevent wrapping
+                }}
+              >
+                <span>Results matching: "</span>
+                <span
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {searchQuery}
+                </span>
+                <span>"</span>
+              </Typography>
+              <Button
+                onClick={handleClearSearch}
+                startDecorator={<CloseIcon />}
+                sx={{ mb: 2 }}
+              >
+                Clear Search
+              </Button>
+            </>
+          )}
         <ArticleList
+          isLoading={isLoading}
           articles={
             //only show first 3 articles on hommepage
-            location.pathname === "/"
-              ? filteredArticles.slice(0, 3)
-              : filteredArticles
+            location.pathname === "/" ? articles.slice(0, 3) : articles
           }
-          isLoading={isLoading}
         />
 
         {location.pathname === "/" && (
@@ -436,7 +524,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
         )}
 
         {/* Pagination Controls (not on homepage) */}
-        {location.pathname !== "/" && filteredArticles.length > 0 && (
+        {location.pathname !== "/" && articles && articles.length > 0 && (
           <>
             <Box
               sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
@@ -489,29 +577,34 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
           </>
         )}
 
-        {!isLoading && articles.length > 0 && filteredArticles.length === 0 && (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Lottie
-              style={{ width: "150px" }}
-              animationData={aniNoSearch}
-              loop={true}
-            />
-            <Typography sx={{ p: 2 }}>
-              No articles found for your search
-            </Typography>
+        {!isLoading &&
+          articles &&
+          articles.length === 0 &&
+          searchQuery.length > 0 &&
+          Object.keys(filters).length === 0 && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Lottie
+                style={{ width: "150px" }}
+                animationData={aniNoSearch}
+                loop={true}
+              />
+              <Typography sx={{ p: 2 }}>
+                No articles found for your search
+              </Typography>
 
-            <Button onClick={handleClearSelections}>Clear search</Button>
-          </Box>
-        )}
+              <Button onClick={handleClearSearch}>Clear search</Button>
+            </Box>
+          )}
 
         {!isLoading &&
-          filteredArticles.length === 0 &&
+          articles &&
+          articles.length === 0 &&
           Object.keys(filters).length > 0 && (
             <Box
               sx={{
@@ -533,8 +626,10 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
             </Box>
           )}
         {!isLoading &&
+          articles &&
           articles.length === 0 &&
-          Object.keys(filters).length === 0 && (
+          Object.keys(filters).length === 0 &&
+          !searchQuery && (
             <Box
               sx={{
                 display: "flex",
