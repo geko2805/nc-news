@@ -472,13 +472,12 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
               <Typography
                 level="title-md"
                 sx={{
-                  m: 2,
                   display: "flex", // Use flex to keep quotes and searchQuery together
                   justifyContent: "center",
                   alignItems: "center",
                   width: "auto",
                   maxWidth: "300px", // Fixed width
-                  margin: "10px auto",
+                  margin: "10px auto 0 auto",
                   whiteSpace: "nowrap", // Prevent wrapping
                 }}
               >
@@ -494,10 +493,13 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                 </span>
                 <span>"</span>
               </Typography>
+              <Typography level="body-sm">
+                {topic ? "In " + topic[0].toUpperCase() + topic.slice(1) : ""}
+              </Typography>
               <Button
                 onClick={handleClearSearch}
                 startDecorator={<CloseIcon />}
-                sx={{ mb: 2 }}
+                sx={{ mb: 2, mt: 1 }}
               >
                 Clear Search
               </Button>
