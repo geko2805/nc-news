@@ -41,6 +41,7 @@ export default function FilterDrawer({
   setFilters,
   searchParams,
   setSearchParams,
+  searchQuery,
 }) {
   let location = useLocation();
   let { topic } = useParams(); // Extract topic param from URL
@@ -101,7 +102,7 @@ export default function FilterDrawer({
 
   // Fetch filtered count
   const fetchFilteredCount = React.useCallback(
-    debounce((newFilters) => {
+    debounce((newFilters, search) => {
       setIsFetchingCount(true);
       getArticles(
         topic,
@@ -110,7 +111,8 @@ export default function FilterDrawer({
         undefined,
         undefined,
         newFilters,
-        true
+        true,
+        search
       )
         .then((data) => {
           setFilteredCount(data.total_count);
@@ -207,7 +209,7 @@ export default function FilterDrawer({
     ) {
       newFilters.selected_topics = selectedTopics;
     }
-    fetchFilteredCount(newFilters);
+    fetchFilteredCount(newFilters, searchQuery);
   }, [
     dateRange,
     hideNegative,
@@ -216,6 +218,7 @@ export default function FilterDrawer({
     user,
     topicSlugs,
     fetchFilteredCount,
+    searchQuery,
   ]);
 
   const applyFilters = () => {
@@ -400,6 +403,11 @@ export default function FilterDrawer({
           <ModalClose />
           <Divider sx={{ mt: "auto" }} />
           <DialogContent sx={{ gap: 2 }}>
+            {searchQuery && (
+              <Typography sx={{ margin: "0 auto" }}>
+                Filtering results for "{searchQuery}"
+              </Typography>
+            )}
             <FormControl>
               <FormLabel sx={{ typography: "title-md", fontWeight: "bold" }}>
                 Published
@@ -635,9 +643,21 @@ export default function FilterDrawer({
                 setSelectedTopics(topicSlugs);
                 setHideNegative(false);
                 setShowAuthoredByUser(false);
-                setSearchParams({ page: "1" });
                 setFilters({});
                 setFilteredCount(null);
+                // setSearchParams({ page: "1" });
+                //preserve search param in URL
+                setSearchParams(
+                  (prev) => {
+                    const newParams = new URLSearchParams();
+                    newParams.set("page", "1");
+                    if (prev.get("search")) {
+                      newParams.set("search", prev.get("search"));
+                    }
+                    return newParams;
+                  },
+                  { replace: true }
+                );
               }}
             >
               Reset

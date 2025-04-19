@@ -17,7 +17,8 @@ export function getArticles(
   page = 1,
   limit = 12,
   filters = {},
-  count_only = false
+  count_only = false,
+  search = null
 ) {
   const queryParams = new URLSearchParams();
   if (topic) queryParams.append("topic", topic);
@@ -38,9 +39,14 @@ export function getArticles(
   //append count_only as true to return only the count when count_only is true
   if (count_only) queryParams.append("count_only", "true");
 
+  //search param
+  if (search) queryParams.append("search", search);
+
   const query = queryParams.toString() ? `?${queryParams.toString()}` : "";
 
   return api.get(`/articles${query}`).then(({ data }) => {
+    console.log("getArticles response data:", data); // Debug log
+
     return data;
   });
 }
