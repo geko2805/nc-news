@@ -19,7 +19,7 @@ import aniComments from "../assets/aniComments.json";
 function CommentList({ article_id, author, setArticle }) {
   const [comments, setComments] = useState([]);
   const [commentsError, setCommentsError] = useState(null); // Error for comments
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [commentInput, setCommentInput] = useState("");
   const [commentSubmitted, setCommentSubmitted] = useState(0); // Trigger for re-fetch - change this to add the returned comment from api to comments
   //const [commentDeleted, setCommentDeleted] = useState(0); // Trigger for re-fetch

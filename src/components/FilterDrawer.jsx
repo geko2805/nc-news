@@ -297,7 +297,7 @@ export default function FilterDrawer({
           sx={(theme) => ({
             [theme.breakpoints.down("sm")]: {
               position: "fixed",
-              bottom: 5,
+              bottom: 20,
               zIndex: 1001,
               left: "50%", // Move left edge to center of parent
               transform: "translateX(-50%)", // Shift back by half its width
