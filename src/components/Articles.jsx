@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   FormLabel,
   Input,
   Option,
@@ -482,7 +483,8 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                 }}
               >
                 <span>
-                  {totalCount} Result{totalCount !== 1 ? "s" : ""} matching: "
+                  {isLoading ? <CircularProgress size="sm" /> : totalCount}{" "}
+                  Result{totalCount !== 1 ? "s" : ""} matching: "
                 </span>
                 <span
                   style={{
