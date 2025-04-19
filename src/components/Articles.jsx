@@ -481,7 +481,9 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                   whiteSpace: "nowrap", // Prevent wrapping
                 }}
               >
-                <span>Results matching: "</span>
+                <span>
+                  {totalCount} Result{totalCount !== 1 ? "s" : ""} matching: "
+                </span>
                 <span
                   style={{
                     whiteSpace: "nowrap",
@@ -496,9 +498,23 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
               <Typography level="body-sm">
                 {topic ? "In " + topic[0].toUpperCase() + topic.slice(1) : ""}
               </Typography>
+              {topic ? (
+                <Button
+                  variant="outlined"
+                  color="neutral"
+                  onClick={() => navigate("/articles")}
+                  endDecorator={<NavigateNextIcon />}
+                  sx={{ mr: 1 }}
+                >
+                  Search all topics
+                </Button>
+              ) : (
+                ""
+              )}
+
               <Button
                 onClick={handleClearSearch}
-                startDecorator={<CloseIcon />}
+                endDecorator={<CloseIcon />}
                 sx={{ mb: 2, mt: 1 }}
               >
                 Clear Search
@@ -597,10 +613,36 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                 loop={true}
               />
               <Typography sx={{ p: 2 }}>
-                No articles found for your search
+                No articles found for your search {topic && " in " + topic}
               </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 1,
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
+              >
+                {topic ? (
+                  <Button
+                    variant="outlined"
+                    color="neutral"
+                    onClick={() => navigate("/articles")}
+                    endDecorator={<NavigateNextIcon />}
+                  >
+                    Search all topics
+                  </Button>
+                ) : (
+                  ""
+                )}
 
-              <Button onClick={handleClearSearch}>Clear search</Button>
+                <Button
+                  onClick={handleClearSearch}
+                  endDecorator={<CloseIcon />}
+                >
+                  Clear search
+                </Button>
+              </Box>
             </Box>
           )}
 
