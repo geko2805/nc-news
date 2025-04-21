@@ -178,6 +178,7 @@ export default function FilterDrawer({
 
   // Sync filters with searchParams and apply them
   React.useEffect(() => {
+    console.log("Sync filters", filters);
     setDateRange(searchParams.get("date_range") || filters.date_range || "all");
     setHideNegative(
       searchParams.get("hide_negative") === "true" ||
@@ -280,7 +281,10 @@ export default function FilterDrawer({
   // }, [articles, selectedTopics, hideNegative, showAuthoredByUser, user]);
 
   const handleCheckboxChange = (topicSlug) => (event) => {
-    navigate("/articles");
+    //navigate to articles to filter all articles if changing topics from a topic page
+    if (location.pathname !== "/articles") {
+      navigate("/articles");
+    }
 
     setSelectedTopics((prev) => {
       if (event.target.checked) {
