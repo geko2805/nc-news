@@ -141,3 +141,14 @@ export function updateAvatar(username, avatar_url) {
     return data.user;
   });
 }
+
+export function addUser({ name, username, avatar_url }) {
+  return api
+    .post("/users", { name, username, avatar_url })
+    .then(({ data }) => {
+      return data.user;
+    })
+    .catch((error) => {
+      throw error;
+    });
+}

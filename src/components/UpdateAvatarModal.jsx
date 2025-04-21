@@ -86,10 +86,16 @@ function UpdateAvatarModal() {
       <Button
         variant="outlined"
         color="neutral"
-        startDecorator={user.avatar_url === "" ? <Add /> : <EditIcon />}
+        startDecorator={
+          user.avatar_url === "" || user.avatar_url === null ? (
+            <Add />
+          ) : (
+            <EditIcon />
+          )
+        }
         onClick={() => setOpen(true)}
       >
-        {user.avatar_url === ""
+        {user.avatar_url === "" || user.avatar_url === null
           ? "Add profile picture"
           : "Edit profile picture"}
       </Button>
@@ -98,7 +104,7 @@ function UpdateAvatarModal() {
           sx={{ bgcolor: "var(--joy-palette-background-transparent)" }}
         >
           <DialogTitle>
-            {user.avatar_url === ""
+            {user.avatar_url === "" || user.avatar_url === null
               ? "Add profile picture"
               : "Edit profile picture"}
           </DialogTitle>
