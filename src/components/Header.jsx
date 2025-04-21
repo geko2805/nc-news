@@ -47,13 +47,24 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
+    if (
+      !location.pathname.startsWith("/articles") &&
+      !location.pathname.startsWith("/topics/")
+    ) {
+      navigate("/articles");
+    }
   };
 
   //go to articles page and focus on the search input when the searcch button in header is clicked
   const handleSearchIconClick = () => {
     setShouldFocusSearch(true);
-    navigate("/articles");
 
+    if (
+      !location.pathname.startsWith("/articles") &&
+      !location.pathname.startsWith("/topics/")
+    ) {
+      navigate("/articles");
+    }
     // setTimeout(() => {
     //   if (searchInputRef.current) {
     //     searchInputRef.current.firstChild.focus();
@@ -289,46 +300,52 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
             gridRow: "1",
           }}
         >
-          <Link component={RouterLink} to="/articles">
-            <Input
-              value={searchQuery}
-              onChange={handleSearchChange}
-              size="sm"
-              placeholder="Search"
-              variant="plain"
-              endDecorator={
-                searchQuery.length === 0 ? (
-                  <Search />
-                ) : (
-                  <CloseIcon
-                    sx={{ cursor: "pointer" }}
-                    onClick={() => setSearchQuery("")}
-                  />
-                )
+          <Input
+            value={searchQuery}
+            onChange={handleSearchChange}
+            onFocus={() => {
+              if (
+                !location.pathname.startsWith("/articles") &&
+                !location.pathname.startsWith("/topics/")
+              ) {
+                navigate("/articles");
               }
-              slotProps={{ input: { "aria-label": "Search anything" } }}
-              sx={{
-                height: 40,
-                width: { md: 280, xl: 200 },
+            }}
+            size="sm"
+            placeholder="Search"
+            variant="plain"
+            endDecorator={
+              searchQuery.length === 0 ? (
+                <Search />
+              ) : (
+                <CloseIcon
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => setSearchQuery("")}
+                />
+              )
+            }
+            slotProps={{ input: { "aria-label": "Search anything" } }}
+            sx={{
+              height: 40,
+              width: { md: 280, xl: 200 },
+              borderRadius: 0,
+              borderBottom: "2px solid",
+              borderColor: "neutral.outlinedBorder",
+              bgcolor: "var(--joy-palette-background-level1)",
+              "&:hover": { borderColor: "neutral.outlinedHoverBorder" },
+              "&::before": {
+                border: "1px solid var(--Input-focusedHighlight)",
+                transform: "scaleX(0)",
+                left: 0,
+                right: 0,
+                bottom: "-2px",
+                top: "unset",
+                transition: "transform 1s cubic-bezier(0.1,0.9,0.2,1)",
                 borderRadius: 0,
-                borderBottom: "2px solid",
-                borderColor: "neutral.outlinedBorder",
-                bgcolor: "var(--joy-palette-background-level1)",
-                "&:hover": { borderColor: "neutral.outlinedHoverBorder" },
-                "&::before": {
-                  border: "1px solid var(--Input-focusedHighlight)",
-                  transform: "scaleX(0)",
-                  left: 0,
-                  right: 0,
-                  bottom: "-2px",
-                  top: "unset",
-                  transition: "transform 1s cubic-bezier(0.1,0.9,0.2,1)",
-                  borderRadius: 0,
-                },
-                "&:focus-within::before": { transform: "scaleX(1)" },
-              }}
-            />
-          </Link>
+              },
+              "&:focus-within::before": { transform: "scaleX(1)" },
+            }}
+          />
         </Box>
 
         {/* Sign in/Register Text (Largest screens only) */}

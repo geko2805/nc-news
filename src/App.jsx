@@ -85,7 +85,16 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/my-articles" element={<MyArticles />} />
 
-              <Route path="/topics/:topic" element={<Articles />} />
+              <Route
+                path="/topics/:topic"
+                element={
+                  <Articles
+                    searchInputRef={searchInputRef}
+                    shouldFocusSearch={shouldFocusSearch}
+                    setShouldFocusSearch={setShouldFocusSearch}
+                  />
+                }
+              />
               <Route
                 path="*"
                 element={

@@ -615,7 +615,7 @@ function Articles({ searchInputRef, shouldFocusSearch, setShouldFocusSearch }) {
                 loop={true}
               />
               <Typography sx={{ p: 2 }}>
-                No articles found for your search {topic && " in " + topic}
+                No articles found for "{searchQuery}" {topic && " in " + topic}
               </Typography>
               <Box
                 sx={{
