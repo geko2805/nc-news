@@ -78,7 +78,7 @@ export default function DrawerBasic({ searchQuery, onSearchChange }) {
               gap: 0.5,
               width: "100%", // Ensures it spans the full width
               mt: 1,
-              mr: 2,
+              pr: 2,
             }}
           >
             <ListItem>
