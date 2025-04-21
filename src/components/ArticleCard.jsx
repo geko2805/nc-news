@@ -151,11 +151,9 @@ function ArticleCard({ article, isLoading }) {
                     style={{ marginTop: "-5px", color: "#fff" }}
                     aria-label="Published"
                   >
-                    {formatDistance(
-                      subDays(new Date(article.created_at), 3),
-                      new Date(),
-                      { addSuffix: true }
-                    )}{" "}
+                    {formatDistance(new Date(article.created_at), new Date(), {
+                      addSuffix: true,
+                    })}{" "}
                   </span>
                 </Box>
 
