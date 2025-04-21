@@ -48,8 +48,9 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
     if (
-      !location.pathname.startsWith("/articles") &&
-      !location.pathname.startsWith("/topics/")
+      (location.pathname.startsWith("/articles/") || // Sub-routes like /articles/43
+        location.pathname !== "/articles") && // Not exactly /articles
+      !location.pathname.startsWith("/topics/") // Not any /topics route
     ) {
       navigate("/articles");
     }
@@ -60,8 +61,9 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
     setShouldFocusSearch(true);
 
     if (
-      !location.pathname.startsWith("/articles") &&
-      !location.pathname.startsWith("/topics/")
+      (location.pathname.startsWith("/articles/") || // Sub-routes like /articles/43
+        location.pathname !== "/articles") && // Not exactly /articles
+      !location.pathname.startsWith("/topics/") // Not any /topics route
     ) {
       navigate("/articles");
     }
@@ -205,18 +207,19 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
                   </MenuItem>
                 </Link>
               )}
-              {user.name && (
-                <Link component={RouterLink} to="/submit">
-                  <MenuItem sx={{ width: "100%" }}>
-                    <PostAddIcon />
-                    Post Article
-                  </MenuItem>
-                </Link>
-              )}
-              <MenuItem>
-                <SettingsIcon />
-                Settings
-              </MenuItem>
+              <Link component={RouterLink} to="/submit">
+                <MenuItem sx={{ width: "100%" }}>
+                  <PostAddIcon />
+                  Post Article
+                </MenuItem>
+              </Link>
+
+              <Link component={RouterLink} to="/settings">
+                <MenuItem>
+                  <SettingsIcon />
+                  Settings
+                </MenuItem>
+              </Link>
 
               {user.name && (
                 <MenuItem
@@ -305,8 +308,9 @@ function Header({ searchInputRef, setShouldFocusSearch }) {
             onChange={handleSearchChange}
             onFocus={() => {
               if (
-                !location.pathname.startsWith("/articles") &&
-                !location.pathname.startsWith("/topics/")
+                (location.pathname.startsWith("/articles/") || // Sub-routes like /articles/43
+                  location.pathname !== "/articles") && // Not exactly /articles
+                !location.pathname.startsWith("/topics/") // Not any /topics route
               ) {
                 navigate("/articles");
               }
