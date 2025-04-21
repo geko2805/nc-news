@@ -48,11 +48,13 @@ function Profile() {
             src={user.avatar_url ? user.avatar_url : UserAvatar}
           />
           <UpdateAvatarModal />
-          <AlertDialogModal
-            itemToDelete={"Profile photo"} //use this string in the modal description
-            handler={handleRemoveImage} //function to run on modal confirm
-            handlerArg={user.username} //argument to pass to handler
-          />
+          {user.avatar_url !== "" && user.avatar_url !== null && (
+            <AlertDialogModal
+              itemToDelete={"Profile photo"} //use this string in the modal description
+              handler={handleRemoveImage} //function to run on modal confirm
+              handlerArg={user.username} //argument to pass to handler
+            />
+          )}
           <Typography>Username: {user.username}</Typography>
         </>
       ) : (

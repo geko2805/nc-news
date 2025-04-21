@@ -6,7 +6,7 @@ import Typography from "@mui/joy/Typography";
 import Sheet from "@mui/joy/Sheet";
 import { Box, Input, Stack } from "@mui/joy";
 import { UserContext } from "./UserContext";
-import { getUserByUsername } from "../../api";
+import { addUser, getUserByUsername } from "../../api";
 import { Link } from "@mui/joy";
 import CircularProgress from "@mui/joy/CircularProgress";
 
@@ -18,17 +18,50 @@ export default function SignInModal() {
   const [error, setError] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [usernameInput, setUsernameInput] = React.useState("");
+  const [newUsernameInput, setNewUsernameInput] = React.useState("");
+  const [newNameInput, setNewNameInput] = React.useState("");
+  const [newAvatarInput, setNewAvatarInput] = React.useState("");
+
   const [isSignUp, setIsSignUp] = React.useState(false); //
 
-  const handleSubmit = async (event) => {
+  const [isImageValid, setIsImageValid] = React.useState(true);
+  const [isCheckingImage, setIsCheckingImage] = React.useState(false);
+
+  const validateImageUrl = async (url) => {
+    if (!url) return true;
+    setIsCheckingImage(true);
+
+    try {
+      const img = new Image();
+      const imagePromise = new Promise((resolve, reject) => {
+        img.onload = () => resolve(true);
+        img.onerror = () => reject(false);
+      });
+      img.src = url;
+      await imagePromise;
+      setIsImageValid(true);
+      return true;
+    } catch (error) {
+      setIsImageValid(false);
+      toastError("Invalid URL - Please check or try a different URL");
+      return false;
+    } finally {
+      setIsCheckingImage(false);
+    }
+  };
+
+  const handleSignIn = async (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const username = formData.get("username");
+    // const formData = new FormData(event.currentTarget);
+    // const username = formData.get("username");
     setIsLoading(true);
-    getUserByUsername(username)
+
+    getUserByUsername(usernameInput) // use state for arg
       .then((user) => {
         setUser(user); //update UserContext with fetched user
         setIsLoading(false);
+        setIsSignUp(false);
+
         setModalOpen(false); // close modal on success
         setError(null); // clear errors
         setUsernameInput("");
@@ -41,6 +74,7 @@ export default function SignInModal() {
         setUsernameInput("");
         toastError("Failed to sign in: " + error.response.data.msg);
       });
+
     // try {
     //   const user = await getUserByUsername(username);
     //   setUser(user); // update UserContext with fetched user
@@ -50,6 +84,49 @@ export default function SignInModal() {
     //   console.error("Error fetching user:", error.message);
     //   setError(error.response.data.msg || "Failed to sign in please try again"); // Display error from backend
     // }
+  };
+
+  const handleRegister = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+
+    if (newAvatarInput) {
+      const isValid = await validateImageUrl(newAvatarInput);
+      if (!isValid) {
+        setIsLoading(false);
+        setError("Invalid image URL");
+        setNewAvatarInput("");
+        return;
+      }
+    }
+    addUser({
+      name: newNameInput,
+      username: newUsernameInput,
+      avatar_url: newAvatarInput,
+    })
+      .then((user) => {
+        setUser(user); //update UserContext with returned new user object
+        setIsLoading(false);
+        setIsSignUp(false);
+
+        setModalOpen(false); // close modal on success
+        setError(null); // clear errors
+        setNewUsernameInput("");
+        setNewNameInput("");
+        setNewAvatarInput("");
+
+        toastSuccess("Successfully registered as " + user.name);
+      })
+      .catch((error) => {
+        console.log(error.response.data.msg);
+        setError(error.response.data.msg);
+        setIsLoading(false);
+        setNewUsernameInput("");
+        setNewNameInput("");
+        setNewAvatarInput("");
+
+        toastError("Failed to register: " + error.response.data.msg);
+      });
   };
 
   return (
@@ -107,10 +184,10 @@ export default function SignInModal() {
               Sign In
             </Typography>
             <Typography id="modal-desc" textColor="text.tertiary">
-              Please sign in to vote on articles and post comments. Enter a
-              valid username to continue.
+              Please sign in to vote on articles and post comments & articles.
+              Enter a valid username to continue.
             </Typography>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSignIn}>
               <Stack spacing={1}>
                 {isLoading ? (
                   <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -158,7 +235,6 @@ export default function SignInModal() {
               bottom: 0,
               backfaceVisibility: "hidden",
               bgcolor: "var(--joy-palette-background-body)",
-
               transform: isSignUp ? "rotateY(0deg)" : "rotateY(-180deg)",
               transition: "transform 0.3s ease-in-out",
               position: isSignUp ? "relative" : "absolute",
@@ -176,28 +252,34 @@ export default function SignInModal() {
             </Typography>
 
             <Typography id="modal-desc" textColor="text.tertiary">
-              Please register to vote on articles and post comments. Enter your
-              details to create an account
+              Please register to vote on articles and post comments & articles.
+              Enter your details to create an account
             </Typography>
 
-            <form onSubmit={handleSubmit} sx>
+            <form onSubmit={handleRegister} sx>
               <Stack spacing={1}>
                 <Input
                   sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
                   placeholder="Enter a username"
                   name="username"
+                  value={newUsernameInput}
+                  onChange={(event) => setNewUsernameInput(event.target.value)}
                   required
                 />
                 <Input
                   sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
                   placeholder="Enter your full name"
                   name="name"
+                  value={newNameInput}
+                  onChange={(event) => setNewNameInput(event.target.value)}
                   required
                 />
                 <Input
                   sx={{ bgcolor: "var(--joy-palette-background-level1)" }}
                   placeholder="Enter profile photo URL"
                   name="avatar_url"
+                  value={newAvatarInput}
+                  onChange={(event) => setNewAvatarInput(event.target.value)}
                 />
                 {error && (
                   <Typography color="danger" level="body2">
